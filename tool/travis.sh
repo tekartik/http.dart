@@ -2,4 +2,4 @@
 
 set -xe
 
-grind test
+pub run grinder:grind test
