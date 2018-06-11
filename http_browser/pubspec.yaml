@@ -1,0 +1,26 @@
+name: tekartik_http_browser
+description: Http browser
+version: 0.0.1
+#homepage: https://www.example.com
+#author: alex <email@example.com>
+
+environment:
+  sdk: '>=2.0.0-dev.54 <2.0.0'
+
+dependencies:
+  tekartik_http:
+    git:
+      url: git://github.com/tekartik/http.dart
+      path: http
+dev_dependencies:
+  test: ">=0.12.37"
+  dev_test: any
+  build_runner: ^0.8.7
+  build_test: '>=0.10.2'
+  build_web_compilers: ^0.4.0
+
+dependency_overrides:
+  tekartik_http:
+    path: ../http
+  tekartik_http_test:
+    path: ../http_test

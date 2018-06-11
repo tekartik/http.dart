@@ -1,0 +1,29 @@
+name: tekartik_http_node
+description: Http node
+version: 0.0.1
+#homepage: https://www.example.com
+#author: alex <email@example.com>
+
+environment:
+  sdk: '>=2.0.0-dev.54 <2.0.0'
+
+dependencies:
+  tekartik_http:
+    git:
+      url: git://github.com/tekartik/http.dart
+      path: http
+  node_interop: ">=1.0.0-dev.6"
+  node_io: '>=1.0.0-dev.3'
+  node_http: '>=1.0.0-dev.4'
+
+dev_dependencies:
+  test: ">=0.12.37"
+  dev_test: any
+  build_runner: ">=0.8.8"
+  build_node_compilers: ">=0.1.3"
+
+dependency_overrides:
+  tekartik_http:
+    path: ../http
+  tekartik_http_test:
+    path: ../http_test

@@ -1,0 +1,23 @@
+# Created with https://github.com/dart-lang/mono_repo
+language: dart
+
+sudo: required
+addons:
+  chrome: stable
+
+jobs:
+  include:
+    - stage: hi
+      script: ./tool/travis.sh
+      dart: dev
+
+stages:
+  - hi
+
+# Only building master means that we don't run two builds for each pull request.
+branches:
+  only: [master]
+
+cache:
+  directories:
+    - $HOME/.pub-cache

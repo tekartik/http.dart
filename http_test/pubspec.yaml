@@ -1,0 +1,24 @@
+name: tekartik_http_test
+description: Http test
+version: 0.0.1
+#homepage: https://www.example.com
+#author: alex <email@example.com>
+
+environment:
+  sdk: '>=2.0.0-dev.54 <2.0.0'
+
+dependencies:
+  tekartik_common_utils:
+    git: git://github.com/tekartik/common_utils.dart
+  tekartik_http:
+    git:
+      url: git://github.com/tekartik/http.dart
+      path: http
+
+dev_dependencies:
+  test: ">=0.12.37"
+  dev_test: any
+
+dependency_overrides:
+  tekartik_http:
+    path: ../http
