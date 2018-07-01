@@ -12,6 +12,7 @@ dependencies:
     git:
       url: git://github.com/tekartik/http.dart
       path: http
+      ref: dart2
   node_interop: ">=1.0.0-dev.6"
   node_io: '>=1.0.0-dev.3'
   node_http: '>=1.0.0-dev.4'

@@ -13,10 +13,12 @@ dependencies:
     git:
       url: git://github.com/tekartik/http.dart
       path: http
+      ref: dart2
   shelf: any
 dev_dependencies:
   test: ">=0.12.37"
   dev_test: any
+  build_runner: ">=0.9.0"
 
 dependency_overrides:
   tekartik_http:

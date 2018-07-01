@@ -12,6 +12,7 @@ dependencies:
     git:
       url: git://github.com/tekartik/http.dart
       path: http
+      ref: dart2
 dev_dependencies:
   test: ">=0.12.37"
   dev_test: any

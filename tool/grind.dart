@@ -23,6 +23,7 @@ test_http_browser() async {
   await bash('''
 set -xe
 pushd http_browser
+pub run test -p chrome -r expanded $extraOptions
 pub run build_runner test --fail-on-severe -- -p chrome -r expanded $extraOptions
 ''', verbose: true);
 }
@@ -33,6 +34,7 @@ test_http_io() async {
 set -xe
 pushd http_io
 pub run test $extraOptions
+pub run build_runner test
 ''', verbose: true);
 }
 
@@ -42,6 +44,7 @@ test_http_node() async {
 set -xe
 pushd http_node
 pub run test -p node $extraOptions
+pub run build_runner test -- -p node
 ''', verbose: true);
 }
 
