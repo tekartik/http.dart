@@ -8,9 +8,22 @@ environment:
   sdk: '>=2.0.0-dev.54 <2.0.0'
 
 dev_dependencies:
-  test: ">=0.12.37"
+  test: ">=1.2.0"
   dev_test: any
   grinder: any
   tekartik_build_utils:
-    git: git://github.com/tekartik/build_utils.dart
+    git:
+      url: git://github.com/tekartik/build_utils.dart
+      ref: dart2
     version: '>=0.3.4'
+
+# to remove once dart2 fixed
+dependency_overrides:
+  tekartik_app_utils:
+    git:
+      url: git://github.com/tekartik/app_utils.dart
+      ref: dart2
+  tekartik_build_utils:
+    git:
+      url: git://github.com/tekartik/build_utils.dart
+      ref: dart2
