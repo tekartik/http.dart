@@ -16,14 +16,3 @@ dev_dependencies:
       url: git://github.com/tekartik/build_utils.dart
       ref: dart2
     version: '>=0.3.4'
-
-# to remove once dart2 fixed
-dependency_overrides:
-  tekartik_app_utils:
-    git:
-      url: git://github.com/tekartik/app_utils.dart
-      ref: dart2
-  tekartik_build_utils:
-    git:
-      url: git://github.com/tekartik/build_utils.dart
-      ref: dart2
