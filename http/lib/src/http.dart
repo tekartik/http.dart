@@ -7,3 +7,4 @@ const String httpMethodPatch = "PATCH";
 const String httpMethodPurge = "PURGE";
 
 const String httpHeaderContentType = "Content-Type";
+const String httpContentTypeJson = "application/json";
