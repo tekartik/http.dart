@@ -7,12 +7,12 @@ addons:
 
 jobs:
   include:
-    - stage: hi
+    - stage: dev
       script: ./tool/travis.sh
       dart: dev
 
 stages:
-  - hi
+  - dev
 
 # Only building master means that we don't run two builds for each pull request.
 branches:
