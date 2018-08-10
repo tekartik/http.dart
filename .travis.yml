@@ -11,12 +11,15 @@ before_install:
 
 jobs:
   include:
-    - stage: dev
+    - stage: test
       script: ./tool/travis.sh
       dart: dev
+    - stage: test
+      script: ./tool/travis.sh
+      dart: stable
 
 stages:
-  - dev
+  - test
 
 # Only building master means that we don't run two builds for each pull request.
 branches:
