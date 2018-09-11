@@ -1,0 +1,37 @@
+name: tekartik_http_redirect
+description: A sample command-line application.
+# version: 1.0.0
+# homepage: https://www.example.com
+# author: alex <email@example.com>
+
+environment:
+  sdk: '>=2.0.0 <3.0.0'
+
+dependencies:
+  tekartik_http:
+    git:
+      url: git://github.com/tekartik/http.dart
+      path: http
+      ref: dart2
+  tekartik_common_utils:
+    git:
+      url: git://github.com/tekartik/common_utils.dart
+      ref: dart2
+  args: any
+
+
+
+dev_dependencies:
+  dev_test: any
+  test: '>=1.2.0'
+  build_runner: ">=0.9.0"
+  build_test:
+  build_node_compilers: ">=0.1.3"
+
+dependency_overrides:
+  tekartik_http:
+    path: ../http
+  tekartik_http_io:
+    path: ../http_io
+  tekartik_http_node:
+    path: ../http_node
