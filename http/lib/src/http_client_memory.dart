@@ -327,7 +327,54 @@ class ResponseMemory implements Response {
   int get statusCode => httpResponseMemory.statusCode;
 }
 
-class HttpClientMemory implements Client {
+abstract class HttpClientMixin {
+  Future<Response> httpCall(url, String method,
+      {Map<String, String> headers, body, Encoding encoding});
+
+  @override
+  Future<Response> delete(url, {Map<String, String> headers}) =>
+      httpCall(url, httpMethodDelete, headers: headers);
+
+  @override
+  Future<Response> get(url, {Map<String, String> headers}) =>
+      httpCall(url, httpMethodGet, headers: headers);
+
+  @override
+  Future<Response> head(url, {Map<String, String> headers}) =>
+      httpCall(url, httpMethodHead, headers: headers);
+
+  @override
+  Future<Response> patch(url,
+          {Map<String, String> headers, body, Encoding encoding}) =>
+      httpCall(url, httpMethodPatch,
+          headers: headers, body: body, encoding: encoding);
+
+  @override
+  Future<Response> post(url,
+          {Map<String, String> headers, body, Encoding encoding}) =>
+      httpCall(url, httpMethodPost,
+          headers: headers, body: body, encoding: encoding);
+
+  @override
+  Future<Response> put(url,
+          {Map<String, String> headers, body, Encoding encoding}) =>
+      httpCall(url, httpMethodPut,
+          headers: headers, body: body, encoding: encoding);
+
+  @override
+  Future<String> read(url, {Map<String, String> headers}) async {
+    var response = await get(url, headers: headers);
+    return response.body;
+  }
+
+  @override
+  Future<Uint8List> readBytes(url, {Map<String, String> headers}) async {
+    var response = await get(url, headers: headers);
+    return response.bodyBytes;
+  }
+}
+
+class HttpClientMemory extends Object with HttpClientMixin implements Client {
   @override
   void close() {
     // TODO: implement close
@@ -343,7 +390,7 @@ class HttpClientMemory implements Client {
     return uri.port ?? 80;
   }
 
-  Future<ResponseMemory> _send(url, String method,
+  Future<ResponseMemory> httpCall(url, String method,
       {Map<String, String> headers, body, Encoding encoding}) async {
     var request = new HttpRequestMemory(getUrlPort(url), method,
         headers: headers, body: body, encoding: encoding);
@@ -359,48 +406,6 @@ class HttpClientMemory implements Client {
     // wait for response
     var response = await request.response.responseMemory;
     return response;
-  }
-
-  @override
-  Future<Response> delete(url, {Map<String, String> headers}) =>
-      _send(url, httpMethodDelete, headers: headers);
-
-  @override
-  Future<Response> get(url, {Map<String, String> headers}) =>
-      _send(url, httpMethodGet, headers: headers);
-
-  @override
-  Future<Response> head(url, {Map<String, String> headers}) =>
-      _send(url, httpMethodHead, headers: headers);
-
-  @override
-  Future<Response> patch(url,
-          {Map<String, String> headers, body, Encoding encoding}) =>
-      _send(url, httpMethodPatch,
-          headers: headers, body: body, encoding: encoding);
-
-  @override
-  Future<Response> post(url,
-          {Map<String, String> headers, body, Encoding encoding}) =>
-      _send(url, httpMethodPost,
-          headers: headers, body: body, encoding: encoding);
-
-  @override
-  Future<Response> put(url,
-          {Map<String, String> headers, body, Encoding encoding}) =>
-      _send(url, httpMethodPut,
-          headers: headers, body: body, encoding: encoding);
-
-  @override
-  Future<String> read(url, {Map<String, String> headers}) async {
-    var response = await get(url, headers: headers);
-    return response.body;
-  }
-
-  @override
-  Future<Uint8List> readBytes(url, {Map<String, String> headers}) async {
-    var response = await get(url, headers: headers);
-    return response.bodyBytes;
   }
 
   @override
