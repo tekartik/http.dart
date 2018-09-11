@@ -3,12 +3,29 @@
 
 import 'dart:convert';
 
+import 'package:tekartik_http/http.dart';
 import 'package:test/test.dart';
 import 'package:tekartik_http/http_server.dart';
 import 'package:tekartik_http/http_client.dart';
 
-void run(
-    HttpClientFactory httpClientFactory, HttpServerFactory httpServerFactory) {
+void run(HttpFactory httpFactory) {
+  final HttpClientFactory httpClientFactory = httpFactory.client;
+  final HttpServerFactory httpServerFactory = httpFactory.server;
+  group('demo', () {
+    test('localhost', () async {
+      var server = await httpServerFactory.bind(localhost, 0);
+      // print('### PORT ${server.port}');
+      server.listen((request) {
+        request.response
+          ..write('test')
+          ..close();
+      });
+      var client = httpClientFactory.newClient();
+      expect(await client.read('http://$localhost:${server.port}'), 'test');
+      client.close();
+      await server.close();
+    });
+  });
   group('client_server', () {
     HttpServer server;
 

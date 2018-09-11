@@ -14,4 +14,9 @@ pushd http_node
 pub get
 popd
 
+pushd http_redirect
+pub get
+tool/travis.sh
+popd
+
 pub run grinder:grinder test
