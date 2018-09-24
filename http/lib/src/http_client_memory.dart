@@ -327,7 +327,7 @@ class ResponseMemory implements Response {
   int get statusCode => httpResponseMemory.statusCode;
 }
 
-abstract class HttpClientMixin {
+abstract class HttpClientMixin implements Client {
   Future<Response> httpCall(url, String method,
       {Map<String, String> headers, body, Encoding encoding});
 
