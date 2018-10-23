@@ -1,11 +1,11 @@
 @TestOn('node')
-library _;
+library tekartik_http_redirect.test.http_redirector_node_test;
 
 import 'package:tekartik_http_node/http_node.dart';
-import 'package:tekartik_http_test/http_test.dart';
 import 'package:test/test.dart';
-//import 'dart:node';
 
-void main() {
+import 'http_redirect_test.dart';
+
+main() {
   run(httpFactoryNode);
 }

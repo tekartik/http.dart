@@ -49,10 +49,21 @@ pub run build_runner test -- -p node
 }
 
 @Task()
+test_http_redirect() async {
+  await bash('''
+set -xe
+pushd http_node
+pub run test -p node,vm,chrome $extraOptions
+pub run build_runner test -- -p node,vm,chrome
+''', verbose: true);
+}
+
+@Task()
 test() async {
   await test_http_io();
   await test_http_node();
   await test_http_browser();
+  await test_http_redirect();
 }
 
 @Task()

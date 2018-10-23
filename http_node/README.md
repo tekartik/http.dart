@@ -1,11 +1,11 @@
 ## Test setup
 
-    User dart2 and set env variable
-    
-    dartsdkdev
+    Need dart > 2
         
 ## Test
 
     pub run test -p vm,node
+    
+    pbr test -- p node
     
     nodetest

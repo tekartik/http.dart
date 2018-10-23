@@ -3,11 +3,9 @@
 
 library tekartik_http.http_memory_test;
 
-import 'package:tekartik_http/http_client.dart';
-import 'package:tekartik_http/http_server.dart';
+import 'package:tekartik_http/src/http_memory.dart';
 import 'package:tekartik_http_test/http_test.dart';
-//import 'dart:io';
 
 void main() {
-  run(httpClientFactoryMemory, httpServerFactoryMemory);
+  run(httpFactoryMemory);
 }
