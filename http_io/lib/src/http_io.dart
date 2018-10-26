@@ -9,4 +9,4 @@ class HttpFactoryIo implements HttpFactory {
 
 HttpFactoryIo _httpFactoryIo;
 
-HttpFactory get httpFactoryIo => _httpFactoryIo ??= new HttpFactoryIo();
+HttpFactory get httpFactoryIo => _httpFactoryIo ??= HttpFactoryIo();

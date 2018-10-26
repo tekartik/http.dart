@@ -11,4 +11,4 @@ class IoHttpServerFactory implements HttpServerFactory {
 
 IoHttpServerFactory _ioHttpServerFactory;
 IoHttpServerFactory get httpServerFactoryIo =>
-    _ioHttpServerFactory ??= new IoHttpServerFactory();
+    _ioHttpServerFactory ??= IoHttpServerFactory();

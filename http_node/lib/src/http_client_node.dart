@@ -5,11 +5,11 @@ import 'package:tekartik_http/http_client.dart';
 class HttpClientFactoryNode implements HttpClientFactory {
   @override
   http.Client newClient() {
-    return new http.NodeClient();
+    return http.NodeClient();
   }
 }
 
 HttpClientFactoryNode _httpClientFactoryNode;
 
 HttpClientFactoryNode get httpClientFactoryNode =>
-    _httpClientFactoryNode ??= new HttpClientFactoryNode();
+    _httpClientFactoryNode ??= HttpClientFactoryNode();

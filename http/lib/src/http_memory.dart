@@ -8,5 +8,4 @@ class HttpFactoryMemory implements HttpFactory {
 
 HttpFactoryMemory _httpFactoryMemory;
 
-HttpFactory get httpFactoryMemory =>
-    _httpFactoryMemory ??= new HttpFactoryMemory();
+HttpFactory get httpFactoryMemory => _httpFactoryMemory ??= HttpFactoryMemory();
