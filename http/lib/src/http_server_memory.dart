@@ -29,14 +29,14 @@ class HttpServerMemory extends Stream<HttpRequest> implements HttpServer {
 
   HttpServerMemory(this.port);
 
-  var requestCtlr = new StreamController<HttpRequestMemory>();
+  var requestCtlr = StreamController<HttpRequestMemory>();
 
   void addRequest(HttpRequestMemory request) {
     requestCtlr.add(request);
   }
 
   @override
-  Future close({bool force: false}) async {
+  Future close({bool force = false}) async {
     await requestCtlr.close();
   }
 
@@ -71,7 +71,7 @@ class HttpDataMemory {
 
 HttpDataMemory _httpDataMemory;
 
-HttpDataMemory get httpDataMemory => _httpDataMemory ??= new HttpDataMemory();
+HttpDataMemory get httpDataMemory => _httpDataMemory ??= HttpDataMemory();
 
 class HttpServerFactoryMemory extends HttpServerFactory {
   int lastPort = 0;
@@ -82,9 +82,9 @@ class HttpServerFactoryMemory extends HttpServerFactory {
       port = ++lastPort;
     }
     if (httpDataMemory.servers[port] != null) {
-      throw new Exception('port $port is busy');
+      throw Exception('port $port is busy');
     }
-    var server = new HttpServerMemory(port);
+    var server = HttpServerMemory(port);
     httpDataMemory.servers[port] = server;
     return server;
   }
@@ -93,4 +93,4 @@ class HttpServerFactoryMemory extends HttpServerFactory {
 HttpServerFactoryMemory _httpServerFactoryMemory;
 
 HttpServerFactoryMemory get httpServerFactoryMemory =>
-    _httpServerFactoryMemory ??= new HttpServerFactoryMemory();
+    _httpServerFactoryMemory ??= HttpServerFactoryMemory();

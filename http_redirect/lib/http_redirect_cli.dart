@@ -14,7 +14,7 @@ const String portArgName = 'port';
 const String redirectBaseUrlArgName = 'host';
 
 main(List<String> arguments) async {
-  var parser = new ArgParser(allowTrailingOptions: true);
+  var parser = ArgParser(allowTrailingOptions: true);
   parser.addFlag(helpArgName, abbr: 'h', help: 'Usage help', negatable: false);
   parser.addFlag(corsArgName, abbr: 'c', help: 'Handle CORS');
   parser.addMultiOption(corsHeadersArgName,
@@ -28,7 +28,7 @@ main(List<String> arguments) async {
 
   var _argsResult = parser.parse(arguments);
 
-  var options = new Options();
+  var options = Options();
   options.handleCors = _argsResult[corsArgName] == true;
   options.corsHeaders = _argsResult[corsHeadersArgName] as List<String>;
   options.baseUrl = _argsResult[redirectBaseUrlArgName] as String;

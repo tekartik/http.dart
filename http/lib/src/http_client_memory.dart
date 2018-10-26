@@ -135,12 +135,12 @@ class HttpRequestMemory extends Stream<List<int>> implements HttpRequest {
   }
 
   @override
-  final HttpHeaders headers = new HttpHeadersMemory();
+  final HttpHeaders headers = HttpHeadersMemory();
 
   @override
   final String method;
 
-  var streamCtlr = new StreamController<List<int>>();
+  var streamCtlr = StreamController<List<int>>();
 
   // TODO: implement certificate
   @override
@@ -171,7 +171,7 @@ class HttpRequestMemory extends Stream<List<int>> implements HttpRequest {
 
   // TODO: implement response
   @override
-  final HttpResponseMemory response = new HttpResponseMemory();
+  final HttpResponseMemory response = HttpResponseMemory();
 
   // TODO: implement session
   @override
@@ -185,8 +185,8 @@ class HttpRequestMemory extends Stream<List<int>> implements HttpRequest {
 }
 
 class HttpResponseMemory extends StreamSink<List<int>> implements HttpResponse {
-  var streamCtlr = new StreamController<List<int>>();
-  var responseCompleter = new Completer<ResponseMemory>();
+  var streamCtlr = StreamController<List<int>>();
+  var responseCompleter = Completer<ResponseMemory>();
   Future<ResponseMemory> get responseMemory => responseCompleter.future;
   @override
   bool bufferOutput;
@@ -210,7 +210,7 @@ class HttpResponseMemory extends StreamSink<List<int>> implements HttpResponse {
   int statusCode;
 
   @override
-  final HttpHeaders headers = new HttpHeadersMemory();
+  final HttpHeaders headers = HttpHeadersMemory();
 
   @override
   void add(List<int> data) {
@@ -234,8 +234,7 @@ class HttpResponseMemory extends StreamSink<List<int>> implements HttpResponse {
     for (var list in bytesLists) {
       data.addAll(list);
     }
-    responseCompleter
-        .complete(new ResponseMemory(this, new Uint8List.fromList(data)));
+    responseCompleter.complete(ResponseMemory(this, Uint8List.fromList(data)));
   }
 
   // TODO: implement connectionInfo
@@ -247,7 +246,7 @@ class HttpResponseMemory extends StreamSink<List<int>> implements HttpResponse {
   List<Cookie> get cookies => throw 'not implemented yet';
 
   @override
-  Future<Socket> detachSocket({bool writeHeaders: true}) =>
+  Future<Socket> detachSocket({bool writeHeaders = true}) =>
       throw 'not implemented yet';
 
   // TODO: implement done
@@ -258,7 +257,7 @@ class HttpResponseMemory extends StreamSink<List<int>> implements HttpResponse {
   Future flush() => throw 'not implemented yet';
 
   @override
-  Future redirect(Uri location, {int status: HttpStatus.movedTemporarily}) =>
+  Future redirect(Uri location, {int status = HttpStatus.movedTemporarily}) =>
       throw 'not implemented yet';
 
   @override
@@ -392,12 +391,11 @@ class HttpClientMemory extends Object with HttpClientMixin implements Client {
 
   Future<ResponseMemory> httpCall(url, String method,
       {Map<String, String> headers, body, Encoding encoding}) async {
-    var request = new HttpRequestMemory(getUrlPort(url), method,
+    var request = HttpRequestMemory(getUrlPort(url), method,
         headers: headers, body: body, encoding: encoding);
     var server = httpDataMemory.servers[request.port];
     if (server == null) {
-      throw new Exception(
-          'no server found for url ${url} port ${request.port}');
+      throw Exception('no server found for url ${url} port ${request.port}');
     }
     //request.add(getBodyAsBytes(getBodyAsBytes(body, encoding: encoding)));
     //request.close();
@@ -417,11 +415,11 @@ class HttpClientMemory extends Object with HttpClientMixin implements Client {
 class HttpClientFactoryMemory extends HttpClientFactory {
   @override
   Client newClient() {
-    var client = new HttpClientMemory();
+    var client = HttpClientMemory();
     return client;
   }
 }
 
 HttpClientFactoryMemory _httpClientFactoryMemory;
 HttpClientFactoryMemory get httpClientFactoryMemory =>
-    _httpClientFactoryMemory ??= new HttpClientFactoryMemory();
+    _httpClientFactoryMemory ??= HttpClientFactoryMemory();

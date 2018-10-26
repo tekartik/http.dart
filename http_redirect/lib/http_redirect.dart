@@ -14,7 +14,7 @@ const String hostHeader = 'host';
 // response
 const String redirectUrlHeader = 'x-tekartik-redirect-url';
 
-final HttpClient _client = new HttpClient();
+final HttpClient _client = HttpClient();
 
 ///
 
@@ -114,7 +114,7 @@ class Options {
   String baseUrl;
 
   set corsHeaders(List<String> corsHeaders) {
-    _corsHeaders = new List.from(corsHeaders);
+    _corsHeaders = List.from(corsHeaders);
     _corsHeaders.add(redirectBaseUrlHeader);
     _lowerCaseCorsHeaders = <String>[];
     _corsHeaders.forEach((name) {
