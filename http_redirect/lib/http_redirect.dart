@@ -131,6 +131,9 @@ class Options {
   String get corsHeadersText => _corsHeadersText ??= corsHeaders.join(",");
 }
 
+///
+/// start http redirect server
+///
 Future<HttpServer> startServer(
     HttpServerFactory factory, Options options) async {
   HttpServer server = await factory.bind(options.host, options.port);
