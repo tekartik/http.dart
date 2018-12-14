@@ -1,6 +1,7 @@
 export 'http_server.dart';
 export 'http_client.dart';
-export 'src/http.dart';
+export 'package:tekartik_http/src/http.dart';
+export 'package:tekartik_http/src/http_constant.dart';
 import 'package:tekartik_http/http.dart';
 
 const String localhost = 'localhost';
