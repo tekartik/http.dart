@@ -3,10 +3,17 @@
 
 import 'dart:convert';
 
+import 'package:http/http.dart';
+import 'package:tekartik_common_utils/int_utils.dart';
 import 'package:tekartik_http/http.dart';
-import 'package:test/test.dart';
-import 'package:tekartik_http/http_server.dart';
 import 'package:tekartik_http/http_client.dart';
+import 'package:tekartik_http/http_memory.dart';
+import 'package:tekartik_http/http_server.dart';
+import 'package:test/test.dart';
+
+void main() {
+  run(httpFactoryMemory);
+}
 
 void run(HttpFactory httpFactory) {
   final HttpClientFactory httpClientFactory = httpFactory.client;
@@ -26,8 +33,72 @@ void run(HttpFactory httpFactory) {
       await server.close();
     });
   });
+
+  group('http_client_response', () {
+    HttpServer server;
+    Client client;
+    setUpAll(() async {
+      server = await httpServerFactory.bind(localhost, 0);
+      server.listen((request) async {
+        var statusCode = parseInt(request.uri.queryParameters['statusCode']);
+        var body = request.uri.queryParameters['body'];
+        request.response.statusCode = statusCode;
+        if (body != null) {
+          request.response.write(body);
+        }
+
+        await request.response.close();
+      });
+      client = httpClientFactory.newClient();
+    });
+
+    test('httpServerGetUri', () async {
+      var uri = httpServerGetUri(server);
+      expect(uri.toString().startsWith('http://localhost:'), isTrue);
+    });
+
+    test('success', () async {
+      var uri = httpServerGetUri(server);
+      var response =
+          await httpClientSend(client, httpMethodGet, '${uri}?statusCode=200');
+      expect(response.isSuccessful, isTrue);
+      expect(response.statusCode, 200);
+    }, );
+
+    test('failure', () async {
+      var uri = httpServerGetUri(server);
+      var response =
+      await httpClientSend(client, httpMethodGet, '${uri}?statusCode=400');
+      expect(response.isSuccessful, isFalse);
+      expect(response.statusCode, 400);
+    });
+
+    test('httpClientRead', () async {
+      var uri = httpServerGetUri(server);
+      var result =
+      await httpClientRead(client, httpMethodGet, '${uri}?statusCode=200&body=test');
+      expect(result, 'test');
+    });
+
+    test('httpClientRead', () async {
+      var uri = httpServerGetUri(server);
+      try {
+        await httpClientRead(
+            client, httpMethodGet, '${uri}?statusCode=400&body=test');
+        fail('should fail');
+      } on HttpClientException catch (e) {
+        expect(e.statusCode, 400);
+      }
+    });
+    tearDownAll(() async {
+      client.close();
+      await server.close();
+    });
+  });
+
   group('client_server', () {
     HttpServer server;
+    Client client;
 
     setUpAll(() async {
       server = await httpServerFactory.bind('127.0.0.1', 8181);
@@ -43,11 +114,13 @@ void run(HttpFactory httpFactory) {
         } else {
           request.response.write('ok');
         }
-        request.response.close();
+        await request.response.close();
       });
+      client = httpClientFactory.newClient();
     });
 
     tearDownAll(() async {
+      client.close();
       await server.close();
     });
 

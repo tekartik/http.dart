@@ -1,5 +1,5 @@
 @TestOn('node')
-library _;
+library tekartik_http_node.http_node_test;
 
 import 'package:tekartik_http_node/http_node.dart';
 import 'package:tekartik_http_test/http_test.dart';

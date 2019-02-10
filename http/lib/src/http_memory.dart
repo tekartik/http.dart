@@ -1,8 +1,10 @@
 import 'package:tekartik_http/http.dart';
 
 class HttpFactoryMemory implements HttpFactory {
+  @override
   HttpClientFactory get client => httpClientFactoryMemory;
 
+  @override
   HttpServerFactory get server => httpServerFactoryMemory;
 }
 

@@ -1,5 +1,5 @@
 @TestOn('node')
-library _;
+library tekartik_http_node.http_memory_test;
 
 import 'package:tekartik_http/http_memory.dart';
 import 'package:tekartik_http_test/http_test.dart';

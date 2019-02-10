@@ -14,6 +14,8 @@ const int httpPortAny = 0;
 
 const int httpStatusCodeOk = 200;
 const int httpStatusCodeBadRequest = 400;
+const int httpStatusCodeUnauthorized = 401;
+const int httpStatusCodeForbidden = 403;
 const int httpStatusCodeNotFound = 404;
 const int httpStatusCodeRequestTimeout = 408;
 const int httpStatusCodeInternalServerError = 500;

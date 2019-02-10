@@ -1,10 +1,15 @@
+import 'dart:async';
+
 import 'package:grinder/grinder.dart';
 import 'package:process_run/process_run.dart';
 import 'package:tekartik_build_utils/bash/bash.dart';
 
+
+// ignore_for_file: non_constant_identifier_names
+
 String extraOptions = '';
 
-main(List<String> args) {
+void main(List<String> args) {
   // Handle extra args after --
   // to specify test names
   for (int i = 0; i < args.length; i++) {
@@ -19,7 +24,7 @@ main(List<String> args) {
 }
 
 @Task()
-test_http_browser() async {
+Future test_http_browser() async {
   await bash('''
 set -xe
 pushd http_browser
@@ -29,7 +34,7 @@ pub run build_runner test --fail-on-severe -- -p chrome -r expanded $extraOption
 }
 
 @Task()
-test_http_io() async {
+Future test_http_io() async {
   await bash('''
 set -xe
 pushd http_io
@@ -39,7 +44,7 @@ pub run build_runner test
 }
 
 @Task()
-test_http_node() async {
+Future test_http_node() async {
   await bash('''
 set -xe
 pushd http_node
@@ -49,7 +54,7 @@ pub run build_runner test -- -p node
 }
 
 @Task()
-test_http_redirect() async {
+Future test_http_redirect() async {
   await bash('''
 set -xe
 pushd http_node
@@ -59,7 +64,7 @@ pub run build_runner test -- -p node,vm,chrome
 }
 
 @Task()
-test() async {
+Future test() async {
   await test_http_io();
   await test_http_node();
   await test_http_browser();
@@ -67,7 +72,7 @@ test() async {
 }
 
 @Task()
-fmt() async {
+Future fmt() async {
   await bash('''
 set -xe
 dartfmt . -w
@@ -75,7 +80,7 @@ dartfmt . -w
 }
 
 @DefaultTask()
-help() {
+void help() {
   print('Quick help:');
   print('  fmt: format');
   print('  test_firebase_browser');

@@ -1,6 +1,11 @@
-export 'package:tekartik_http/src/http_client.dart' show HttpClientFactory;
-import 'package:tekartik_http/src/http_client.dart';
+import 'package:tekartik_http/src/http_client.dart' show HttpClientFactory;
+import 'package:tekartik_http/src/http_client_memory.dart' as memory;
 
-import 'package:tekartik_http/src/http_client_memory.dart' as _;
+export 'package:tekartik_http/src/http_client.dart'
+    show HttpClientFactory, httpClientSend, HttpClientResponse, httpClientRead;
 
-HttpClientFactory get httpClientFactoryMemory => _.httpClientFactoryMemory;
+HttpClientFactory get httpClientFactoryMemory => memory.httpClientFactoryMemory;
+
+abstract class HttpClientException {
+  int get statusCode;
+}

@@ -13,6 +13,7 @@ List<int> getBodyAsBytes(body, {Encoding encoding}) {
 }
 
 class HttpServerMemory extends Stream<HttpRequest> implements HttpServer {
+  @override
   final int port;
 
   @override
