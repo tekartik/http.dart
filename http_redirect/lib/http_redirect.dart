@@ -157,8 +157,8 @@ Future<HttpServer> startServer(
       if (request.method == 'OPTIONS') {
         request.response
           ..statusCode = 200
-          ..write("")
-          ..close();
+          ..write("");
+        await request.response.close();
         return;
       }
     }
@@ -181,9 +181,9 @@ Future<HttpServer> startServer(
       print("no host port");
       request.response
         ..statusCode = 405
-        ..write("missing ${redirectBaseUrlHeader} header")
-        ..flush()
-        ..close();
+        ..write("missing ${redirectBaseUrlHeader} header");
+      await request.response.flush();
+      await request.response.close();
     } else {
       try {
         await proxyHttpRequest(options, request, baseUrl);
@@ -192,9 +192,9 @@ Future<HttpServer> startServer(
         try {
           request.response
             ..statusCode = 405
-            ..write("caught error $e")
-            ..flush()
-            ..close();
+            ..write("caught error $e");
+          await request.response.flush();
+          await request.response.close();
         } catch (_) {}
       }
     }

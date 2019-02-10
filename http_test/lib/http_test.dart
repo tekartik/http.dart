@@ -40,7 +40,7 @@ void run(HttpFactory httpFactory) {
       HttpServer server;
       Client client;
       setUpAll(() async {
-        server = await httpServerFactory.bind('127.0.0.1', 8181);
+        server = await httpServerFactory.bind(localhost, 0);
         server.listen((request) async {
           var statusCode = parseInt(request.uri.queryParameters['statusCode']);
           var body = request.uri.queryParameters['body'];

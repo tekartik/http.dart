@@ -38,6 +38,7 @@ class HttpServerMemory extends Stream<HttpRequest> implements HttpServer {
 
   @override
   Future close({bool force = false}) async {
+    httpDataMemory.servers.remove(port);
     await requestCtlr.close();
   }
 

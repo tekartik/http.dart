@@ -5,6 +5,6 @@ import 'package:tekartik_http_io/http_io.dart';
 import 'package:test/test.dart';
 import 'http_redirect_test.dart';
 
-main() {
+void main() {
   run(httpFactoryIo);
 }

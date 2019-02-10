@@ -4,7 +4,7 @@ import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http_redirect/http_redirect.dart';
 import 'package:test/test.dart';
 
-main() {
+void main() {
   run(httpFactoryMemory);
 }
 
