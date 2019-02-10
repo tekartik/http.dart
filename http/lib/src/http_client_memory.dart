@@ -5,7 +5,6 @@ import 'dart:io';
 
 import 'dart:typed_data';
 
-
 import 'package:http/http.dart';
 import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/src/http.dart';
@@ -109,7 +108,6 @@ class HttpHeadersMemory implements HttpHeaders {
   }
 }
 
-
 class HttpRequestMemory extends Stream<List<int>> implements HttpRequest {
   @override
   final Uri uri;
@@ -118,7 +116,8 @@ class HttpRequestMemory extends Stream<List<int>> implements HttpRequest {
   final Encoding encoding;
 
   HttpRequestMemory(this.method, this.uri,
-      {Map<String, String> headers, this.body, this.encoding}) : port = parseUri(uri).port {
+      {Map<String, String> headers, this.body, this.encoding})
+      : port = parseUri(uri).port {
     headers?.forEach((key, value) {
       this.headers.set(key, value);
     });
@@ -172,7 +171,8 @@ class HttpRequestMemory extends Stream<List<int>> implements HttpRequest {
 
   HttpResponseMemory _response;
   @override
-  HttpResponseMemory get response => _response ??= HttpResponseMemory(Request(method, uri));
+  HttpResponseMemory get response =>
+      _response ??= HttpResponseMemory(Request(method, uri));
 
   // TODO: implement session
   @override
@@ -234,7 +234,8 @@ class HttpResponseMemory extends StreamSink<List<int>> implements HttpResponse {
     for (var list in bytesLists) {
       data.addAll(list);
     }
-    responseCompleter.complete(ResponseMemory(_request, this, Uint8List.fromList(data)));
+    responseCompleter
+        .complete(ResponseMemory(_request, this, Uint8List.fromList(data)));
   }
 
   // TODO: implement connectionInfo
@@ -334,20 +335,20 @@ abstract class HttpClientMixin implements Client {
 
   @override
   Future<Response> delete(url, {Map<String, String> headers}) =>
-      httpCall( httpMethodDelete, url, headers: headers);
+      httpCall(httpMethodDelete, url, headers: headers);
 
   @override
   Future<Response> get(url, {Map<String, String> headers}) =>
-      httpCall( httpMethodGet,url, headers: headers);
+      httpCall(httpMethodGet, url, headers: headers);
 
   @override
   Future<Response> head(url, {Map<String, String> headers}) =>
-      httpCall(httpMethodHead,url,  headers: headers);
+      httpCall(httpMethodHead, url, headers: headers);
 
   @override
   Future<Response> patch(url,
           {Map<String, String> headers, body, Encoding encoding}) =>
-      httpCall( httpMethodPatch,url,
+      httpCall(httpMethodPatch, url,
           headers: headers, body: body, encoding: encoding);
 
   @override
@@ -359,7 +360,7 @@ abstract class HttpClientMixin implements Client {
   @override
   Future<Response> put(url,
           {Map<String, String> headers, body, Encoding encoding}) =>
-      httpCall(httpMethodPut,url,
+      httpCall(httpMethodPut, url,
           headers: headers, body: body, encoding: encoding);
 
   @override
@@ -374,12 +375,11 @@ abstract class HttpClientMixin implements Client {
     return response.bodyBytes;
   }
 
-
   @override
   Future<StreamedResponse> send(BaseRequest request) {
-    return httpSend(request.method, request.url, headers: request.headers, body: (request as Request).body);
+    return httpSend(request.method, request.url,
+        headers: request.headers, body: (request as Request).body);
   }
-
 }
 
 class HttpClientMemory extends Object with HttpClientMixin implements Client {
@@ -387,7 +387,6 @@ class HttpClientMemory extends Object with HttpClientMixin implements Client {
   void close() {
     // TODO: implement close
   }
-
 
   @override
   Future<ResponseMemory> httpCall(String method, url,
@@ -410,14 +409,15 @@ class HttpClientMemory extends Object with HttpClientMixin implements Client {
   @override
   Future<StreamedResponse> httpSend(String method, url,
       {Map<String, String> headers, body, Encoding encoding}) async {
-    var response = await httpCall(method, url, headers: headers, body: body, encoding: encoding);
+    var response = await httpCall(method, url,
+        headers: headers, body: body, encoding: encoding);
     return StreamedResponse(() async* {
       yield response.bodyBytes;
-    }(), response.statusCode, contentLength: response.contentLength, headers: response.headers, request: response.request);
+    }(), response.statusCode,
+        contentLength: response.contentLength,
+        headers: response.headers,
+        request: response.request);
   }
-
-
-
 }
 
 class HttpClientFactoryMemory extends HttpClientFactory {

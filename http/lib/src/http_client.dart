@@ -35,7 +35,6 @@ class HttpClientException extends http.ClientException
     implements http_client.HttpClientException {
   final HttpClientResponse response;
 
-
   HttpClientException({String message, @required this.response})
       : super(message, parseUri(response.response.request.url));
 
@@ -73,22 +72,20 @@ Future<HttpClientResponse> httpClientSend(
   return httpResponse;
 }
 
-
-Future<String> httpClientRead(  http.Client client,
+Future<String> httpClientRead(
+    http.Client client,
     String method,
 /* Uri | String */ dynamic url,
-{Map<String, String> headers,
+    {Map<String, String> headers,
     dynamic body,
-Encoding encoding}) async {
-    var response = await httpClientSend(client, method, url, headers: headers, body: body, encoding: encoding);
-    if (_checkResponseSuccess(response)) {
-      return response.body;
-    } else {
-      throw HttpClientException(response: response);
-    }
-
-
-
+    Encoding encoding}) async {
+  var response = await httpClientSend(client, method, url,
+      headers: headers, body: body, encoding: encoding);
+  if (_checkResponseSuccess(response)) {
+    return response.body;
+  } else {
+    throw HttpClientException(response: response);
+  }
 }
 
 /// Throws an error if [response] is not successful.
@@ -97,7 +94,8 @@ bool _checkResponseSuccess(HttpClientResponse response) {
     return true;
   }
 
-  var message = "Request to ${response.response.request.url} failed with status ${response.statusCode}";
+  var message =
+      "Request to ${response.response.request.url} failed with status ${response.statusCode}";
   if (response.reasonPhrase != null) {
     message = "$message: ${response.reasonPhrase}";
   }

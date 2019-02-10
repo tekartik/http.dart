@@ -4,7 +4,6 @@ import 'package:grinder/grinder.dart';
 import 'package:process_run/process_run.dart';
 import 'package:tekartik_build_utils/bash/bash.dart';
 
-
 // ignore_for_file: non_constant_identifier_names
 
 String extraOptions = '';

@@ -9,6 +9,7 @@ const String httpMethodPurge = "PURGE";
 const String httpHeaderContentType = "Content-Type";
 const String httpContentTypeJson = "application/json";
 const String httpContentTypeHtml = "text/html";
+const String httpContentTypeText = "text/plain";
 
 const int httpPortAny = 0;
 
