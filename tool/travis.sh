@@ -2,6 +2,9 @@
 
 set -xe
 
+# Test dependecies
+pub upgrade
+
 pushd http_io
 pub get
 tool/travis.sh

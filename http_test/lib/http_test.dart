@@ -103,6 +103,8 @@ void run(HttpFactory httpFactory) {
           fail('should fail');
         } on HttpClientException catch (e) {
           expect(e.statusCode, 400);
+          expect(e.response.statusCode, 400);
+          expect(e.response.body, 'test');
         }
       });
       tearDownAll(() async {

@@ -33,6 +33,7 @@ class HttpClientResponse {
 
 class HttpClientException extends http.ClientException
     implements http_client.HttpClientException {
+  @override
   final HttpClientResponse response;
 
   HttpClientException({String message, @required this.response})
@@ -72,6 +73,7 @@ Future<HttpClientResponse> httpClientSend(
   return httpResponse;
 }
 
+/// Throws a [HttpClientException] on Error
 Future<String> httpClientRead(
     http.Client client,
     String method,

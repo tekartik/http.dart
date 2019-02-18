@@ -4,8 +4,9 @@ import 'package:tekartik_build_utils/common_import.dart';
 Future testHttp() async {
   var dir = 'http';
   await runCmd(PubCmd(pubGetArgs())..workingDirectory = dir);
-  await runCmd(DartAnalyzerCmd(['--fatal-warnings', 'lib', 'test'])
-    ..workingDirectory = dir);
+  await runCmd(
+      DartAnalyzerCmd(['--fatal-warnings', '--fatal-infos', 'lib', 'test'])
+        ..workingDirectory = dir);
   await runCmd(PubCmd(pubRunTestArgs(platforms: ['vm', 'chrome']))
     ..workingDirectory = dir);
 }
@@ -13,8 +14,9 @@ Future testHttp() async {
 Future testHttpIo() async {
   var dir = 'http_io';
   await runCmd(PubCmd(pubGetArgs())..workingDirectory = dir);
-  await runCmd(DartAnalyzerCmd(['--fatal-warnings', 'lib', 'test'])
-    ..workingDirectory = dir);
+  await runCmd(
+      DartAnalyzerCmd(['--fatal-warnings', '--fatal-infos', 'lib', 'test'])
+        ..workingDirectory = dir);
   await runCmd(
       PubCmd(pubRunTestArgs(platforms: ['vm']))..workingDirectory = dir);
 }
@@ -22,8 +24,9 @@ Future testHttpIo() async {
 Future testHttpBrowser() async {
   var dir = 'http_browser';
   await runCmd(PubCmd(pubGetArgs())..workingDirectory = dir);
-  await runCmd(DartAnalyzerCmd(['--fatal-warnings', 'lib', 'test'])
-    ..workingDirectory = dir);
+  await runCmd(
+      DartAnalyzerCmd(['--fatal-warnings', '--fatal-infos', 'lib', 'test'])
+        ..workingDirectory = dir);
   /*
   await runCmd(
       PubCmd(pubRunTestArgs(platforms: ['chrome']))..workingDirectory = dir);
@@ -33,8 +36,9 @@ Future testHttpBrowser() async {
 Future testHttpNode() async {
   var dir = 'http_node';
   await runCmd(PubCmd(pubGetArgs())..workingDirectory = dir);
-  await runCmd(DartAnalyzerCmd(['--fatal-warnings', 'lib', 'test'])
-    ..workingDirectory = dir);
+  await runCmd(
+      DartAnalyzerCmd(['--fatal-warnings', '--fatal-infos', 'lib', 'test'])
+        ..workingDirectory = dir);
   /*
   await runCmd(
       PubCmd(pubRunTestArgs(platforms: ['node']))..workingDirectory = dir);
@@ -44,8 +48,8 @@ Future testHttpNode() async {
 Future testHttpRedirect() async {
   var dir = 'http_redirect';
   await runCmd(FlutterCmd(['packages', 'get'])..workingDirectory = dir);
-  await runCmd(
-      DartAnalyzerCmd(['--fatal-warnings', 'lib'])..workingDirectory = dir);
+  await runCmd(DartAnalyzerCmd(['--fatal-warnings', '--fatal-infos', 'lib'])
+    ..workingDirectory = dir);
   await runCmd(
       PubCmd(pubRunTestArgs(platforms: [/* not yet 'node' */ 'vm', 'chrome']))
         ..workingDirectory = dir);
@@ -54,8 +58,8 @@ Future testHttpRedirect() async {
 Future testHttpTest() async {
   var dir = 'http_test';
   await runCmd(PubCmd(pubGetArgs())..workingDirectory = dir);
-  await runCmd(
-      DartAnalyzerCmd(['--fatal-warnings', 'lib'])..workingDirectory = dir);
+  await runCmd(DartAnalyzerCmd(['--fatal-warnings', '--fatal-infos', 'lib'])
+    ..workingDirectory = dir);
 }
 
 Future main() async {

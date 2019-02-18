@@ -1,6 +1,6 @@
 name: tekartik_http_io
 description: Http io
-version: 0.3.0+1
+version: 0.3.1
 #homepage: https://www.example.com
 #author: alex <email@example.com>
 
@@ -14,7 +14,7 @@ dependencies:
       url: git://github.com/tekartik/http.dart
       path: http
       ref: dart2
-    version: '>=0.3.0+1'
+    version: '>=0.3.1'
   shelf: any
 dev_dependencies:
   test: ">=1.2.0"
