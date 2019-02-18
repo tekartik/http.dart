@@ -88,6 +88,23 @@ void run(HttpFactory httpFactory) {
         },
       );
 
+      test(
+        'failure_throw',
+        () async {
+          var uri = httpServerGetUri(server);
+          try {
+            await httpClientSend(
+                client, httpMethodGet, '${uri}?statusCode=400&body=test',
+                throwOnFailure: true);
+            fail('should fail');
+          } on HttpClientException catch (e) {
+            expect(e.statusCode, 400);
+            expect(e.response.statusCode, 400);
+            expect(e.response.body, 'test');
+          }
+        },
+      );
+
       test('httpClientRead', () async {
         var uri = httpServerGetUri(server);
         var result = await httpClientRead(

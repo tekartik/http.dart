@@ -28,6 +28,8 @@ class HttpClientResponse {
 
   HttpClientResponse(this._response);
 
+  Map<String, String> get headers => _response.headers;
+
   String reasonPhrase;
 }
 
@@ -43,13 +45,15 @@ class HttpClientException extends http.ClientException
   int get statusCode => response.statusCode;
 }
 
+/// if [throwOnFailure] is true, throw on HttpClientException if not successful
 Future<HttpClientResponse> httpClientSend(
     http.Client client,
     String method,
     /* Uri | String */ dynamic url,
     {Map<String, String> headers,
     dynamic body,
-    Encoding encoding}) async {
+    Encoding encoding,
+    bool throwOnFailure}) async {
   Uri uri = parseUri(url);
 
   var request = http.Request(method, uri);
@@ -70,6 +74,10 @@ Future<HttpClientResponse> httpClientSend(
 
   var response = await Response.fromStream(await client.send(request));
   var httpResponse = HttpClientResponse(response);
+
+  if (throwOnFailure == true) {
+    _checkResponseSuccess(httpResponse);
+  }
   return httpResponse;
 }
 
