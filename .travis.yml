@@ -21,12 +21,6 @@ jobs:
 stages:
   - test
 
-# Only building master means that we don't run two builds for each pull request.
-branches:
-  only:
-    - master
-    - dart2
-
 cache:
   directories:
     - $HOME/.pub-cache

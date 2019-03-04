@@ -1,6 +1,6 @@
 name: tekartik_http_io
 description: Http io
-version: 0.3.1+1
+version: 0.3.1+2
 #homepage: https://www.example.com
 #author: alex <email@example.com>
 
@@ -8,7 +8,6 @@ environment:
   sdk: '>=2.0.0-dev.54 <3.0.0'
 
 dependencies:
-  dart2_constant: any
   tekartik_http:
     git:
       url: git://github.com/tekartik/http.dart
