@@ -34,14 +34,6 @@ void run(HttpFactory httpFactory) {
     });
   });
 
-  test('connected', () async {
-    var client = httpClientFactory.newClient();
-    var content = await client.read('https://api.github.com',
-        headers: {'User-Agent': 'tekarik_http_node'});
-    var map = jsonDecode(content);
-    expect(map['current_user_url'], 'https://api.github.com/user');
-  }, skip: httpClientFactory == httpClientFactoryMemory);
-
   group(
     'http_client_response',
     () {
