@@ -7,6 +7,9 @@ const String httpMethodPatch = "PATCH";
 const String httpMethodPurge = "PURGE";
 
 const String httpHeaderContentType = "Content-Type";
+const String httpHeaderUserAgent = "User-Agent";
+const String httpHeaderAccept = "Accept";
+
 const String httpContentTypeJson = "application/json";
 const String httpContentTypeHtml = "text/html";
 const String httpContentTypeText = "text/plain";
