@@ -1,11 +1,10 @@
 name: tekartik_http_browser
 description: Http browser
 version: 0.3.1+1
-#homepage: https://www.example.com
-#author: alex <email@example.com>
+publish_to: none
 
 environment:
-  sdk: '>=2.0.0-dev.54 <3.0.0'
+  sdk: '>=2.1.0 <3.0.0'
 
 dependencies:
   tekartik_http:
@@ -24,7 +23,7 @@ dev_dependencies:
     git:
       url: git://github.com/tekartik/build_utils.dart
       ref: dart2
-    version: '>=0.3.4'
+    version: '>=0.6.5+1'
 
 dependency_overrides:
   tekartik_http:

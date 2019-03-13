@@ -1,11 +1,10 @@
 name: tekartik_http
 description: Http core
 version: 0.3.1+1
-#homepage: https://www.example.com
-#author: alex <email@example.com>
+publish_to: none
 
 environment:
-  sdk: '>=2.0.0-dev.54 <3.0.0'
+  sdk: '>=2.1.0 <3.0.0'
 
 dependencies:
   http: any
@@ -20,6 +19,7 @@ dev_dependencies:
   test: ">=0.12.37"
   dev_test: any
   build_runner: any
+  process_run: '>=0.10.0+1'
 
 dependency_overrides:
   tekartik_http_test:
