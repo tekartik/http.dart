@@ -16,8 +16,9 @@ void main() {
 
   test('connected', () async {
     var client = httpFactoryIo.client.newClient();
+    // Somehow user agent is required starting with Travis on travis...
     var content = await client.read('https://api.github.com',
-        headers: {'User-Agent': 'tekarik_http_node'});
+        headers: {'User-Agent': 'Travis/tekarik_http_node'});
     var map = jsonDecode(content);
     expect(map['current_user_url'], 'https://api.github.com/user');
   });
