@@ -28,6 +28,12 @@ dev_dependencies:
       url: git://github.com/tekartik/build_utils.dart
       ref: dart2
     version: '>=0.3.4'
+  tekartik_platform_node:
+    git:
+      url: git://github.com/tekartik/platform.dart
+      path: platform_node
+      ref: dart2
+    version: '>=0.1.0'
 
 dependency_overrides:
   tekartik_http:
