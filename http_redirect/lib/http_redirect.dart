@@ -1,9 +1,11 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:path/path.dart' as _path;
 import 'package:tekartik_common_utils/log_utils.dart';
+import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/http_server.dart';
+import 'package:tekartik_http/http_client.dart';
+import 'package:http/http.dart' as http;
 
 Level logLevel;
 
@@ -14,7 +16,7 @@ const String hostHeader = 'host';
 // response
 const String redirectUrlHeader = 'x-tekartik-redirect-url';
 
-final HttpClient _client = HttpClient();
+final http.Client _client = http.Client();
 
 ///
 
@@ -36,13 +38,18 @@ Future proxyHttpRequest(
   }
   var uri = Uri.parse(url);
   print("calling ${request.method} $uri");
-  final HttpClientRequest rq = await _client.openUrl(request.method, uri);
+
+  var headers = <String, String>{};
 
   request.headers.forEach((name, List<String> values) {
+    void _set() {
+      headers[name] = values.join(',');
+    }
+
     if (options.forwardedHeaders != null) {
       for (var forwardedHeaders in options.forwardedHeaders) {
         if (forwardedHeaders.toLowerCase() == name.toLowerCase()) {
-          rq.headers.add(name, values);
+          _set();
         }
       }
       return;
@@ -53,7 +60,7 @@ Future proxyHttpRequest(
         return;
       }
       if (options.containsHeader(name)) {
-        rq.headers.add(name, values);
+        _set();
       }
     } else {
       if (name == hostHeader) {
@@ -61,25 +68,37 @@ Future proxyHttpRequest(
         // needed for google storage
         return;
       }
-      rq.headers.add(name, values);
+      _set();
     }
   });
-  print("headers: ${rq.headers}");
-  rq.contentLength = request.contentLength == null ? -1 : request.contentLength;
+  print("headers: ${headers}");
+
+  var bytes = <int>[];
+  for (var list in await request.toList()) {
+    bytes.addAll(list);
+  }
+  var innerResponse = await httpClientSend(_client, request.method, uri,
+      body: bytes, headers: headers);
+  var innerBody = innerResponse.bodyBytes;
+  var innerHeaders = innerResponse.headers;
+
+  // final HttpClientRequest rq = await _client.openUrl(request.method, uri);
+
+  // rq.contentLength = request.contentLength == null ? -1 : request.contentLength;
   /*
   rq
     ..followRedirects = request.
     ..maxRedirects = request.maxRedirects;
 */
-  await rq.addStream(request);
-  final HttpClientResponse rs = await rq.close();
+  // await rq.addStream(request);
+  // final HttpClientResponse rs = await rq.close();
   final HttpResponse r = request.response;
 
-  r.statusCode = rs.statusCode;
+  r.statusCode = innerResponse.statusCode;
   print("response: ${r.statusCode}");
-  print("respons headers: ${rs.headers}");
+  print("respons headers: ${innerResponse.headers}");
 
-  rs.headers.forEach((key, values) {
+  innerHeaders.forEach((key, values) {
     String lowercaseKey = key.toLowerCase();
     if (lowercaseKey == 'content-length') {
       return;
@@ -87,13 +106,14 @@ Future proxyHttpRequest(
     if (lowercaseKey == 'content-encoding') {
       return;
     }
-    r.headers.set(key, values.join(','));
+    r.headers.set(key, values);
   });
   // r.contentLength = rs.contentLength == null ? -1 : rs.contentLength;
-  r.headers.contentType = rs.headers.contentType;
+  // r.headers.contentType = ContentType.parse(innerResponse.headers[httpHeaderContentType]); //.contentType;
   print("fwd response headers: ${r.headers}");
   r.headers.set(redirectUrlHeader, url);
-  await r.addStream(rs);
+
+  await r.addStream(Stream.fromIterable([innerBody]));
   await r.flush();
   await r.close();
   print("done");
@@ -131,6 +151,9 @@ class Options {
   String get corsHeadersText => _corsHeadersText ??= corsHeaders.join(",");
 }
 
+///
+/// start http redirect server
+///
 Future<HttpServer> startServer(
     HttpServerFactory factory, Options options) async {
   HttpServer server = await factory.bind(options.host, options.port);
@@ -154,8 +177,8 @@ Future<HttpServer> startServer(
       if (request.method == 'OPTIONS') {
         request.response
           ..statusCode = 200
-          ..write("")
-          ..close();
+          ..write("");
+        await request.response.close();
         return;
       }
     }
@@ -178,9 +201,9 @@ Future<HttpServer> startServer(
       print("no host port");
       request.response
         ..statusCode = 405
-        ..write("missing ${redirectBaseUrlHeader} header")
-        ..flush()
-        ..close();
+        ..write("missing ${redirectBaseUrlHeader} header");
+      await request.response.flush();
+      await request.response.close();
     } else {
       try {
         await proxyHttpRequest(options, request, baseUrl);
@@ -189,9 +212,9 @@ Future<HttpServer> startServer(
         try {
           request.response
             ..statusCode = 405
-            ..write("caught error $e")
-            ..flush()
-            ..close();
+            ..write("caught error $e");
+          await request.response.flush();
+          await request.response.close();
         } catch (_) {}
       }
     }

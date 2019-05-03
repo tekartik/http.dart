@@ -2,7 +2,7 @@
 
 set -xe
 
-dartanalyzer --fatal-warnings lib test
+dartanalyzer --fatal-warnings --fatal-infos lib test
 
 # pub run build_runner test
 pub run build_runner test -- -p vm,chrome

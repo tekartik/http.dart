@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/src/http_client_memory.dart';
+import 'package:tekartik_http/src/http_server.dart';
 
 List<int> getBodyAsBytes(body, {Encoding encoding}) {
   if (body is String) {
@@ -13,8 +13,10 @@ List<int> getBodyAsBytes(body, {Encoding encoding}) {
 }
 
 class HttpServerMemory extends Stream<HttpRequest> implements HttpServer {
+  @override
   final int port;
 
+  /*
   @override
   bool autoCompress;
 
@@ -26,10 +28,10 @@ class HttpServerMemory extends Stream<HttpRequest> implements HttpServer {
 
   @override
   InternetAddress address;
-
+  */
   HttpServerMemory(this.port);
 
-  var requestCtlr = StreamController<HttpRequestMemory>();
+  var requestCtlr = StreamController<HttpRequest>();
 
   void addRequest(HttpRequestMemory request) {
     requestCtlr.add(request);
@@ -37,16 +39,18 @@ class HttpServerMemory extends Stream<HttpRequest> implements HttpServer {
 
   @override
   Future close({bool force = false}) async {
+    httpDataMemory.servers.remove(port);
     await requestCtlr.close();
   }
 
+/*
   @override
   HttpConnectionsInfo connectionsInfo() => throw 'not implemented yet';
 
   // TODO: implement defaultResponseHeaders
   @override
   HttpHeaders get defaultResponseHeaders => throw 'not implemented yet';
-
+  */
   @override
   StreamSubscription<HttpRequest> listen(
       void Function(HttpRequest event) onData,
@@ -57,10 +61,12 @@ class HttpServerMemory extends Stream<HttpRequest> implements HttpServer {
         onError: onError, onDone: onDone, cancelOnError: cancelOnError);
   }
 
+  /*
   @override
   set sessionTimeout(int timeout) {
     // TODO: implement sessionTimeout
   }
+  */
 }
 
 class HttpConnectionMemory {}

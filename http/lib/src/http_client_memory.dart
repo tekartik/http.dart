@@ -1,20 +1,20 @@
 import 'dart:async';
 
 import 'dart:convert';
-import 'dart:io';
+//import 'dart:io';
 
 import 'dart:typed_data';
 
-import 'package:http/src/base_request.dart';
-import 'package:http/src/client.dart';
-import 'package:http/src/response.dart';
-import 'package:http/src/streamed_response.dart';
+import 'package:http/http.dart';
 import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/src/http.dart';
 import 'package:tekartik_http/src/http_server_memory.dart';
+import 'package:tekartik_http/src/http_server.dart';
 
 class HttpHeadersMemory implements HttpHeaders {
   final Map<String, List<String>> map = {};
+
+  /*
   @override
   bool chunkedTransferEncoding;
 
@@ -38,6 +38,7 @@ class HttpHeadersMemory implements HttpHeaders {
 
   @override
   int port;
+  */
 
   @override
   List<String> operator [](String name) => map[getKey(name)];
@@ -55,15 +56,18 @@ class HttpHeadersMemory implements HttpHeaders {
     }
   }
 
+  /*
   @override
   void clear() {
     map.clear();
   }
+  */
 
   @override
   void forEach(void Function(String name, List<String> values) f) =>
       map.forEach(f);
 
+  /*
   @override
   void noFolding(String name) => throw 'not implemented yet';
 
@@ -83,6 +87,7 @@ class HttpHeadersMemory implements HttpHeaders {
   void removeAll(String name) {
     map.remove(getKey(name));
   }
+  */
 
   @override
   void set(String name, Object value) {
@@ -112,17 +117,30 @@ class HttpHeadersMemory implements HttpHeaders {
 }
 
 class HttpRequestMemory extends Stream<List<int>> implements HttpRequest {
+  @override
+  final Uri uri;
   final int port;
   final body;
   final Encoding encoding;
+  @override
+  int contentLength;
 
-  HttpRequestMemory(this.port, this.method,
-      {Map<String, String> headers, this.body, this.encoding}) {
+  HttpRequestMemory(this.method, this.uri,
+      {Map<String, String> headers, this.body, this.encoding})
+      : port = parseUri(uri).port {
     headers?.forEach((key, value) {
       this.headers.set(key, value);
     });
     if (body is String) {
-      streamCtlr.add(getBodyAsBytes(body, encoding: encoding));
+      var bytes = getBodyAsBytes(body, encoding: encoding);
+      contentLength = bytes.length;
+      streamCtlr.add(bytes);
+    } else if (body is List<int>) {
+      List<int> bytes = body as List<int>;
+      contentLength = bytes.length;
+      streamCtlr.add(bytes);
+    } else {
+      contentLength = 0;
     }
     streamCtlr.close();
   }
@@ -142,6 +160,7 @@ class HttpRequestMemory extends Stream<List<int>> implements HttpRequest {
 
   var streamCtlr = StreamController<List<int>>();
 
+  /*
   // TODO: implement certificate
   @override
   X509Certificate get certificate => throw 'not implemented yet';
@@ -164,36 +183,39 @@ class HttpRequestMemory extends Stream<List<int>> implements HttpRequest {
   // TODO: implement protocolVersion
   @override
   String get protocolVersion => throw 'not implemented yet';
-
+  */
   // TODO: implement requestedUri
   @override
   Uri get requestedUri => throw 'not implemented yet';
 
-  // TODO: implement response
+  HttpResponseMemory _response;
   @override
-  final HttpResponseMemory response = HttpResponseMemory();
+  HttpResponseMemory get response =>
+      _response ??= HttpResponseMemory(Request(method, uri));
 
+  /*
   // TODO: implement session
   @override
   HttpSession get session => throw 'not implemented yet';
-
-  // TODO: implement uri
-  @override
-  Uri get uri => throw 'not implemented yet';
+  */
 
   Future close() => throw 'not implemented yet';
 }
 
 class HttpResponseMemory extends StreamSink<List<int>> implements HttpResponse {
+  final Request _request;
   var streamCtlr = StreamController<List<int>>();
   var responseCompleter = Completer<ResponseMemory>();
+
+  HttpResponseMemory(this._request);
   Future<ResponseMemory> get responseMemory => responseCompleter.future;
+  /*
   @override
   bool bufferOutput;
-
+  */
   @override
   int contentLength;
-
+/*
   @override
   Duration deadline;
 
@@ -205,7 +227,7 @@ class HttpResponseMemory extends StreamSink<List<int>> implements HttpResponse {
 
   @override
   String reasonPhrase;
-
+  */
   @override
   int statusCode;
 
@@ -234,9 +256,11 @@ class HttpResponseMemory extends StreamSink<List<int>> implements HttpResponse {
     for (var list in bytesLists) {
       data.addAll(list);
     }
-    responseCompleter.complete(ResponseMemory(this, Uint8List.fromList(data)));
+    responseCompleter
+        .complete(ResponseMemory(_request, this, Uint8List.fromList(data)));
   }
 
+  /*
   // TODO: implement connectionInfo
   @override
   HttpConnectionInfo get connectionInfo => throw 'not implemented yet';
@@ -250,15 +274,17 @@ class HttpResponseMemory extends StreamSink<List<int>> implements HttpResponse {
       throw 'not implemented yet';
 
   // TODO: implement done
+  */
   @override
   Future get done => streamCtlr.done;
 
   @override
   Future flush() => throw 'not implemented yet';
-
+  /*
   @override
   Future redirect(Uri location, {int status = HttpStatus.movedTemporarily}) =>
       throw 'not implemented yet';
+      */
 
   @override
   void write(Object obj) {
@@ -269,6 +295,7 @@ class HttpResponseMemory extends StreamSink<List<int>> implements HttpResponse {
     }
   }
 
+  /*
   @override
   void writeAll(Iterable objects, [String separator = ""]) =>
       throw 'not implemented yet';
@@ -278,11 +305,13 @@ class HttpResponseMemory extends StreamSink<List<int>> implements HttpResponse {
 
   @override
   void writeln([Object obj = ""]) => throw 'not implemented yet';
+  */
 }
 
 class ResponseMemory implements Response {
+  final Request _request;
   final HttpResponseMemory httpResponseMemory;
-  ResponseMemory(this.httpResponseMemory, this.bodyBytes) {
+  ResponseMemory(this._request, this.httpResponseMemory, this.bodyBytes) {
     httpResponseMemory.headers.forEach((name, values) {
       if (values.length > 1) {
         headers[name] = values.join();
@@ -292,17 +321,16 @@ class ResponseMemory implements Response {
     });
   }
 
-  // TODO: implement body
   @override
   String get body => utf8.decode(bodyBytes);
 
   @override
   final Uint8List bodyBytes;
 
-  // TODO: implement contentLength
   @override
   int get contentLength => bodyBytes.length;
 
+  @override
   final Map<String, String> headers = {};
 
   // TODO: implement isRedirect
@@ -317,47 +345,49 @@ class ResponseMemory implements Response {
   @override
   String get reasonPhrase => throw 'not implemented yet';
 
-  // TODO: implement request
-  @override
-  BaseRequest get request => throw 'not implemented yet';
-
   // TODO: implement statusCode
   @override
   int get statusCode => httpResponseMemory.statusCode;
+
+  @override
+  BaseRequest get request => _request;
 }
 
 abstract class HttpClientMixin implements Client {
-  Future<Response> httpCall(url, String method,
+  Future<Response> httpCall(String method, url,
+      {Map<String, String> headers, body, Encoding encoding});
+
+  Future<StreamedResponse> httpSend(String method, url,
       {Map<String, String> headers, body, Encoding encoding});
 
   @override
   Future<Response> delete(url, {Map<String, String> headers}) =>
-      httpCall(url, httpMethodDelete, headers: headers);
+      httpCall(httpMethodDelete, url, headers: headers);
 
   @override
   Future<Response> get(url, {Map<String, String> headers}) =>
-      httpCall(url, httpMethodGet, headers: headers);
+      httpCall(httpMethodGet, url, headers: headers);
 
   @override
   Future<Response> head(url, {Map<String, String> headers}) =>
-      httpCall(url, httpMethodHead, headers: headers);
+      httpCall(httpMethodHead, url, headers: headers);
 
   @override
   Future<Response> patch(url,
           {Map<String, String> headers, body, Encoding encoding}) =>
-      httpCall(url, httpMethodPatch,
+      httpCall(httpMethodPatch, url,
           headers: headers, body: body, encoding: encoding);
 
   @override
   Future<Response> post(url,
           {Map<String, String> headers, body, Encoding encoding}) =>
-      httpCall(url, httpMethodPost,
+      httpCall(httpMethodPost, url,
           headers: headers, body: body, encoding: encoding);
 
   @override
   Future<Response> put(url,
           {Map<String, String> headers, body, Encoding encoding}) =>
-      httpCall(url, httpMethodPut,
+      httpCall(httpMethodPut, url,
           headers: headers, body: body, encoding: encoding);
 
   @override
@@ -371,6 +401,12 @@ abstract class HttpClientMixin implements Client {
     var response = await get(url, headers: headers);
     return response.bodyBytes;
   }
+
+  @override
+  Future<StreamedResponse> send(BaseRequest request) {
+    return httpSend(request.method, request.url,
+        headers: request.headers, body: (request as Request).body);
+  }
 }
 
 class HttpClientMemory extends Object with HttpClientMixin implements Client {
@@ -379,19 +415,10 @@ class HttpClientMemory extends Object with HttpClientMixin implements Client {
     // TODO: implement close
   }
 
-  int getUrlPort(url) {
-    Uri uri;
-    if (url is Uri) {
-      uri = url;
-    } else {
-      uri = Uri.parse(url.toString());
-    }
-    return uri.port ?? 80;
-  }
-
-  Future<ResponseMemory> httpCall(url, String method,
+  @override
+  Future<ResponseMemory> httpCall(String method, url,
       {Map<String, String> headers, body, Encoding encoding}) async {
-    var request = HttpRequestMemory(getUrlPort(url), method,
+    var request = HttpRequestMemory(method, parseUri(url),
         headers: headers, body: body, encoding: encoding);
     var server = httpDataMemory.servers[request.port];
     if (server == null) {
@@ -407,8 +434,16 @@ class HttpClientMemory extends Object with HttpClientMixin implements Client {
   }
 
   @override
-  Future<StreamedResponse> send(BaseRequest request) {
-    throw 'not supported yet';
+  Future<StreamedResponse> httpSend(String method, url,
+      {Map<String, String> headers, body, Encoding encoding}) async {
+    var response = await httpCall(method, url,
+        headers: headers, body: body, encoding: encoding);
+    return StreamedResponse(() async* {
+      yield response.bodyBytes;
+    }(), response.statusCode,
+        contentLength: response.contentLength,
+        headers: response.headers,
+        request: response.request);
   }
 }
 

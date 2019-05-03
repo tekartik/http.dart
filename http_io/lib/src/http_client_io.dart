@@ -8,7 +8,7 @@ class HttpClientFactoryIo implements HttpClientFactory {
   }
 }
 
-HttpClientFactoryIo _HttpClientFactoryIo;
+HttpClientFactoryIo _httpClientFactoryIo;
 
 HttpClientFactoryIo get httpClientFactoryIo =>
-    _HttpClientFactoryIo ??= HttpClientFactoryIo();
+    _httpClientFactoryIo ??= HttpClientFactoryIo();

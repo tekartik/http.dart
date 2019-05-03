@@ -12,20 +12,14 @@ before_install:
 jobs:
   include:
     - stage: test
-      script: ./tool/travis.sh
+      script: dart ./tool/travis.dart
       dart: dev
     - stage: test
-      script: ./tool/travis.sh
+      script: dart ./tool/travis.dart
       dart: stable
 
 stages:
   - test
-
-# Only building master means that we don't run two builds for each pull request.
-branches:
-  only:
-    - master
-    - dart2
 
 cache:
   directories:

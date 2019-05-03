@@ -1,8 +1,9 @@
-export 'http_server.dart';
-export 'http_client.dart';
-export 'src/http.dart';
 import 'package:tekartik_http/http.dart';
-import 'src/http_memory.dart' as _;
-export 'src/http_client_memory.dart' show HttpClientMixin;
+import 'package:tekartik_http/src/http_memory.dart' as memory;
 
-HttpFactory get httpFactoryMemory => _.httpFactoryMemory;
+export 'package:tekartik_http/src/http_client_memory.dart' show HttpClientMixin;
+
+export 'http_client.dart';
+export 'http_server.dart';
+
+HttpFactory get httpFactoryMemory => memory.httpFactoryMemory;

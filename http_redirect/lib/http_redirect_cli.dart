@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:args/args.dart';
@@ -13,7 +14,7 @@ const String logArgName = 'log';
 const String portArgName = 'port';
 const String redirectBaseUrlArgName = 'host';
 
-main(List<String> arguments) async {
+Future main(List<String> arguments) async {
   var parser = ArgParser(allowTrailingOptions: true);
   parser.addFlag(helpArgName, abbr: 'h', help: 'Usage help', negatable: false);
   parser.addFlag(corsArgName, abbr: 'c', help: 'Handle CORS');
@@ -56,5 +57,5 @@ main(List<String> arguments) async {
   // var proxy = new HttpRequestProxy('localhost', 8000);
   //var host = InternetAddress.ANY_IP_V6;
   options.host = InternetAddress.anyIPv4;
-  startServer(httpServerFactoryIo, options);
+  await startServer(httpServerFactoryIo, options);
 }

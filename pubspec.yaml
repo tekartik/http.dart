@@ -1,11 +1,10 @@
 name: tekartik_http_repo
 description: Http repo (tools)
-version: 0.2.0
-#homepage: https://www.example.com
-#author: alex <email@example.com>
+version: 0.3.1+1
+publish_to: none
 
 environment:
-  sdk: '>=2.0.0-dev.54 <3.0.0'
+  sdk: '>=2.1.0 <3.0.0'
 
 dev_dependencies:
   test: ">=1.2.0"
@@ -15,4 +14,24 @@ dev_dependencies:
     git:
       url: git://github.com/tekartik/build_utils.dart
       ref: dart2
-    version: '>=0.3.4'
+    version: '>=0.6.5+1'
+  # test dependencies without version
+  tekartik_http_io:
+    git:
+      url: git://github.com/tekartik/http.dart
+      ref: dart2
+      path: http_io
+  tekartik_http_browser:
+    git:
+      url: git://github.com/tekartik/http.dart
+      ref: dart2
+      path: http_browser
+  tekartik_http_node:
+    git:
+      url: git://github.com/tekartik/http.dart
+      ref: dart2
+      path: http_node
+
+dependency_overrides:
+  tekartik_http:
+    path: http
