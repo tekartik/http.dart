@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:node_io/node_io.dart' as node;
 import 'package:tekartik_http/http_server.dart';
+// ignore: implementation_imports
+import 'package:tekartik_http_io/src/http_server_io.dart' as io;
 
 class HttpServerFactoryNode implements HttpServerFactory {
   int lastDynamicPort = 33000;
@@ -14,7 +16,7 @@ class HttpServerFactoryNode implements HttpServerFactory {
       try {
         var server = await node.HttpServer.bind(address, port);
         lastDynamicPort = server.port;
-        return server;
+        return io.HttpServerIo(server);
       } catch (_) {
         port++;
         if (port > lastDynamicPort + 1000) {

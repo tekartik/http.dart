@@ -139,7 +139,8 @@ void run(HttpFactory httpFactory) {
       server = await httpServerFactory.bind('127.0.0.1', 8181);
       server.listen((request) async {
         String body = await request.map(utf8.decode).join();
-        request.response.headers.contentType = ContentType.text;
+        request.response.headers.contentType =
+            ContentType.parse(httpContentTypeText);
         request.response.headers.set('X-Foo', 'bar');
         request.response.headers.set(
             'set-cookie', ['JSESSIONID=verylongid; Path=/somepath; HttpOnly']);
@@ -184,6 +185,7 @@ void run(HttpFactory httpFactory) {
     test('make get request with library-level get method', () async {
       var client = httpClientFactory.newClient();
       var response = await client.get('http://127.0.0.1:8181/test');
+      // devPrint(response.headers);
       expect(response.statusCode, 200);
       expect(response.contentLength, greaterThan(0));
       expect(response.body, equals('ok'));
