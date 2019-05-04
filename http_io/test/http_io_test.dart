@@ -5,14 +5,15 @@
 library tekartik_http_io.http_io_test;
 
 import 'dart:convert';
-import 'dart:io';
+import 'dart:io' as io;
 
 import 'package:tekartik_http_io/http_io.dart';
+import 'package:tekartik_http/http_server.dart';
 import 'package:tekartik_http_test/http_test.dart';
 import 'package:test/test.dart';
 //import 'dart:io';
 
-bool get runningOnTravis => Platform.environment['TRAVIS'] == "true";
+bool get runningOnTravis => io.Platform.environment['TRAVIS'] == "true";
 
 void main() {
   run(httpFactoryIo);
@@ -24,4 +25,10 @@ void main() {
     var map = jsonDecode(content);
     expect(map['current_user_url'], 'https://api.github.com/user');
   }, skip: runningOnTravis);
+
+  test('server', () async {
+    var server = await httpFactoryIo.server.bind(InternetAddress.anyIPv4, 0);
+    expect(server.port, isNot(0));
+    await server.close();
+  });
 }

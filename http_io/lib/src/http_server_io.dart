@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io' as io;
 
+import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/http_server.dart';
 
 class HttpHeadersIo implements HttpHeaders {
@@ -74,6 +75,11 @@ class HttpResponseIo extends Sink<List<int>> implements HttpResponse {
 
   @override
   void write(Object obj) => ioHttpResponse.write(obj);
+
+  @override
+  Future redirect(Uri location, {int status = httpStatusMovedTemporarily}) =>
+      ioHttpResponse.redirect(location,
+          status: status ?? httpStatusMovedTemporarily);
 }
 
 class HttpRequestIo extends Stream<List<int>> implements HttpRequest {
@@ -135,6 +141,13 @@ class HttpServerIo extends Stream<HttpRequest> implements HttpServer {
 class IoHttpServerFactory implements HttpServerFactory {
   @override
   Future<HttpServer> bind(address, int port) async {
+    if (address is InternetAddress) {
+      if (address == InternetAddress.anyIPv4) {
+        address = io.InternetAddress.anyIPv4;
+      } else {
+        throw 'address $address not supported';
+      }
+    }
     var ioHttpServer = await io.HttpServer.bind(address, port);
     if (ioHttpServer != null) {
       return HttpServerIo(ioHttpServer);

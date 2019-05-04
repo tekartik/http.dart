@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:tekartik_http/http.dart';
 
+class _InternetAddress implements InternetAddress {}
+
 /// An internet address.
 ///
 /// This object holds an internet address. If this internet address
@@ -23,10 +25,11 @@ abstract class InternetAddress {
   static InternetAddress get loopbackIPv6 => LOOPBACK_IP_V6;
   @Deprecated("Use loopbackIPv6 instead")
   external static InternetAddress get LOOPBACK_IP_V6;
-
+  */
   /// IP version 4 any address. Use this address when listening on
   /// all adapters IP addresses using IP version 4 (IPv4).
-  static InternetAddress get anyIPv4 => ANY_IP_V4;
+  static final anyIPv4 = _InternetAddress();
+  /*
   @Deprecated("Use anyIPv4 instead")
   external static InternetAddress get ANY_IP_V4;
 
@@ -318,7 +321,7 @@ abstract class HttpResponse implements StreamSink<List<int>> {
   /*
   /// Cookies to set in the client (in the 'set-cookie' header).
   List<Cookie> get cookies;
-
+  */
   /// Respond with a redirect to [location].
   ///
   /// The URI in [location] should be absolute, but there are no checks
@@ -330,7 +333,8 @@ abstract class HttpResponse implements StreamSink<List<int>> {
   ///
   /// This method will also call `close`, and the returned future is
   /// the future returned by `close`.
-  Future redirect(Uri location, {int status = HttpStatus.movedTemporarily});
+  Future redirect(Uri location, {int status = httpStatusMovedTemporarily});
+  /*
 
   /// Detaches the underlying socket from the HTTP server. When the
   /// socket is detached the HTTP server will no longer perform any
