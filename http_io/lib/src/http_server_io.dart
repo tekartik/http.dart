@@ -138,16 +138,22 @@ class HttpServerIo extends Stream<HttpRequest> implements HttpServer {
   int get port => ioHttpServer.port;
 }
 
+/// Convert to a native internet address case by case...
+dynamic unwrapInternetAddress(dynamic address) {
+  if (address is InternetAddress) {
+    if (address == InternetAddress.anyIPv4) {
+      address = io.InternetAddress.anyIPv4;
+    } else {
+      throw 'address $address not supported';
+    }
+  }
+  return address;
+}
+
 class IoHttpServerFactory implements HttpServerFactory {
   @override
   Future<HttpServer> bind(address, int port) async {
-    if (address is InternetAddress) {
-      if (address == InternetAddress.anyIPv4) {
-        address = io.InternetAddress.anyIPv4;
-      } else {
-        throw 'address $address not supported';
-      }
-    }
+    address = unwrapInternetAddress(address);
     var ioHttpServer = await io.HttpServer.bind(address, port);
     if (ioHttpServer != null) {
       return HttpServerIo(ioHttpServer);
