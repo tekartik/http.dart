@@ -131,6 +131,22 @@ void run(HttpFactory httpFactory) {
     },
   );
 
+  group('server_request_headers', () {
+    test('headers', () async {
+      var server = await httpServerFactory.bind(InternetAddress.anyIPv4, 0);
+      server.listen((request) async {
+        expect(request.headers.value('x-test'), 'test_value');
+        request.response.statusCode = 200;
+        await request.response.close();
+      });
+      var client = httpClientFactory.newClient();
+      var response = await client.get('http://127.0.0.1:${server.port}',
+          headers: <String, String>{'x-test': 'test_value'});
+      expect(response.statusCode, 200);
+      client.close();
+      await server.close();
+    });
+  });
   group('client_server', () {
     HttpServer server;
     Client client;

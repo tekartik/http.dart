@@ -31,4 +31,16 @@ void main() {
     expect(server.port, isNot(0));
     await server.close();
   });
+
+  test('redirect', () async {
+    var server = await httpFactoryIo.server.bind(InternetAddress.anyIPv4, 0);
+    server.listen((request) async {
+      await request.response.redirect(Uri.parse('https://www.google.com'));
+    });
+    var client = httpFactoryIo.client.newClient();
+    var response = await client.get('http://127.0.0.1:${server.port}');
+    // print(response.body);
+    expect(response.statusCode, 200);
+    client.close();
+  });
 }

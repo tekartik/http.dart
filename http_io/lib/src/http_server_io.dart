@@ -91,7 +91,7 @@ class HttpRequestIo extends Stream<List<int>> implements HttpRequest {
   int get contentLength => ioHttpRequest.contentLength;
 
   @override
-  HttpHeaders get headers => null;
+  HttpHeaders get headers => HttpHeadersIo(ioHttpRequest.headers);
 
   @override
   StreamSubscription<List<int>> listen(void Function(List<int> event) onData,
