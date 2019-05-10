@@ -2,7 +2,26 @@ import 'dart:async';
 
 import 'package:tekartik_http/http.dart';
 
-class _InternetAddress implements InternetAddress {}
+class _InternetAddressType implements InternetAddressType {}
+
+class _InternetAddress implements InternetAddress {
+  @override
+  final InternetAddressType type;
+
+  @override
+  final String address;
+
+  _InternetAddress(this.type, this.address);
+}
+
+/// [InternetAddressType] is the type an [InternetAddress]. Currently,
+/// IP version 4 (IPv4) and IP version 6 (IPv6) are supported.
+class InternetAddressType {
+  // ignore: non_constant_identifier_names
+  static final InternetAddressType IPv4 = _InternetAddressType();
+  // ignore: non_constant_identifier_names
+  static final InternetAddressType IPv6 = _InternetAddressType();
+}
 
 /// An internet address.
 ///
@@ -28,7 +47,7 @@ abstract class InternetAddress {
   */
   /// IP version 4 any address. Use this address when listening on
   /// all adapters IP addresses using IP version 4 (IPv4).
-  static final anyIPv4 = _InternetAddress();
+  static final anyIPv4 = _InternetAddress(InternetAddressType.IPv4, null);
   /*
   @Deprecated("Use anyIPv4 instead")
   external static InternetAddress get ANY_IP_V4;
@@ -38,7 +57,7 @@ abstract class InternetAddress {
   static InternetAddress get anyIPv6 => ANY_IP_V6;
   @Deprecated("Use anyIPv6 instead")
   external static InternetAddress get ANY_IP_V6;
-
+  */
   /// The [type] of the [InternetAddress] specified what IP protocol.
   InternetAddressType get type;
 
@@ -47,6 +66,7 @@ abstract class InternetAddress {
   /// hexadecimal representation.
   String get address;
 
+  /*
   /// The host used to lookup the address. If there is no host
   /// associated with the address this returns the numeric address.
   String get host;
@@ -621,12 +641,12 @@ abstract class HttpServer implements Stream<HttpRequest> {
   /// specified in the [bind] or [bindSecure] call.
   int get port;
 
-  /*
   /// Returns the address that the server is listening on. This can be
   /// used to get the actual address used, when the address is fetched by
   /// a lookup from a hostname.
   InternetAddress get address;
 
+  /*
   /// Sets the timeout, in seconds, for sessions of this [HttpServer].
   /// The default timeout is 20 minutes.
   set sessionTimeout(int timeout);

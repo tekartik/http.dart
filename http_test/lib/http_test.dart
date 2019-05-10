@@ -34,6 +34,15 @@ void run(HttpFactory httpFactory) {
     });
   });
 
+  group('server', () {
+    test('address', () async {
+      var server = await httpServerFactory.bind(InternetAddress.anyIPv4, 0);
+      expect(server.address, isNotNull);
+      expect(server.port, isNotNull);
+      expect(server.port, isNot(0));
+      await server.close();
+    });
+  });
   group(
     'http_client_response',
     () {

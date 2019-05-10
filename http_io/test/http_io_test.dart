@@ -26,9 +26,11 @@ void main() {
     expect(map['current_user_url'], 'https://api.github.com/user');
   }, skip: runningOnTravis);
 
-  test('server', () async {
+  test('server_any_ipv4', () async {
     var server = await httpFactoryIo.server.bind(InternetAddress.anyIPv4, 0);
     expect(server.port, isNot(0));
+    expect(server.address.type, InternetAddressType.IPv4);
+    expect(server.address.address, '0.0.0.0');
     await server.close();
   });
 

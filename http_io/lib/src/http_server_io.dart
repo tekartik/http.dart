@@ -4,6 +4,37 @@ import 'dart:io' as io;
 import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/http_server.dart';
 
+class InternetAddressIo implements InternetAddress {
+  final io.InternetAddress ioAddress;
+
+  InternetAddressIo(this.ioAddress);
+
+  @override
+  String toString() => ioAddress.toString();
+
+  @override
+  String get address => ioAddress.address;
+
+  @override
+  InternetAddressType get type => wrapInternetAddressType(ioAddress.type);
+}
+
+InternetAddressType wrapInternetAddressType(
+    io.InternetAddressType ioAddressType) {
+  if (ioAddressType == io.InternetAddressType.IPv4) {
+    return InternetAddressType.IPv4;
+  } else if (ioAddressType == io.InternetAddressType.IPv6) {
+    return InternetAddressType.IPv6;
+  }
+  return ioAddressType != null ? InternetAddressTypeIo(ioAddressType) : null;
+}
+
+class InternetAddressTypeIo implements InternetAddressType {
+  final io.InternetAddressType ioType;
+
+  InternetAddressTypeIo(this.ioType);
+}
+
 class HttpHeadersIo implements HttpHeaders {
   final io.HttpHeaders ioHttpHeaders;
   @override
@@ -136,6 +167,14 @@ class HttpServerIo extends Stream<HttpRequest> implements HttpServer {
 
   @override
   int get port => ioHttpServer.port;
+
+  @override
+  InternetAddress get address => wrapInternetAddress(ioHttpServer.address);
+}
+
+/// Convert to common address
+InternetAddress wrapInternetAddress(io.InternetAddress address) {
+  return address != null ? InternetAddressIo(address) : null;
 }
 
 /// Convert to a native internet address case by case...
