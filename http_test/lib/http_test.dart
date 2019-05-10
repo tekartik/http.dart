@@ -220,4 +220,46 @@ void run(HttpFactory httpFactory) {
       client.close();
     });
   });
+
+  group('response_io_sink', () {
+    test('writeln', () async {
+      var server = await httpServerFactory.bind(localhost, 0);
+      server.listen((request) {
+        request.response
+          ..writeln('test')
+          ..close();
+      });
+      var client = httpClientFactory.newClient();
+      expect(await client.read('http://$localhost:${server.port}'), 'test\n');
+      client.close();
+      await server.close();
+    });
+
+    test('writeAll', () async {
+      var server = await httpServerFactory.bind(localhost, 0);
+      server.listen((request) {
+        request.response
+          ..writeAll(['test', true, 1], ',')
+          ..close();
+      });
+      var client = httpClientFactory.newClient();
+      expect(
+          await client.read('http://$localhost:${server.port}'), 'test,true,1');
+      client.close();
+      await server.close();
+    });
+
+    test('writeCharCode', () async {
+      var server = await httpServerFactory.bind(localhost, 0);
+      server.listen((request) {
+        request.response
+          ..writeCharCode('é'.codeUnitAt(0))
+          ..close();
+      });
+      var client = httpClientFactory.newClient();
+      expect(await client.read('http://$localhost:${server.port}'), 'é');
+      client.close();
+      await server.close();
+    });
+  });
 }

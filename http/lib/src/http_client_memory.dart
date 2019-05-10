@@ -294,6 +294,21 @@ class HttpResponseMemory extends StreamSink<List<int>> implements HttpResponse {
     }
   }
 
+  @override
+  void writeAll(Iterable objects, [String separator = ""]) {
+    write(objects.join(separator));
+  }
+
+  @override
+  void writeCharCode(int charCode) {
+    write(String.fromCharCode(charCode));
+  }
+
+  @override
+  void writeln([Object obj = ""]) {
+    write('$obj\n');
+  }
+
   /*
   @override
   void writeAll(Iterable objects, [String separator = ""]) =>

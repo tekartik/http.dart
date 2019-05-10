@@ -111,6 +111,21 @@ class HttpResponseIo extends Sink<List<int>> implements HttpResponse {
   Future redirect(Uri location, {int status = httpStatusMovedTemporarily}) =>
       ioHttpResponse.redirect(location,
           status: status ?? httpStatusMovedTemporarily);
+
+  @override
+  void writeAll(Iterable objects, [String separator = ""]) {
+    ioHttpResponse.writeAll(objects, separator);
+  }
+
+  @override
+  void writeCharCode(int charCode) {
+    ioHttpResponse.writeCharCode(charCode);
+  }
+
+  @override
+  void writeln([Object obj = ""]) {
+    ioHttpResponse.writeln(obj);
+  }
 }
 
 class HttpRequestIo extends Stream<List<int>> implements HttpRequest {
