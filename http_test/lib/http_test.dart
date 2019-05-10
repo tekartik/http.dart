@@ -34,6 +34,15 @@ void run(HttpFactory httpFactory) {
     });
   });
 
+  group('server', () {
+    test('address', () async {
+      var server = await httpServerFactory.bind(InternetAddress.anyIPv4, 0);
+      expect(server.address, isNotNull);
+      expect(server.port, isNotNull);
+      expect(server.port, isNot(0));
+      await server.close();
+    });
+  });
   group(
     'http_client_response',
     () {
@@ -131,6 +140,22 @@ void run(HttpFactory httpFactory) {
     },
   );
 
+  group('server_request_headers', () {
+    test('headers', () async {
+      var server = await httpServerFactory.bind(InternetAddress.anyIPv4, 0);
+      server.listen((request) async {
+        expect(request.headers.value('x-test'), 'test_value');
+        request.response.statusCode = 200;
+        await request.response.close();
+      });
+      var client = httpClientFactory.newClient();
+      var response = await client.get('http://127.0.0.1:${server.port}',
+          headers: <String, String>{'x-test': 'test_value'});
+      expect(response.statusCode, 200);
+      client.close();
+      await server.close();
+    });
+  });
   group('client_server', () {
     HttpServer server;
     Client client;
@@ -194,5 +219,48 @@ void run(HttpFactory httpFactory) {
           'JSESSIONID=verylongid; Path=/somepath; HttpOnly');
       client.close();
     });
+  });
+
+  group('response_io_sink', () {
+    test('writeln', () async {
+      var server = await httpServerFactory.bind(localhost, 0);
+      server.listen((request) {
+        request.response
+          ..writeln('test')
+          ..close();
+      });
+      var client = httpClientFactory.newClient();
+      expect(await client.read('http://$localhost:${server.port}'), 'test\n');
+      client.close();
+      await server.close();
+    });
+
+    test('writeAll', () async {
+      var server = await httpServerFactory.bind(localhost, 0);
+      server.listen((request) {
+        request.response
+          ..writeAll(['test', true, 1], ',')
+          ..close();
+      });
+      var client = httpClientFactory.newClient();
+      expect(
+          await client.read('http://$localhost:${server.port}'), 'test,true,1');
+      client.close();
+      await server.close();
+    });
+
+    // This fails on node
+    test('writeCharCode', () async {
+      var server = await httpServerFactory.bind(localhost, 0);
+      server.listen((request) {
+        request.response
+          ..writeCharCode('é'.codeUnitAt(0))
+          ..close();
+      });
+      var client = httpClientFactory.newClient();
+      expect(await client.read('http://$localhost:${server.port}'), 'é');
+      client.close();
+      await server.close();
+    }, skip: true);
   });
 }

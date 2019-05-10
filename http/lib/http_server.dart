@@ -11,7 +11,9 @@ export 'package:tekartik_http/src/http_server.dart'
         HttpRequest,
         HttpResponse,
         InternetAddress,
+        InternetAddressType,
         HttpHeaders,
         ContentType;
 
+@deprecated
 HttpServerFactory get httpServerFactoryMemory => memory.httpServerFactoryMemory;

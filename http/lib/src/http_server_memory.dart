@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/src/http_client_memory.dart';
 import 'package:tekartik_http/src/http_server.dart';
@@ -25,11 +26,12 @@ class HttpServerMemory extends Stream<HttpRequest> implements HttpServer {
 
   @override
   String serverHeader;
+  */
 
   @override
-  InternetAddress address;
-  */
-  HttpServerMemory(this.port);
+  final InternetAddress address;
+
+  HttpServerMemory(this.address, this.port);
 
   var requestCtlr = StreamController<HttpRequest>();
 
@@ -40,7 +42,9 @@ class HttpServerMemory extends Stream<HttpRequest> implements HttpServer {
   @override
   Future close({bool force = false}) async {
     httpDataMemory.servers.remove(port);
-    await requestCtlr.close();
+    // This hangs if the server was not listened to
+    // https://github.com/dart-lang/sdk/issues/19095
+    unawaited(requestCtlr.close());
   }
 
 /*
@@ -90,7 +94,11 @@ class HttpServerFactoryMemory extends HttpServerFactory {
     if (httpDataMemory.servers[port] != null) {
       throw Exception('port $port is busy');
     }
-    var server = HttpServerMemory(port);
+    InternetAddress internetAddress;
+    if (address is InternetAddress) {
+      internetAddress = address;
+    }
+    var server = HttpServerMemory(internetAddress, port);
     httpDataMemory.servers[port] = server;
     return server;
   }

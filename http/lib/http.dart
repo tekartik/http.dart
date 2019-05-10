@@ -8,6 +8,9 @@ export 'http_server.dart';
 
 const String localhost = 'localhost';
 
+/// Use to dynamically assign a port
+const int portDynamic = 0;
+
 abstract class HttpFactory {
   HttpClientFactory get client;
 

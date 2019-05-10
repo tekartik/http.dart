@@ -1,7 +1,39 @@
 import 'dart:async';
 import 'dart:io' as io;
 
+import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/http_server.dart';
+
+class InternetAddressIo implements InternetAddress {
+  final io.InternetAddress ioAddress;
+
+  InternetAddressIo(this.ioAddress);
+
+  @override
+  String toString() => ioAddress.toString();
+
+  @override
+  String get address => ioAddress.address;
+
+  @override
+  InternetAddressType get type => wrapInternetAddressType(ioAddress.type);
+}
+
+InternetAddressType wrapInternetAddressType(
+    io.InternetAddressType ioAddressType) {
+  if (ioAddressType == io.InternetAddressType.IPv4) {
+    return InternetAddressType.IPv4;
+  } else if (ioAddressType == io.InternetAddressType.IPv6) {
+    return InternetAddressType.IPv6;
+  }
+  return ioAddressType != null ? InternetAddressTypeIo(ioAddressType) : null;
+}
+
+class InternetAddressTypeIo implements InternetAddressType {
+  final io.InternetAddressType ioType;
+
+  InternetAddressTypeIo(this.ioType);
+}
 
 class HttpHeadersIo implements HttpHeaders {
   final io.HttpHeaders ioHttpHeaders;
@@ -74,6 +106,26 @@ class HttpResponseIo extends Sink<List<int>> implements HttpResponse {
 
   @override
   void write(Object obj) => ioHttpResponse.write(obj);
+
+  @override
+  Future redirect(Uri location, {int status = httpStatusMovedTemporarily}) =>
+      ioHttpResponse.redirect(location,
+          status: status ?? httpStatusMovedTemporarily);
+
+  @override
+  void writeAll(Iterable objects, [String separator = ""]) {
+    ioHttpResponse.writeAll(objects, separator);
+  }
+
+  @override
+  void writeCharCode(int charCode) {
+    ioHttpResponse.writeCharCode(charCode);
+  }
+
+  @override
+  void writeln([Object obj = ""]) {
+    ioHttpResponse.writeln(obj);
+  }
 }
 
 class HttpRequestIo extends Stream<List<int>> implements HttpRequest {
@@ -85,7 +137,7 @@ class HttpRequestIo extends Stream<List<int>> implements HttpRequest {
   int get contentLength => ioHttpRequest.contentLength;
 
   @override
-  HttpHeaders get headers => null;
+  HttpHeaders get headers => HttpHeadersIo(ioHttpRequest.headers);
 
   @override
   StreamSubscription<List<int>> listen(void Function(List<int> event) onData,
@@ -130,11 +182,32 @@ class HttpServerIo extends Stream<HttpRequest> implements HttpServer {
 
   @override
   int get port => ioHttpServer.port;
+
+  @override
+  InternetAddress get address => wrapInternetAddress(ioHttpServer.address);
+}
+
+/// Convert to common address
+InternetAddress wrapInternetAddress(io.InternetAddress address) {
+  return address != null ? InternetAddressIo(address) : null;
+}
+
+/// Convert to a native internet address case by case...
+dynamic unwrapInternetAddress(dynamic address) {
+  if (address is InternetAddress) {
+    if (address == InternetAddress.anyIPv4) {
+      address = io.InternetAddress.anyIPv4;
+    } else {
+      throw 'address $address not supported';
+    }
+  }
+  return address;
 }
 
 class IoHttpServerFactory implements HttpServerFactory {
   @override
   Future<HttpServer> bind(address, int port) async {
+    address = unwrapInternetAddress(address);
     var ioHttpServer = await io.HttpServer.bind(address, port);
     if (ioHttpServer != null) {
       return HttpServerIo(ioHttpServer);
