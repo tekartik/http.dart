@@ -116,7 +116,7 @@ class HttpHeadersMemory implements HttpHeaders {
   }
 }
 
-class HttpRequestMemory extends Stream<List<int>> implements HttpRequest {
+class HttpRequestMemory extends Stream<Uint8List> implements HttpRequest {
   @override
   final Uri uri;
   final int port;
@@ -135,10 +135,14 @@ class HttpRequestMemory extends Stream<List<int>> implements HttpRequest {
       var bytes = getBodyAsBytes(body, encoding: encoding);
       contentLength = bytes.length;
       streamCtlr.add(bytes);
+    } else if (body is Uint8List) {
+      Uint8List bytes = body as Uint8List;
+      contentLength = bytes.length;
+      streamCtlr.add(bytes);
     } else if (body is List<int>) {
       List<int> bytes = body as List<int>;
       contentLength = bytes.length;
-      streamCtlr.add(bytes);
+      streamCtlr.add(Uint8List.fromList(bytes));
     } else {
       contentLength = 0;
     }
@@ -146,7 +150,7 @@ class HttpRequestMemory extends Stream<List<int>> implements HttpRequest {
   }
 
   @override
-  StreamSubscription<List<int>> listen(void Function(List<int> event) onData,
+  StreamSubscription<Uint8List> listen(void Function(Uint8List event) onData,
       {Function onError, void Function() onDone, bool cancelOnError}) {
     return streamCtlr.stream.listen(onData,
         onError: onError, onDone: onDone, cancelOnError: cancelOnError);
@@ -158,7 +162,7 @@ class HttpRequestMemory extends Stream<List<int>> implements HttpRequest {
   @override
   final String method;
 
-  var streamCtlr = StreamController<List<int>>();
+  var streamCtlr = StreamController<Uint8List>();
 
   /*
   // TODO: implement certificate

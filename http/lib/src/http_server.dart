@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:tekartik_http/http.dart';
 
@@ -163,7 +164,7 @@ abstract class InternetAddress {
 ///       res.write('Received request ${req.method}: ${req.uri.path}');
 ///       res.close();
 ///     }
-abstract class HttpRequest implements Stream<List<int>> {
+abstract class HttpRequest implements Stream<Uint8List> {
   /// The content length of the request body.
   ///
   /// If the size of the request body is not known in advance,

@@ -2,6 +2,7 @@
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:http/http.dart';
 import 'package:tekartik_common_utils/common_utils_import.dart';
@@ -262,5 +263,22 @@ void run(HttpFactory httpFactory) {
       client.close();
       await server.close();
     }, skip: true);
+  });
+
+  test('response_stream', () async {
+    var server = await httpServerFactory.bind(localhost, 0);
+    server.listen((request) {
+      request.response
+        ..write('abc')
+        ..close();
+    });
+      var client = httpClientFactory.newClient();
+      var url = 'http://$localhost:${server.port}';
+      Uint8List bytes = await client.readBytes(url);
+      expect(bytes, const TypeMatcher<Uint8List>());
+
+      client.close();
+      await server.close();
+
   });
 }
