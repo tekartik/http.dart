@@ -2,6 +2,7 @@
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:http/http.dart';
 import 'package:tekartik_common_utils/common_utils_import.dart';
@@ -160,16 +161,22 @@ void run(HttpFactory httpFactory) {
     HttpServer server;
     Client client;
 
+    var host = '127.0.0.1';
+    String url;
     setUpAll(() async {
-      server = await httpServerFactory.bind('127.0.0.1', 8181);
+      server = await httpServerFactory.bind(host, 0);
+      url = 'http://$host:${server.port}';
+
+
       server.listen((request) async {
-        String body = await request.map(utf8.decode).join();
+        String body = await utf8.decoder.bind(request).join();
         request.response.headers.contentType =
             ContentType.parse(httpContentTypeText);
         request.response.headers.set('X-Foo', 'bar');
         request.response.headers.set(
             'set-cookie', ['JSESSIONID=verylongid; Path=/somepath; HttpOnly']);
         request.response.statusCode = 200;
+        // devPrint('body ${body} ${body.length}');
         if (body != null && body.isNotEmpty) {
           request.response.write(body);
         } else {
@@ -187,7 +194,7 @@ void run(HttpFactory httpFactory) {
 
     test('make get request', () async {
       var client = httpClientFactory.newClient();
-      var response = await client.get('http://127.0.0.1:8181/test');
+      var response = await client.get(url);
       expect(response.statusCode, 200);
       expect(response.contentLength, greaterThan(0));
       expect(response.body, equals('ok'));
@@ -200,7 +207,7 @@ void run(HttpFactory httpFactory) {
     test('make post request with a body', () async {
       var client = httpClientFactory.newClient();
       var response =
-          await client.post('http://127.0.0.1:8181/test', body: 'hello');
+          await client.post(url, body: 'hello');
       expect(response.statusCode, 200);
       expect(response.contentLength, greaterThan(0));
       expect(response.body, equals('hello'));
@@ -209,7 +216,7 @@ void run(HttpFactory httpFactory) {
 
     test('make get request with library-level get method', () async {
       var client = httpClientFactory.newClient();
-      var response = await client.get('http://127.0.0.1:8181/test');
+      var response = await client.get(url);
       // devPrint(response.headers);
       expect(response.statusCode, 200);
       expect(response.contentLength, greaterThan(0));
@@ -262,5 +269,22 @@ void run(HttpFactory httpFactory) {
       client.close();
       await server.close();
     }, skip: true);
+  });
+
+  test('response_stream', () async {
+    var server = await httpServerFactory.bind(localhost, 0);
+    server.listen((request) {
+      request.response
+        ..write('abc')
+        ..close();
+    });
+      var client = httpClientFactory.newClient();
+      var url = 'http://$localhost:${server.port}';
+      Uint8List bytes = await client.readBytes(url);
+      expect(bytes, const TypeMatcher<Uint8List>());
+
+      client.close();
+      await server.close();
+
   });
 }

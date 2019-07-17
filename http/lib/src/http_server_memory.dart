@@ -1,16 +1,21 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/src/http_client_memory.dart';
 import 'package:tekartik_http/src/http_server.dart';
+import 'package:tekartik_http/src/compat.dart';
 
-List<int> getBodyAsBytes(body, {Encoding encoding}) {
+Uint8List getBodyAsBytes(body, {Encoding encoding}) {
+  List<int> bytes;
   if (body is String) {
-    return utf8.encode(body);
+    bytes = utf8.encode(body);
+  } else {
+    bytes = body as List<int>;
   }
-  return body as List<int>;
+  return asUint8List(bytes);
 }
 
 class HttpServerMemory extends Stream<HttpRequest> implements HttpServer {

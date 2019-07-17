@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:io' as io;
+import 'dart:typed_data';
 
 import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/http_server.dart';
+import 'package:tekartik_http/src/compat.dart'; // ignore: implementation_imports
 
 class InternetAddressIo implements InternetAddress {
   final io.InternetAddress ioAddress;
@@ -37,6 +39,7 @@ class InternetAddressTypeIo implements InternetAddressType {
 
 class HttpHeadersIo implements HttpHeaders {
   final io.HttpHeaders ioHttpHeaders;
+
   @override
   ContentType get contentType =>
       ContentType.parse(ioHttpHeaders.contentType.toString());
@@ -78,6 +81,7 @@ class HttpResponseIo extends Sink<List<int>> implements HttpResponse {
 
   @override
   int get statusCode => ioHttpResponse.statusCode;
+
   @override
   set statusCode(int statusCode) => ioHttpResponse.statusCode = statusCode;
 
@@ -128,7 +132,7 @@ class HttpResponseIo extends Sink<List<int>> implements HttpResponse {
   }
 }
 
-class HttpRequestIo extends Stream<List<int>> implements HttpRequest {
+class HttpRequestIo extends Stream<Uint8List> implements HttpRequest {
   final io.HttpRequest ioHttpRequest;
 
   HttpRequestIo(this.ioHttpRequest);
@@ -140,9 +144,9 @@ class HttpRequestIo extends Stream<List<int>> implements HttpRequest {
   HttpHeaders get headers => HttpHeadersIo(ioHttpRequest.headers);
 
   @override
-  StreamSubscription<List<int>> listen(void Function(List<int> event) onData,
+  StreamSubscription<Uint8List> listen(void Function(Uint8List event) onData,
       {Function onError, void Function() onDone, bool cancelOnError}) {
-    return ioHttpRequest.listen(onData,
+    return intListStreamToUint8ListStream(ioHttpRequest).listen(onData,
         onError: onError, onDone: onDone, cancelOnError: cancelOnError);
   }
 
@@ -163,6 +167,7 @@ class HttpServerIo extends Stream<HttpRequest> implements HttpServer {
   final io.HttpServer ioHttpServer;
 
   HttpServerIo(this.ioHttpServer);
+
   @override
   Future close({bool force = false}) => ioHttpServer.close(force: force);
 
@@ -217,5 +222,6 @@ class IoHttpServerFactory implements HttpServerFactory {
 }
 
 IoHttpServerFactory _ioHttpServerFactory;
+
 IoHttpServerFactory get httpServerFactoryIo =>
     _ioHttpServerFactory ??= IoHttpServerFactory();

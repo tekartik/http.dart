@@ -1,6 +1,6 @@
 name: tekartik_http_node
 description: Http node
-version: 0.4.0+2
+version: 0.5.0+1
 publish_to: none
 
 environment:
@@ -12,16 +12,16 @@ dependencies:
       url: git://github.com/tekartik/http.dart
       path: http
       ref: dart2
-    version: '>=0.4.0+1'
+    version: '>=0.5.0'
   tekartik_http_io:
     git:
       url: git://github.com/tekartik/http.dart
       path: http_io
       ref: dart2
-    version: '>=0.4.0+1'
-  node_interop: ">=1.0.0-dev.6"
-  node_io: '>=1.0.0-dev.3'
-  node_http: '>=1.0.0-dev.4'
+    version: '>=0.5.0'
+  node_interop: ">=1.0.3"
+  node_io: '>=1.0.1+2'
+  node_http: '>=1.0.0'
 
 dev_dependencies:
   test: ">=1.5.2"
