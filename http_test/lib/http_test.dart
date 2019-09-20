@@ -167,7 +167,6 @@ void run(HttpFactory httpFactory) {
       server = await httpServerFactory.bind(host, 0);
       url = 'http://$host:${server.port}';
 
-
       server.listen((request) async {
         String body = await utf8.decoder.bind(request).join();
         request.response.headers.contentType =
@@ -206,8 +205,7 @@ void run(HttpFactory httpFactory) {
 
     test('make post request with a body', () async {
       var client = httpClientFactory.newClient();
-      var response =
-          await client.post(url, body: 'hello');
+      var response = await client.post(url, body: 'hello');
       expect(response.statusCode, 200);
       expect(response.contentLength, greaterThan(0));
       expect(response.body, equals('hello'));
@@ -278,13 +276,12 @@ void run(HttpFactory httpFactory) {
         ..write('abc')
         ..close();
     });
-      var client = httpClientFactory.newClient();
-      var url = 'http://$localhost:${server.port}';
-      Uint8List bytes = await client.readBytes(url);
-      expect(bytes, const TypeMatcher<Uint8List>());
+    var client = httpClientFactory.newClient();
+    var url = 'http://$localhost:${server.port}';
+    Uint8List bytes = await client.readBytes(url);
+    expect(bytes, const TypeMatcher<Uint8List>());
 
-      client.close();
-      await server.close();
-
+    client.close();
+    await server.close();
   });
 }
