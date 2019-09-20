@@ -21,7 +21,7 @@ pub run test -p vm,chrome
   var dartVersion = parsePlatformVersion(Platform.version);
   if (dartVersion >= Version(2, 2, 0, pre: 'dev')) {
     await shell.run('''
-    pub run build_runner test -- -p chrome
+    pub run build_runner test -- -p chrome test/multiplatform test/web
   ''');
   }
 }
