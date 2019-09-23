@@ -3,7 +3,17 @@ import 'dart:typed_data';
 
 import 'package:tekartik_http/http.dart';
 
-class _InternetAddressType implements InternetAddressType {}
+class _InternetAddressType implements InternetAddressType {
+  @override
+  String toString() {
+    if (this == InternetAddressType.IPv4) {
+      return 'IPv4';
+    } else if (this == InternetAddressType.IPv6) {
+      return 'IPv6';
+    }
+    return super.toString();
+  }
+}
 
 class _InternetAddress implements InternetAddress {
   @override
@@ -13,6 +23,16 @@ class _InternetAddress implements InternetAddress {
   final String address;
 
   _InternetAddress(this.type, this.address);
+
+  @override
+  String toString() {
+    if (this == InternetAddress.anyIPv4) {
+      return 'anyIPv4/0.0.0.0';
+      //} else if (this == InternetAddress.anyIPv6) {
+      //  return 'anyIPv6';
+    }
+    return '$address $type';
+  }
 }
 
 /// [InternetAddressType] is the type an [InternetAddress]. Currently,
