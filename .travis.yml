@@ -24,3 +24,7 @@ stages:
 cache:
   directories:
     - $HOME/.pub-cache
+
+matrix:
+  allow_failures:
+    - dart: dev

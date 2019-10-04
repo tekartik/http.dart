@@ -3,9 +3,9 @@ import 'dart:typed_data';
 
 import 'package:tekartik_common_utils/common_utils_import.dart';
 
-// 2.5 compatibility change
-//
-// TODO 2019/07/08 This could be removed once the stable API returns Uint8List everywhere
+/// 2.5 compatibility change.
+///
+/// TODO 2019/07/08 This could be removed once the stable API returns Uint8List everywhere
 Uint8List asUint8List(List<int> bytes) {
   if (bytes is Uint8List) {
     return bytes;
@@ -13,9 +13,9 @@ Uint8List asUint8List(List<int> bytes) {
   return Uint8List.fromList(bytes);
 }
 
-// 2.5 compatibility change
-//
-// TODO 2019/07/08 This could be removed once the stable API returns Uint8List everywhere
+/// 2.5 compatibility change.
+///
+/// TODO 2019/07/08 This could be removed once the stable API returns Uint8List everywhere
 Stream<Uint8List> intListStreamToUint8ListStream(Stream stream) {
   if (stream is Stream<Uint8List>) {
     return stream.cast<Uint8List>();

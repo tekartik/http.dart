@@ -8,36 +8,50 @@ import 'package:meta/meta.dart';
 import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/http_client.dart' as http_client;
 
+/// Http client factory.
 abstract class HttpClientFactory {
+  /// Create a new http client.
   http.Client newClient();
 }
 
+/// Http client response.
 class HttpClientResponse {
+  /// True if succesful.
   bool get isSuccessful => statusCode < 400;
 
   final Response _response;
+
+  /// Http response.
   Response get response => _response;
 
+  /// Http status code.
   int get statusCode => _response.statusCode;
 
   String _body;
 
+  /// Body as a string.
   String get body => _body ??= _response.body;
 
+  /// Body bytes.
   Uint8List get bodyBytes => _response.bodyBytes;
 
+  /// Create a client response from an http response.
   HttpClientResponse(this._response);
 
+  /// Response headers.
   Map<String, String> get headers => _response.headers;
 
+  /// Response reason phrase.
   String reasonPhrase;
 }
 
+/// Http client exception.
 class HttpClientException extends http.ClientException
     implements http_client.HttpClientException {
   @override
   final HttpClientResponse response;
 
+  /// Creates an exception with a message and a response.
   HttpClientException({String message, @required this.response})
       : super(message, parseUri(response.response.request.url));
 
