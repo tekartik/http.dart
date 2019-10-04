@@ -3,7 +3,17 @@ import 'dart:typed_data';
 
 import 'package:tekartik_http/http.dart';
 
-class _InternetAddressType implements InternetAddressType {}
+class _InternetAddressType implements InternetAddressType {
+  @override
+  String toString() {
+    if (this == InternetAddressType.IPv4) {
+      return 'IPv4';
+    } else if (this == InternetAddressType.IPv6) {
+      return 'IPv6';
+    }
+    return super.toString();
+  }
+}
 
 class _InternetAddress implements InternetAddress {
   @override
@@ -13,13 +23,26 @@ class _InternetAddress implements InternetAddress {
   final String address;
 
   _InternetAddress(this.type, this.address);
+
+  @override
+  String toString() {
+    if (this == InternetAddress.anyIPv4) {
+      return 'anyIPv4/0.0.0.0';
+      //} else if (this == InternetAddress.anyIPv6) {
+      //  return 'anyIPv6';
+    }
+    return '$address $type';
+  }
 }
 
 /// [InternetAddressType] is the type an [InternetAddress]. Currently,
 /// IP version 4 (IPv4) and IP version 6 (IPv6) are supported.
 class InternetAddressType {
+  /// IPv4 address type.
   // ignore: non_constant_identifier_names
   static final InternetAddressType IPv4 = _InternetAddressType();
+
+  /// IPv6 address type.
   // ignore: non_constant_identifier_names
   static final InternetAddressType IPv6 = _InternetAddressType();
 }
@@ -980,10 +1003,10 @@ abstract class HttpHeaders {
   /// values will still be added to the collection of values for the
   /// header.
   void removeAll(String name);
+  */
   /// Enumerates the headers, applying the function [f] to each
   /// header. The header name passed in [:name:] will be all lower
   /// case.
-  */
   void forEach(void f(String name, List<String> values));
   /*
 
@@ -1075,18 +1098,22 @@ abstract class ContentType
   */
 }
 
+/// Content type implementation.
 class ContentTypeImpl implements ContentType {
   final String _value;
 
+  /// Wrap a content type on a string value.
   ContentTypeImpl(this._value);
 
   @override
   String toString() => _value;
 }
 
+/// Http server factory.
 abstract class HttpServerFactory {
+  /// Creates a http server on given address and port
   /// Use 0 to automatically assign a port
-  Future<HttpServer> bind(address, int port);
+  Future<HttpServer> bind(dynamic address, int port);
 }
 
 /// Node does not support root uri. / appendend on puropose

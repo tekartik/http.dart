@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:path/path.dart' as _path;
+import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_common_utils/log_utils.dart';
 import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/http_server.dart';
@@ -18,25 +19,25 @@ const String redirectUrlHeader = 'x-tekartik-redirect-url';
 
 final http.Client _client = http.Client();
 
-///
-
 /// Proxy the HTTP request to the specified server.
-Future proxyHttpRequest(
-    Options options, HttpRequest request, String baseUrl) async {
-  var path = request.uri.path;
-  if (path.startsWith("/")) {
-    path = path.substring(1);
-  }
+Future proxyHttpRequest(Options options, HttpRequest request, String baseUrl,
+    {Uri uri}) async {
+  if (uri == null) {
+    var path = request.uri.path;
+    if (path.startsWith("/")) {
+      path = path.substring(1);
+    }
 
-  print("baseUrl: ${baseUrl}, path: ${path}, headers: ${request.headers}");
-  String url;
-  if (path == "" || path == "." || path == "/") {
-    url = baseUrl;
-  } else {
-    url = _path.url.join(baseUrl, path);
-    print("baseUrl: ${baseUrl}, path: ${path}, url ${url}");
+    print("baseUrl: ${baseUrl}, path: ${path}, headers: ${request.headers}");
+    String url;
+    if (path == "" || path == "." || path == "/") {
+      url = baseUrl;
+    } else {
+      url = _path.url.join(baseUrl, path);
+      print("baseUrl: ${baseUrl}, path: ${path}, url ${url}");
+    }
+    uri = Uri.parse(url);
   }
-  var uri = Uri.parse(url);
   print("calling ${request.method} $uri");
 
   var headers = <String, String>{};
@@ -59,6 +60,10 @@ Future proxyHttpRequest(
       if (name == redirectBaseUrlHeader) {
         return;
       }
+      // don't forward redirect url
+      if (name == redirectUrlHeader) {
+        return;
+      }
       if (options.containsHeader(name)) {
         _set();
       }
@@ -77,6 +82,11 @@ Future proxyHttpRequest(
   for (var list in await request.toList()) {
     bytes.addAll(list);
   }
+
+  if ((!options.forwardHeaders) || false) {
+    headers = null;
+  }
+
   var innerResponse = await httpClientSend(_client, request.method, uri,
       body: bytes, headers: headers);
   var innerBody = innerResponse.bodyBytes;
@@ -111,7 +121,7 @@ Future proxyHttpRequest(
   // r.contentLength = rs.contentLength == null ? -1 : rs.contentLength;
   // r.headers.contentType = ContentType.parse(innerResponse.headers[httpHeaderContentType]); //.contentType;
   print("fwd response headers: ${r.headers}");
-  r.headers.set(redirectUrlHeader, url);
+  r.headers.set(redirectUrlHeader, uri.toString());
 
   await r.addStream(Stream.fromIterable([innerBody]));
   await r.flush();
@@ -121,6 +131,7 @@ Future proxyHttpRequest(
 
 class Options {
   bool handleCors;
+  bool forwardHeaders;
   int port;
   var host;
 
@@ -136,6 +147,7 @@ class Options {
   set corsHeaders(List<String> corsHeaders) {
     _corsHeaders = List.from(corsHeaders);
     _corsHeaders.add(redirectBaseUrlHeader);
+    _corsHeaders.add(redirectUrlHeader);
     _lowerCaseCorsHeaders = <String>[];
     _corsHeaders.forEach((name) {
       _lowerCaseCorsHeaders.add(name.toLowerCase());
@@ -148,7 +160,12 @@ class Options {
   List<String> _lowerCaseCorsHeaders;
   String _corsHeadersText;
 
-  String get corsHeadersText => _corsHeadersText ??= corsHeaders.join(",");
+  String get corsHeadersText => _corsHeadersText ??= () {
+        if (_corsHeaders == null) {
+          corsHeaders = corsDefaultHeaders;
+        }
+        return corsHeaders.join(",");
+      }();
 }
 
 ///
@@ -156,9 +173,11 @@ class Options {
 ///
 Future<HttpServer> startServer(
     HttpServerFactory factory, Options options) async {
-  HttpServer server = await factory.bind(options.host, options.port);
-  print("listing on ${options.host} port ${options.port}");
-  print("from http://localhost:${options.port}");
+  var host = options.host ?? InternetAddress.anyIPv4;
+  var port = options.port ?? 8180;
+  HttpServer server = await factory.bind(host, port);
+  print("listing on $host port $port");
+  print("from http://localhost:$port");
   if (options.baseUrl != null) {
     print("default redirection to ${options.baseUrl}");
   }
@@ -197,16 +216,20 @@ Future<HttpServer> startServer(
       }
     }
 
-    if (baseUrl == null) {
+    String fullUrl = request.headers.value(redirectUrlHeader);
+
+    if (baseUrl == null && fullUrl == null) {
       print("no host port");
       request.response
         ..statusCode = 405
-        ..write("missing ${redirectBaseUrlHeader} header");
+        ..write(
+            "missing ${redirectBaseUrlHeader} header or ${redirectUrlHeader}");
       await request.response.flush();
       await request.response.close();
     } else {
       try {
-        await proxyHttpRequest(options, request, baseUrl);
+        await proxyHttpRequest(options, request, baseUrl,
+            uri: fullUrl != null ? Uri.parse(fullUrl) : null);
       } catch (e) {
         print("proxyHttpRequest error ${e}");
         try {
