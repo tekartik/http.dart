@@ -253,6 +253,8 @@ class HttpResponseMemory extends StreamSink<List<int>> implements HttpResponse {
 
   @override
   Future close() async {
+    // Default status code
+    statusCode ??= httpStatusCodeOk;
     var futureBytes = streamCtlr.stream.toList();
     await streamCtlr.close();
     var data = <int>[];
@@ -421,9 +423,23 @@ abstract class HttpClientMixin implements Client {
   }
 
   @override
-  Future<StreamedResponse> send(BaseRequest request) {
+  Future<StreamedResponse> send(BaseRequest request) async {
+    dynamic body;
+    var data = <int>[];
+    await request.finalize().listen((part) {
+      data.addAll(part);
+    }).asFuture();
+    body = data;
+    /*
+    if (request is Request) {
+      body = request.body;
+    } else {
+
+    }
+
+     */
     return httpSend(request.method, request.url,
-        headers: request.headers, body: (request as Request).body);
+        headers: request.headers, body: body);
   }
 }
 

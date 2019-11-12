@@ -71,6 +71,18 @@ void run(HttpFactory httpFactory) {
         expect(uri.toString().startsWith('http://localhost:'), isTrue);
       });
 
+      test('defaultStatusCode', () async {
+        var uri = httpServerGetUri(server);
+        //var response = await client.get('http://localhost:8181/?statusCode=200');
+        // devPrint(uri);
+        //var response = await client.get('${uri}/?statusCode=200');
+
+        var response = await httpClientSend(
+            client, httpMethodGet, '${uri}?statusCode=none');
+        expect(response.isSuccessful, isTrue);
+
+        expect(response.statusCode, 200);
+      });
       test(
         'success',
         () async {
