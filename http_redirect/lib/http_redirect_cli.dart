@@ -24,11 +24,11 @@ Future main(List<String> arguments) async {
   parser.addOption(logArgName,
       abbr: 'l', help: 'Log level (fine, debug, info...)');
   parser.addOption(portArgName,
-      abbr: 'p', help: "Post number", defaultsTo: "8180");
+      abbr: 'p', help: 'Post number', defaultsTo: '8180');
   parser.addOption(redirectBaseUrlArgName,
-      abbr: 'b', help: "redirect baseUrl (http[s]://host:[port]/base_path");
+      abbr: 'b', help: 'redirect baseUrl (http[s]://host:[port]/base_path');
   parser.addFlag(forwardHeaderFlagName,
-      abbr: 'w', help: "forward headers", defaultsTo: true);
+      abbr: 'w', help: 'forward headers', defaultsTo: true);
 
   var _argsResult = parser.parse(arguments);
 
@@ -38,14 +38,14 @@ Future main(List<String> arguments) async {
   options.baseUrl = _argsResult[redirectBaseUrlArgName] as String;
   options.forwardHeaders = _argsResult[forwardHeaderFlagName] as bool;
 
-  bool help = _argsResult[helpArgName] as bool;
+  final help = _argsResult[helpArgName] as bool;
   if (help) {
     print('http_proxy_exp [-p <port>] [-h <redirect_host:redirect_post>]');
     print('');
     print(parser.usage);
     return;
   }
-  String logLevelText = _argsResult[logArgName] as String;
+  final logLevelText = _argsResult[logArgName] as String;
   if (logLevelText != null) {
     logLevel = parseLogLevel(logLevelText);
     Logger.root.level = logLevel;

@@ -24,21 +24,21 @@ Future proxyHttpRequest(Options options, HttpRequest request, String baseUrl,
     {Uri uri}) async {
   if (uri == null) {
     var path = request.uri.path;
-    if (path.startsWith("/")) {
+    if (path.startsWith('/')) {
       path = path.substring(1);
     }
 
-    print("baseUrl: ${baseUrl}, path: ${path}, headers: ${request.headers}");
+    print('baseUrl: ${baseUrl}, path: ${path}, headers: ${request.headers}');
     String url;
-    if (path == "" || path == "." || path == "/") {
+    if (path == '' || path == '.' || path == '/') {
       url = baseUrl;
     } else {
       url = _path.url.join(baseUrl, path);
-      print("baseUrl: ${baseUrl}, path: ${path}, url ${url}");
+      print('baseUrl: ${baseUrl}, path: ${path}, url ${url}');
     }
     uri = Uri.parse(url);
   }
-  print("calling ${request.method} $uri");
+  print('calling ${request.method} $uri');
 
   var headers = <String, String>{};
 
@@ -76,7 +76,7 @@ Future proxyHttpRequest(Options options, HttpRequest request, String baseUrl,
       _set();
     }
   });
-  print("headers: ${headers}");
+  print('headers: ${headers}');
 
   var bytes = <int>[];
   for (var list in await request.toList()) {
@@ -102,14 +102,14 @@ Future proxyHttpRequest(Options options, HttpRequest request, String baseUrl,
 */
   // await rq.addStream(request);
   // final HttpClientResponse rs = await rq.close();
-  final HttpResponse r = request.response;
+  final r = request.response;
 
   r.statusCode = innerResponse.statusCode;
-  print("response: ${r.statusCode}");
-  print("respons headers: ${innerResponse.headers}");
+  print('response: ${r.statusCode}');
+  print('respons headers: ${innerResponse.headers}');
 
   innerHeaders.forEach((key, values) {
-    String lowercaseKey = key.toLowerCase();
+    final lowercaseKey = key.toLowerCase();
     if (lowercaseKey == 'content-length') {
       return;
     }
@@ -120,13 +120,13 @@ Future proxyHttpRequest(Options options, HttpRequest request, String baseUrl,
   });
   // r.contentLength = rs.contentLength == null ? -1 : rs.contentLength;
   // r.headers.contentType = ContentType.parse(innerResponse.headers[httpHeaderContentType]); //.contentType;
-  print("fwd response headers: ${r.headers}");
+  print('fwd response headers: ${r.headers}');
   r.headers.set(redirectUrlHeader, uri.toString());
 
   await r.addStream(Stream.fromIterable([innerBody]));
   await r.flush();
   await r.close();
-  print("done");
+  print('done');
 }
 
 class Options {
@@ -164,7 +164,7 @@ class Options {
         if (_corsHeaders == null) {
           corsHeaders = corsDefaultHeaders;
         }
-        return corsHeaders.join(",");
+        return corsHeaders.join(',');
       }();
 }
 
@@ -175,55 +175,51 @@ Future<HttpServer> startServer(
     HttpServerFactory factory, Options options) async {
   var host = options.host ?? InternetAddress.anyIPv4;
   var port = options.port ?? 8180;
-  HttpServer server = await factory.bind(host, port);
-  print("listing on $host port $port");
-  print("from http://localhost:$port");
+  final server = await factory.bind(host, port);
+  print('listing on $host port $port');
+  print('from http://localhost:$port');
   if (options.baseUrl != null) {
-    print("default redirection to ${options.baseUrl}");
+    print('default redirection to ${options.baseUrl}');
   }
   server.listen((request) async {
-    print("uri: ${request?.uri} ${request.method}");
+    print('uri: ${request?.uri} ${request.method}');
     if (options.handleCors) {
-      //request.response.headers.set(HttpHeaders.CONTENT_TYPE, "text/plain; charset=UTF-8");
+      //request.response.headers.set(HttpHeaders.CONTENT_TYPE, 'text/plain; charset=UTF-8');
       request.response.headers.add(
-          "Access-Control-Allow-Methods", "POST, OPTIONS, GET, PATCH, DELETE");
-      request.response.headers.add("Access-Control-Allow-Origin", "*");
+          'Access-Control-Allow-Methods', 'POST, OPTIONS, GET, PATCH, DELETE');
+      request.response.headers.add('Access-Control-Allow-Origin', '*');
       request.response.headers.add(
           'Access-Control-Allow-Headers',
-          // "Origin,Content-Type,Authorization,Accept,connection,content-length,host,user-agent");
+          // 'Origin,Content-Type,Authorization,Accept,connection,content-length,host,user-agent');
           options.corsHeadersText);
 
       if (request.method == 'OPTIONS') {
         request.response
           ..statusCode = 200
-          ..write("");
+          ..write('');
         await request.response.close();
         return;
       }
     }
     /*
     var overridenRedirectHostPort =
-        parseHostPort(request.headers.value("_tekartik_redirect_host"));
+        parseHostPort(request.headers.value('_tekartik_redirect_host'));
     var redirectHostPort = overridenRedirectHostPort ?? hostPort;
     */
     // compat
-    String baseUrl = request.headers.value(redirectBaseUrlHeader);
-    if (baseUrl == null) {
-      // compat
-      baseUrl = request.headers.value("_tekartik_redirect_host");
-      if (baseUrl == null) {
-        baseUrl = options.baseUrl;
-      }
-    }
+    var baseUrl = request.headers.value(redirectBaseUrlHeader) ??
+        // compat
+        request.headers.value('_tekartik_redirect_host') ??
+        options.baseUrl;
 
-    String fullUrl = request.headers.value(redirectUrlHeader);
+    var fullUrl = request.headers.value(redirectUrlHeader);
 
     if (baseUrl == null && fullUrl == null) {
-      print("no host port");
+      print('no host port');
       request.response
         ..statusCode = 405
         ..write(
-            "missing ${redirectBaseUrlHeader} header or ${redirectUrlHeader}");
+            'missing ${redirectBaseUrlHeader} header or ${redirectUrlHeader}');
       await request.response.flush();
       await request.response.close();
     } else {
@@ -231,11 +227,11 @@ Future<HttpServer> startServer(
         await proxyHttpRequest(options, request, baseUrl,
             uri: fullUrl != null ? Uri.parse(fullUrl) : null);
       } catch (e) {
-        print("proxyHttpRequest error ${e}");
+        print('proxyHttpRequest error ${e}');
         try {
           request.response
             ..statusCode = 405
-            ..write("caught error $e");
+            ..write('caught error $e');
           await request.response.flush();
           await request.response.close();
         } catch (_) {}
@@ -246,12 +242,12 @@ Future<HttpServer> startServer(
 }
 
 var corsDefaultHeaders = [
-  "Origin",
-  "Content-Type",
-  "Authorization",
-  "Accept",
-  "Connection",
-  "Content-length",
-  "Host",
-  "User-Agent"
+  'Origin',
+  'Content-Type',
+  'Authorization',
+  'Accept',
+  'Connection',
+  'Content-length',
+  'Host',
+  'User-Agent'
 ];

@@ -13,7 +13,7 @@ import 'package:tekartik_http_test/http_test.dart';
 import 'package:test/test.dart';
 //import 'dart:io';
 
-bool get runningOnTravis => io.Platform.environment['TRAVIS'] == "true";
+bool get runningOnTravis => io.Platform.environment['TRAVIS'] == 'true';
 
 void main() {
   run(httpFactoryIo);

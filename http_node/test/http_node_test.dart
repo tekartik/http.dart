@@ -8,7 +8,7 @@ import 'package:tekartik_http_node/http_node.dart';
 import 'package:tekartik_http_test/http_test.dart';
 import 'package:test/test.dart';
 
-bool get runningOnTravis => Platform.environment['TRAVIS'] == "true";
+bool get runningOnTravis => Platform.environment['TRAVIS'] == 'true';
 
 void main() {
   run(httpFactoryNode);

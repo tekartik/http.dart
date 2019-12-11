@@ -13,10 +13,13 @@ jobs:
   include:
     - stage: test
       script: dart ./tool/travis.dart
-      dart: dev
+      dart: min
     - stage: test
       script: dart ./tool/travis.dart
       dart: stable
+    - stage: test
+      script: dart ./tool/travis.dart
+      dart: dev
 
 stages:
   - test
