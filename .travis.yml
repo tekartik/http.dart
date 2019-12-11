@@ -11,18 +11,20 @@ before_install:
 
 jobs:
   include:
-    - stage: test
+    - stage: min
       script: dart ./tool/travis.dart
-      dart: min
-    - stage: test
+      dart: 2.5.0
+    - stage: stable
       script: dart ./tool/travis.dart
       dart: stable
-    - stage: test
+    - stage: dev
       script: dart ./tool/travis.dart
       dart: dev
 
 stages:
-  - test
+  - stable
+  - min
+  - dev
 
 cache:
   directories:
