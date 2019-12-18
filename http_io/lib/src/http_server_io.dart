@@ -118,7 +118,7 @@ class HttpResponseIo extends Sink<List<int>> implements HttpResponse {
           status: status ?? httpStatusMovedTemporarily);
 
   @override
-  void writeAll(Iterable objects, [String separator = ""]) {
+  void writeAll(Iterable objects, [String separator = '']) {
     ioHttpResponse.writeAll(objects, separator);
   }
 
@@ -128,7 +128,7 @@ class HttpResponseIo extends Sink<List<int>> implements HttpResponse {
   }
 
   @override
-  void writeln([Object obj = ""]) {
+  void writeln([Object obj = '']) {
     ioHttpResponse.writeln(obj);
   }
 }

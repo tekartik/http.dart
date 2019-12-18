@@ -17,8 +17,8 @@ void main() {
 }
 
 void run(HttpFactory httpFactory) {
-  final HttpClientFactory httpClientFactory = httpFactory.client;
-  final HttpServerFactory httpServerFactory = httpFactory.server;
+  final httpClientFactory = httpFactory.client;
+  final httpServerFactory = httpFactory.server;
   group('demo', () {
     test('localhost', () async {
       var server = await httpServerFactory.bind(localhost, 0);
@@ -71,6 +71,18 @@ void run(HttpFactory httpFactory) {
         expect(uri.toString().startsWith('http://localhost:'), isTrue);
       });
 
+      test('defaultStatusCode', () async {
+        var uri = httpServerGetUri(server);
+        //var response = await client.get('http://localhost:8181/?statusCode=200');
+        // devPrint(uri);
+        //var response = await client.get('${uri}/?statusCode=200');
+
+        var response = await httpClientSend(
+            client, httpMethodGet, '${uri}?statusCode=none');
+        expect(response.isSuccessful, isTrue);
+
+        expect(response.statusCode, 200);
+      });
       test(
         'success',
         () async {
@@ -168,7 +180,7 @@ void run(HttpFactory httpFactory) {
       url = 'http://$host:${server.port}';
 
       server.listen((request) async {
-        String body = await utf8.decoder.bind(request).join();
+        final body = await utf8.decoder.bind(request).join();
         request.response.headers.contentType =
             ContentType.parse(httpContentTypeText);
         request.response.headers.set('X-Foo', 'bar');
@@ -278,7 +290,7 @@ void run(HttpFactory httpFactory) {
     });
     var client = httpClientFactory.newClient();
     var url = 'http://$localhost:${server.port}';
-    Uint8List bytes = await client.readBytes(url);
+    final bytes = await client.readBytes(url);
     expect(bytes, const TypeMatcher<Uint8List>());
 
     client.close();
