@@ -1,4 +1,7 @@
 import 'package:process_run/shell.dart';
+import 'package:path/path.dart';
+
+var topDir = '..';
 
 Future main() async {
   var shell = Shell();
@@ -11,7 +14,7 @@ Future main() async {
     'http_test',
     'http_redirect',
   ]) {
-    shell = shell.pushd(dir);
+    shell = shell.pushd(join(topDir, dir));
     await shell.run('''
     
     pub get
