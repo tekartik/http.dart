@@ -83,6 +83,8 @@ void run(HttpFactory httpFactory) {
         expect(response.isSuccessful, isTrue);
 
         expect(response.statusCode, 200);
+        //expect(response.toString(), startsWith('HTTP 200'));
+        expect(response.toString(), startsWith('HTTP 200'));
       });
       test(
         'success',
@@ -96,7 +98,7 @@ void run(HttpFactory httpFactory) {
               client, httpMethodGet, '${uri}?statusCode=200');
           expect(response.isSuccessful, isTrue);
 
-          expect(response.statusCode, 200);
+          expect(response.toString(), 'HTTP 200 size 0 headers 0');
         },
       );
 
