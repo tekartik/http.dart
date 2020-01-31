@@ -68,7 +68,8 @@ void run(HttpFactory httpFactory) {
 
       test('httpServerGetUri', () async {
         var uri = httpServerGetUri(server);
-        expect(uri.toString().startsWith('http://localhost:'), isTrue);
+        // expect(uri.toString().startsWith('http://_memory:'), isTrue);
+        expect(uri.toString().startsWith('http://'), isTrue);
       });
 
       test('defaultStatusCode', () async {
@@ -82,6 +83,8 @@ void run(HttpFactory httpFactory) {
         expect(response.isSuccessful, isTrue);
 
         expect(response.statusCode, 200);
+        //expect(response.toString(), startsWith('HTTP 200'));
+        expect(response.toString(), startsWith('HTTP 200'));
       });
       test(
         'success',
@@ -95,7 +98,8 @@ void run(HttpFactory httpFactory) {
               client, httpMethodGet, '${uri}?statusCode=200');
           expect(response.isSuccessful, isTrue);
 
-          expect(response.statusCode, 200);
+          expect(response.toString().startsWith('HTTP 200 size 0 headers '),
+              isTrue); // 0');
         },
       );
 
@@ -126,6 +130,16 @@ void run(HttpFactory httpFactory) {
           }
         },
       );
+
+      test('port', () async {
+        var server1 =
+            await httpServerFactory.bind(InternetAddress.any, httpPortAny);
+        var port1 = server1.port;
+        var server2 =
+            await httpServerFactory.bind(InternetAddress.any, httpPortAny);
+        var port2 = server2.port;
+        expect(port1, isNot(port2));
+      });
 
       test('httpClientRead', () async {
         var uri = httpServerGetUri(server);

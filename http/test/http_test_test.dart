@@ -4,8 +4,8 @@
 library tekartik_http.http_memory_test;
 
 import 'package:tekartik_http/http_memory.dart';
+import 'package:tekartik_http/http_test.dart';
 import 'package:tekartik_http_test/http_test.dart';
-import 'package:tekartik_http/http.dart' show httpServerGetUri;
 import 'package:test/test.dart';
 
 void main() {
@@ -14,10 +14,10 @@ void main() {
 
     group('server', () {
       test('address', () async {
-        var server =
-            await httpServerFactoryMemory.bind(InternetAddress.anyIPv4, 1);
+        var server = await httpServerFactoryMemory.bind(InternetAddress.any, 1);
         expect(server.address, InternetAddress.anyIPv4);
-        expect(httpServerGetUri(server), Uri.parse('http://_memory:1/'));
+        expect(server.uri, Uri.parse('http://_memory:1/'));
+        expect(server.port, 1);
         await server.close();
       });
     });

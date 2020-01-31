@@ -7,6 +7,7 @@ import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/src/http_client_memory.dart';
 import 'package:tekartik_http/src/http_server.dart';
 import 'package:tekartik_http/src/compat.dart';
+import 'package:tekartik_http/src/http_server_mixin.dart';
 
 Uint8List getBodyAsBytes(body, {Encoding encoding}) {
   List<int> bytes;
@@ -18,7 +19,8 @@ Uint8List getBodyAsBytes(body, {Encoding encoding}) {
   return asUint8List(bytes);
 }
 
-class HttpServerMemory extends Stream<HttpRequest> implements HttpServer {
+class HttpServerMemory extends Stream<HttpRequest>
+    implements HttpServer, HttpServerWithUri {
   @override
   final int port;
 
@@ -69,6 +71,9 @@ class HttpServerMemory extends Stream<HttpRequest> implements HttpServer {
     return requestCtlr.stream.listen(onData,
         onError: onError, onDone: onDone, cancelOnError: cancelOnError);
   }
+
+  @override
+  Uri get uri => Uri.parse('http://_memory:${port}/');
 
   /*
   @override

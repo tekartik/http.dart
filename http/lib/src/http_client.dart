@@ -43,6 +43,18 @@ class HttpClientResponse {
 
   /// Response reason phrase.
   String reasonPhrase;
+
+  @override
+  String toString() {
+    var sb = StringBuffer();
+    try {
+      sb.write(
+          'HTTP $statusCode size ${bodyBytes.length} headers ${headers.length}');
+    } catch (e) {
+      sb.write(' error: $e');
+    }
+    return sb.toString();
+  }
 }
 
 /// Http client exception.
