@@ -3,6 +3,8 @@ import 'dart:typed_data';
 
 import 'package:tekartik_http/http.dart';
 
+import 'http_server_mixin.dart';
+
 class _InternetAddressType implements InternetAddressType {
   @override
   String toString() {
@@ -56,6 +58,8 @@ class InternetAddressType {
 /// endpoint to which a socket can connect or a listening socket can
 /// bind.
 abstract class InternetAddress {
+  /// Tekartik extension;
+  static InternetAddress get any => anyIPv4;
   /*
   /// IP version 4 loopback address. Use this address when listening on
   /// or connecting to the loopback adapter using IP version 4 (IPv4).
@@ -1116,6 +1120,15 @@ abstract class HttpServerFactory {
   Future<HttpServer> bind(dynamic address, int port);
 }
 
-/// Node does not support root uri. / appendend on puropose
-Uri httpServerGetUri(HttpServer server) =>
+/// not exported
+Uri httpServerGetDefaultUri(HttpServer server) =>
     Uri.parse('http://${localhost}:${server.port}/');
+
+/// Node does not support root uri. / appendend on puropose
+Uri httpServerGetUri(HttpServer server) {
+  if (server is HttpServerWithUri) {
+    return (server as HttpServerWithUri).uri;
+  }
+
+  return httpServerGetDefaultUri(server);
+}

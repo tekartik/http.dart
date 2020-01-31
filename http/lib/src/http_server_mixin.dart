@@ -10,3 +10,9 @@ mixin HttpHeadersMixin implements HttpHeaders {
     return map.toString();
   }
 }
+
+/// Server that allows getting the uri
+abstract class HttpServerWithUri {
+  /// Get the uri to use
+  Uri get uri;
+}
