@@ -80,7 +80,7 @@ Future<HttpClientResponse> httpClientSend(
     dynamic body,
     Encoding encoding,
     bool throwOnFailure}) async {
-  Uri uri = parseUri(url);
+  var uri = parseUri(url);
 
   var request = http.Request(method, uri);
 
@@ -131,9 +131,9 @@ bool _checkResponseSuccess(HttpClientResponse response) {
   }
 
   var message =
-      "Request to ${response.response.request.url} failed with status ${response.statusCode}";
+      'Request to ${response.response.request.url} failed with status ${response.statusCode}';
   if (response.reasonPhrase != null) {
-    message = "$message: ${response.reasonPhrase}";
+    message = '$message: ${response.reasonPhrase}';
   }
   throw HttpClientException(message: message, response: response);
 }

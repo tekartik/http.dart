@@ -17,12 +17,14 @@ jobs:
       dart: 2.7.0
     - stage: stable
       dart: stable
+    - stage: beta
+        dart: beta
     - stage: dev
       dart: dev
 
 stages:
   - stable
-  - min
+  - beta
   - dev
 
 cache:
