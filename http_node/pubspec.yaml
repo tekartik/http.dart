@@ -4,7 +4,7 @@ version: 0.5.2
 publish_to: none
 
 environment:
-  sdk: '>=2.5.0 <3.0.0'
+  sdk: '>=2.8.0 <3.0.0'
 
 dependencies:
   tekartik_http:
@@ -40,6 +40,8 @@ dev_dependencies:
       path: platform_node
       ref: dart2
     version: '>=0.1.0'
+  # Temp overriding (https://github.com/pulyaevskiy/node-interop/issues/78)
+  meta: '<1.2.0'
 
 dependency_overrides:
   tekartik_http:
