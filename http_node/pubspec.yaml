@@ -22,6 +22,8 @@ dependencies:
   node_interop: ">=1.0.3"
   node_io: '>=1.0.1+2'
   node_http: '>=1.0.0'
+  # Temp overriding (https://github.com/pulyaevskiy/node-interop/issues/78)
+  meta: '<1.2.0'
 
 dev_dependencies:
   test: ">=1.5.2"
@@ -40,8 +42,6 @@ dev_dependencies:
       path: platform_node
       ref: dart2
     version: '>=0.1.0'
-  # Temp overriding (https://github.com/pulyaevskiy/node-interop/issues/78)
-  meta: '<1.2.0'
 
 dependency_overrides:
   tekartik_http:
