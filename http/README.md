@@ -1,15 +1,15 @@
-# http_io.dart
+# http.dart
 
-IO Http client and server
+Abstract Http client and server
 
 ## IO Setup
 
 ```yaml
 dependencies:
-  tekartik_http_io:
+  tekartik_http:
     git:
       url: git://github.com/tekartik/http.dart
-      path: http_io
+      path: http
       ref: dart2
-    version: '>=0.2.0+2'
+    version: '>=0.5.5'
 ```

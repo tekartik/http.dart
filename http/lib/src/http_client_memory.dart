@@ -136,11 +136,11 @@ class HttpRequestMemory extends Stream<Uint8List> implements HttpRequest {
       contentLength = bytes.length;
       streamCtlr.add(bytes);
     } else if (body is Uint8List) {
-      Uint8List bytes = body as Uint8List;
+      var bytes = body as Uint8List;
       contentLength = bytes.length;
       streamCtlr.add(bytes);
     } else if (body is List<int>) {
-      List<int> bytes = body as List<int>;
+      var bytes = body as List<int>;
       contentLength = bytes.length;
       streamCtlr.add(Uint8List.fromList(bytes));
     } else {
@@ -301,7 +301,7 @@ class HttpResponseMemory extends StreamSink<List<int>> implements HttpResponse {
   }
 
   @override
-  void writeAll(Iterable objects, [String separator = ""]) {
+  void writeAll(Iterable objects, [String separator = '']) {
     write(objects.join(separator));
   }
 
@@ -311,20 +311,20 @@ class HttpResponseMemory extends StreamSink<List<int>> implements HttpResponse {
   }
 
   @override
-  void writeln([Object obj = ""]) {
+  void writeln([Object obj = '']) {
     write('$obj\n');
   }
 
   /*
   @override
-  void writeAll(Iterable objects, [String separator = ""]) =>
+  void writeAll(Iterable objects, [String separator = '']) =>
       throw 'not implemented yet';
 
   @override
   void writeCharCode(int charCode) => throw 'not implemented yet';
 
   @override
-  void writeln([Object obj = ""]) => throw 'not implemented yet';
+  void writeln([Object obj = '']) => throw 'not implemented yet';
   */
 }
 

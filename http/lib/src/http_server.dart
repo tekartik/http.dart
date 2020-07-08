@@ -1011,7 +1011,7 @@ abstract class HttpHeaders {
   /// Enumerates the headers, applying the function [f] to each
   /// header. The header name passed in [:name:] will be all lower
   /// case.
-  void forEach(void f(String name, List<String> values));
+  void forEach(void Function(String name, List<String> values) f);
   /*
 
   /// Disables folding for the header named [name] when sending the HTTP

@@ -1,6 +1,6 @@
 name: tekartik_http
 description: Http core
-version: 0.5.4
+version: 0.5.5
 publish_to: none
 
 environment:
@@ -16,8 +16,8 @@ dependencies:
   web_socket_channel: any
 
 dev_dependencies:
-  test: ">=0.12.37"
-  dev_test: any
+  test: any
+  dev_test: '>=0.13.2-dev.3'
   build_runner: any
   process_run: '>=0.10.0+1'
 

@@ -13,22 +13,22 @@ script: ./http_support/root_travis.sh
 
 jobs:
   include:
-    - stage: min
-      dart: 2.7.0
     - stage: stable
       dart: stable
+    - stage: beta
+      dart: beta
     - stage: dev
       dart: dev
 
 stages:
   - stable
-  - min
+  - beta
   - dev
 
 cache:
   directories:
     - $HOME/.pub-cache
 
-matrix:
+jobs:
   allow_failures:
     - dart: dev
