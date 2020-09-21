@@ -1,8 +1,3 @@
-import 'package:tekartik_http/src/http_server.dart';
-import 'package:tekartik_http/src/http_server_memory.dart' as memory;
-
-// export 'dart:io' show HttpResponse, HttpRequest, HttpServer, ContentType;
-
 export 'package:tekartik_http/src/http_server.dart'
     show
         HttpServerFactory,
@@ -15,6 +10,4 @@ export 'package:tekartik_http/src/http_server.dart'
         HttpHeaders,
         ContentType;
 
-/// deprecated.
-@deprecated
-HttpServerFactory get httpServerFactoryMemory => memory.httpServerFactoryMemory;
+export 'package:tekartik_http/http_memory.dart' show httpServerFactoryMemory;
