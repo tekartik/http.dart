@@ -1,6 +1,6 @@
 name: tekartik_http_node
 description: Http node
-version: 0.5.6
+version: 0.5.7
 publish_to: none
 
 environment:
