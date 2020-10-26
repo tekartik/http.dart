@@ -1,10 +1,10 @@
 name: tekartik_http_node
 description: Http node
-version: 0.5.7
+version: 0.5.8
 publish_to: none
 
 environment:
-  sdk: '>=2.8.0 <3.0.0'
+  sdk: '>=2.10.0 <3.0.0'
 
 dependencies:
   tekartik_http:
@@ -22,8 +22,7 @@ dependencies:
   node_interop: ">=1.0.3"
   node_io: '>=1.0.1+2'
   node_http: '>=1.0.0'
-  # Temp overriding (https://github.com/pulyaevskiy/node-interop/issues/78)
-  meta: '<1.2.0'
+  meta: '>=1.2.3'
 
 dev_dependencies:
   test: ">=1.5.2"
