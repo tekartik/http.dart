@@ -1,6 +1,6 @@
 name: tekartik_http
 description: Http core
-version: 0.5.7
+version: 0.5.8
 publish_to: none
 
 environment:

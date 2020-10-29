@@ -167,6 +167,23 @@ void run(HttpFactory httpFactory) {
     },
   );
 
+  group('server_request_fragment', () {
+    test('fragment', () async {
+      var server = await httpServerFactory.bind(InternetAddress.anyIPv4, 0);
+      server.listen((request) async {
+        request.response.write(request.uri.fragment);
+        await request.response.close();
+      });
+      var client = httpClientFactory.newClient();
+      var response = await client
+          .get('${httpServerGetUri(server)}/some_path#some_fragment');
+      expect(response.body, '');
+      expect(response.statusCode, 200);
+      client.close();
+      await server.close();
+    });
+  });
+
   group('server_request_headers', () {
     test('headers', () async {
       var server = await httpServerFactory.bind(InternetAddress.anyIPv4, 0);
