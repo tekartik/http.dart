@@ -184,6 +184,24 @@ void run(HttpFactory httpFactory) {
     });
   });
 
+  group('server_request_bytes_response_bytes', () {
+    test('fragment', () async {
+      var server = await httpServerFactory.bind(localhost, 0);
+      server.listen((request) async {
+        var bytes = await httpStreamGetBytes(request);
+        request.response.add(bytes);
+        await request.response.close();
+      });
+      var client = httpClientFactory.newClient();
+      var response = await client.post('${httpServerGetUri(server)}',
+          body: Uint8List.fromList([1, 2, 3]));
+      expect(response.bodyBytes, [1, 2, 3]);
+      expect(response.statusCode, 200);
+      client.close();
+      await server.close();
+    });
+  });
+
   group('server_request_headers', () {
     test('headers', () async {
       var server = await httpServerFactory.bind(InternetAddress.anyIPv4, 0);

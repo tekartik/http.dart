@@ -68,7 +68,7 @@ class HttpHeadersIo with HttpHeadersMixin implements HttpHeaders {
       ioHttpHeaders.contentType = io.ContentType.parse(contentType.toString());
 }
 
-class HttpResponseIo extends Sink<List<int>> implements HttpResponse {
+class HttpResponseIo extends Sink<Uint8List> implements HttpResponse {
   final io.HttpResponse ioHttpResponse;
 
   HttpResponseIo(this.ioHttpResponse);
@@ -87,14 +87,14 @@ class HttpResponseIo extends Sink<List<int>> implements HttpResponse {
   set statusCode(int statusCode) => ioHttpResponse.statusCode = statusCode;
 
   @override
-  void add(List<int> data) => ioHttpResponse.add(data);
+  void add(Uint8List data) => ioHttpResponse.add(data);
 
   @override
   void addError(Object error, [StackTrace stackTrace]) =>
       ioHttpResponse.addError(error, stackTrace);
 
   @override
-  Future addStream(Stream<List<int>> stream) =>
+  Future addStream(Stream<Uint8List> stream) =>
       ioHttpResponse.addStream(stream);
 
   @override

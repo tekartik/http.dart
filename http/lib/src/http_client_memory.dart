@@ -9,6 +9,7 @@ import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/src/http.dart';
 import 'package:tekartik_http/src/http_server.dart';
 import 'package:tekartik_http/src/http_server_memory.dart';
+import 'package:tekartik_http/src/utils.dart';
 
 class HttpHeadersMemory implements HttpHeaders {
   final Map<String, List<String>> map = {};
@@ -209,9 +210,9 @@ class HttpRequestMemory extends Stream<Uint8List> implements HttpRequest {
   Future close() => throw 'not implemented yet';
 }
 
-class HttpResponseMemory extends StreamSink<List<int>> implements HttpResponse {
+class HttpResponseMemory extends StreamSink<Uint8List> implements HttpResponse {
   final Request _request;
-  var streamCtlr = StreamController<List<int>>();
+  var streamCtlr = StreamController<Uint8List>();
   var responseCompleter = Completer<ResponseMemory>();
 
   HttpResponseMemory(this._request);
@@ -245,7 +246,7 @@ class HttpResponseMemory extends StreamSink<List<int>> implements HttpResponse {
   final HttpHeaders headers = HttpHeadersMemory();
 
   @override
-  void add(List<int> data) {
+  void add(Uint8List data) {
     streamCtlr.add(data);
   }
 
@@ -255,7 +256,7 @@ class HttpResponseMemory extends StreamSink<List<int>> implements HttpResponse {
   }
 
   @override
-  Future addStream(Stream<List<int>> stream) => streamCtlr.addStream(stream);
+  Future addStream(Stream<Uint8List> stream) => streamCtlr.addStream(stream);
 
   @override
   Future close() async {
@@ -300,9 +301,10 @@ class HttpResponseMemory extends StreamSink<List<int>> implements HttpResponse {
   @override
   void write(Object obj) {
     if (obj is String) {
-      add(utf8.encode(obj));
+      add(asUint8List(utf8.encode(obj)));
     } else {
-      add(obj as List<int>);
+      // Only type supported
+      add(asUint8List(obj as List<int>));
     }
   }
 

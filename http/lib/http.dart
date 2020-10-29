@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:tekartik_http/http.dart';
 
 export 'package:tekartik_http/src/http.dart';
@@ -30,4 +32,13 @@ Uri parseUri(dynamic url) {
     uri = Uri.parse(url.toString());
   }
   return uri;
+}
+
+/// Read a stream of bytes
+Future<Uint8List> httpStreamGetBytes(Stream<Uint8List> stream) async {
+  var bytes = Uint8List(0);
+  await stream.listen((event) {
+    bytes = Uint8List.fromList([...bytes, ...event]);
+  }).asFuture();
+  return bytes;
 }
