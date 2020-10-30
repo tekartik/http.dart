@@ -202,18 +202,24 @@ void run(HttpFactory httpFactory) {
     });
   });
 
-  group('server_request_headers', () {
+  group('server_request_response_headers', () {
     test('headers', () async {
       var server = await httpServerFactory.bind(InternetAddress.anyIPv4, 0);
       server.listen((request) async {
         expect(request.headers.value('x-test'), 'test_value');
+        expect(request.headers.value('X-Test'), 'test_value');
+        request.response.headers.set('x-test', 'test_value');
         request.response.statusCode = 200;
         await request.response.close();
       });
       var client = httpClientFactory.newClient();
-      var response = await client.get('http://127.0.0.1:${server.port}',
+      var response = await httpClientSend(client, httpMethodGet,
+          httpServerGetUri(server), // 'http://127.0.0.1:${server.port}',
+          //var response = await client.get('http://127.0.0.1:${server.port}',
           headers: <String, String>{'x-test': 'test_value'});
       expect(response.statusCode, 200);
+      expect(response.headers.value('x-test'), 'test_value');
+      expect(response.headers.value('X-Test'), 'test_value');
       client.close();
       await server.close();
     });

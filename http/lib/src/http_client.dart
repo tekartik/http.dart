@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
@@ -8,21 +9,49 @@ import 'package:meta/meta.dart';
 import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/http_client.dart' as http_client;
 
+import 'http_client_memory.dart';
+
 /// Http client factory.
 abstract class HttpClientFactory {
   /// Create a new http client.
   http.Client newClient();
 }
 
+class _HttpClientResponseFromResponse extends HttpClientResponse {
+  @override
+  final Response response;
+
+  _HttpClientResponseFromResponse(this.response) : super.impl();
+}
+
+/// Read only
+class HttpHeadersFromMap extends HttpHeadersMemory {
+  HttpHeadersFromMap(Map<String, String> map) {
+    addMap(map);
+  }
+}
+
 /// Http client response.
-class HttpClientResponse {
+abstract class HttpClientResponse {
+  HttpClientResponse.impl();
+
+  /// Create a client response from an http response.
+  factory HttpClientResponse.fromResponse(Response response) {
+    return _HttpClientResponseFromResponse(response);
+  }
+
+  /// Deprecated since 2020-10-20
+  factory HttpClientResponse(Response response) {
+    return _HttpClientResponseFromResponse(response);
+  }
+
   /// True if succesful.
   bool get isSuccessful => statusCode < 400;
 
-  final Response _response;
+  Response get _response => response;
 
   /// Http response.
-  Response get response => _response;
+  Response get response;
 
   /// Http status code.
   int get statusCode => _response.statusCode;
@@ -35,11 +64,8 @@ class HttpClientResponse {
   /// Body bytes.
   Uint8List get bodyBytes => _response.bodyBytes;
 
-  /// Create a client response from an http response.
-  HttpClientResponse(this._response);
-
   /// Response headers.
-  Map<String, String> get headers => _response.headers;
+  HttpHeaders get headers => HttpHeadersFromMap(_response.headers);
 
   /// Response reason phrase.
   String reasonPhrase;
@@ -48,8 +74,7 @@ class HttpClientResponse {
   String toString() {
     var sb = StringBuffer();
     try {
-      sb.write(
-          'HTTP $statusCode size ${bodyBytes.length} headers ${headers.length}');
+      sb.write('HTTP $statusCode size ${bodyBytes.length} headers ${headers}');
     } catch (e) {
       sb.write(' error: $e');
     }

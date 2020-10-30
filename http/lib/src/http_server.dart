@@ -963,6 +963,7 @@ abstract class HttpHeaders {
   /// directly. Mutating the returned current value will have no
   /// effect.
   ContentType contentType;
+
   /*
 
   /// Gets and sets the content length header value.

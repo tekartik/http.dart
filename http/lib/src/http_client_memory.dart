@@ -43,6 +43,8 @@ class HttpHeadersMemory implements HttpHeaders {
   @override
   List<String> operator [](String name) => map[getKey(name)];
 
+  int get length => map.length;
+
   String getKey(String name) => name.toLowerCase();
 
   @override
@@ -98,6 +100,12 @@ class HttpHeadersMemory implements HttpHeaders {
     } else {
       map[key] = [value?.toString()];
     }
+  }
+
+  void addMap(Map<String, String> map) {
+    map.forEach((key, value) {
+      add(key, value);
+    });
   }
 
   @override
@@ -360,7 +368,7 @@ class ResponseMemory implements Response {
   int get contentLength => bodyBytes.length;
 
   @override
-  final Map<String, String> headers = {};
+  final headers = {};
 
   // TODO: implement isRedirect
   @override
