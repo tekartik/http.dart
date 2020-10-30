@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:meta/meta.dart';
+import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/http_client.dart' as http_client;
 
@@ -24,10 +24,43 @@ class _HttpClientResponseFromResponse extends HttpClientResponse {
   _HttpClientResponseFromResponse(this.response) : super.impl();
 }
 
+abstract class HttpMapHeaders implements Map<String, String> {
+  /// Get a single value
+  String value(String key);
+}
+
 /// Read only
-class HttpHeadersFromMap extends HttpHeadersMemory {
-  HttpHeadersFromMap(Map<String, String> map) {
-    addMap(map);
+class HttpMapHeadersFromMap
+    with MapMixin<String, String>
+    implements HttpMapHeaders {
+  final _map = HttpHeadersMemory();
+
+  HttpMapHeadersFromMap(Map<String, String> map) {
+    _map.addMap(map);
+  }
+
+  @override
+  String operator [](Object key) => _map.value(key as String);
+
+  @override
+  void operator []=(String key, String value) => _map.set(key, value);
+
+  @override
+  String value(String key) => _map.value(key);
+
+  @override
+  void clear() {
+    _map.clear();
+  }
+
+  @override
+  Iterable<String> get keys => _map.keys;
+
+  @override
+  String remove(Object key) {
+    var value = this.value(key as String);
+    _map.map.remove(key);
+    return value;
   }
 }
 
@@ -65,7 +98,7 @@ abstract class HttpClientResponse {
   Uint8List get bodyBytes => _response.bodyBytes;
 
   /// Response headers.
-  HttpHeaders get headers => HttpHeadersFromMap(_response.headers);
+  HttpMapHeaders get headers => HttpMapHeadersFromMap(_response.headers);
 
   /// Response reason phrase.
   String reasonPhrase;

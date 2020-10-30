@@ -14,6 +14,9 @@ import 'package:tekartik_http/src/utils.dart';
 class HttpHeadersMemory implements HttpHeaders {
   final Map<String, List<String>> map = {};
 
+  /// Keys
+  Iterable<String> get keys => map.keys;
+
   /*
   @override
   bool chunkedTransferEncoding;
@@ -122,6 +125,10 @@ class HttpHeadersMemory implements HttpHeaders {
       return ContentType.parse(contentTypeValue);
     }
     return null;
+  }
+
+  void clear() {
+    map.clear();
   }
 }
 

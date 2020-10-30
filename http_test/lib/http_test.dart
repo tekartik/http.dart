@@ -208,6 +208,8 @@ void run(HttpFactory httpFactory) {
       server.listen((request) async {
         expect(request.headers.value('x-test'), 'test_value');
         expect(request.headers.value('X-Test'), 'test_value');
+        expect(request.headers['x-test'], ['test_value']);
+        expect(request.headers['X-Test'], ['test_value']);
         request.response.headers.set('x-test', 'test_value');
         request.response.statusCode = 200;
         await request.response.close();
@@ -220,6 +222,8 @@ void run(HttpFactory httpFactory) {
       expect(response.statusCode, 200);
       expect(response.headers.value('x-test'), 'test_value');
       expect(response.headers.value('X-Test'), 'test_value');
+      expect(response.headers['x-test'], 'test_value');
+      expect(response.headers['X-Test'], 'test_value');
       client.close();
       await server.close();
     });
