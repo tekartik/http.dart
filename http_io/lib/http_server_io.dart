@@ -1,2 +1,2 @@
-export 'package:tekartik_http_io/src/http_server_io.dart'
+export 'package:tekartik_http_io/src/export/export.dart'
     show httpServerFactoryIo;

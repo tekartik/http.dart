@@ -167,18 +167,63 @@ void run(HttpFactory httpFactory) {
     },
   );
 
-  group('server_request_headers', () {
+  group('server_request_fragment', () {
+    test('fragment', () async {
+      var server = await httpServerFactory.bind(InternetAddress.anyIPv4, 0);
+      server.listen((request) async {
+        request.response.write(request.uri.fragment);
+        await request.response.close();
+      });
+      var client = httpClientFactory.newClient();
+      var response = await client
+          .get('${httpServerGetUri(server)}/some_path#some_fragment');
+      expect(response.body, '');
+      expect(response.statusCode, 200);
+      client.close();
+      await server.close();
+    });
+  });
+
+  group('server_request_bytes_response_bytes', () {
+    test('fragment', () async {
+      var server = await httpServerFactory.bind(localhost, 0);
+      server.listen((request) async {
+        var bytes = await httpStreamGetBytes(request);
+        request.response.add(bytes);
+        await request.response.close();
+      });
+      var client = httpClientFactory.newClient();
+      var response = await client.post('${httpServerGetUri(server)}',
+          body: Uint8List.fromList([1, 2, 3]));
+      expect(response.bodyBytes, [1, 2, 3]);
+      expect(response.statusCode, 200);
+      client.close();
+      await server.close();
+    });
+  });
+
+  group('server_request_response_headers', () {
     test('headers', () async {
       var server = await httpServerFactory.bind(InternetAddress.anyIPv4, 0);
       server.listen((request) async {
         expect(request.headers.value('x-test'), 'test_value');
+        expect(request.headers.value('X-Test'), 'test_value');
+        expect(request.headers['x-test'], ['test_value']);
+        expect(request.headers['X-Test'], ['test_value']);
+        request.response.headers.set('x-test', 'test_value');
         request.response.statusCode = 200;
         await request.response.close();
       });
       var client = httpClientFactory.newClient();
-      var response = await client.get('http://127.0.0.1:${server.port}',
+      var response = await httpClientSend(client, httpMethodGet,
+          httpServerGetUri(server), // 'http://127.0.0.1:${server.port}',
+          //var response = await client.get('http://127.0.0.1:${server.port}',
           headers: <String, String>{'x-test': 'test_value'});
       expect(response.statusCode, 200);
+      expect(response.headers.value('x-test'), 'test_value');
+      expect(response.headers.value('X-Test'), 'test_value');
+      expect(response.headers['x-test'], 'test_value');
+      expect(response.headers['X-Test'], 'test_value');
       client.close();
       await server.close();
     });

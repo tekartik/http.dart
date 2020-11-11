@@ -1,2 +1,2 @@
-export 'package:tekartik_http_node/src/http_client_node.dart'
+export 'package:tekartik_http_node/src/export/export.dart'
     show httpClientFactoryNode;

@@ -6,8 +6,8 @@ import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/src/http_client_memory.dart';
 import 'package:tekartik_http/src/http_server.dart';
-import 'package:tekartik_http/src/compat.dart';
 import 'package:tekartik_http/src/http_server_mixin.dart';
+import 'package:tekartik_http/src/utils.dart';
 
 Uint8List getBodyAsBytes(body, {Encoding encoding}) {
   List<int> bytes;
@@ -75,7 +75,7 @@ class HttpServerMemory extends Stream<HttpRequest>
   @override
   Uri get uri => Uri.parse('http://_memory:${port}/');
 
-  /*
+/*
   @override
   set sessionTimeout(int timeout) {
     // TODO: implement sessionTimeout

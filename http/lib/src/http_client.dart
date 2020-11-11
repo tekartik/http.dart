@@ -5,8 +5,11 @@ import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:meta/meta.dart';
+import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/http_client.dart' as http_client;
+
+import 'http_client_memory.dart';
 
 /// Http client factory.
 abstract class HttpClientFactory {
@@ -14,15 +17,74 @@ abstract class HttpClientFactory {
   http.Client newClient();
 }
 
+class _HttpClientResponseFromResponse extends HttpClientResponse {
+  @override
+  final Response response;
+
+  _HttpClientResponseFromResponse(this.response) : super.impl();
+}
+
+abstract class HttpMapHeaders implements Map<String, String> {
+  /// Get a single value
+  String value(String key);
+}
+
+/// Read only
+class HttpMapHeadersFromMap
+    with MapMixin<String, String>
+    implements HttpMapHeaders {
+  final _map = HttpHeadersMemory();
+
+  HttpMapHeadersFromMap(Map<String, String> map) {
+    _map.addMap(map);
+  }
+
+  @override
+  String operator [](Object key) => _map.value(key as String);
+
+  @override
+  void operator []=(String key, String value) => _map.set(key, value);
+
+  @override
+  String value(String key) => _map.value(key);
+
+  @override
+  void clear() {
+    _map.clear();
+  }
+
+  @override
+  Iterable<String> get keys => _map.keys;
+
+  @override
+  String remove(Object key) {
+    var value = this.value(key as String);
+    _map.map.remove(key);
+    return value;
+  }
+}
+
 /// Http client response.
-class HttpClientResponse {
+abstract class HttpClientResponse {
+  HttpClientResponse.impl();
+
+  /// Create a client response from an http response.
+  factory HttpClientResponse.fromResponse(Response response) {
+    return _HttpClientResponseFromResponse(response);
+  }
+
+  /// Deprecated since 2020-10-20
+  factory HttpClientResponse(Response response) {
+    return _HttpClientResponseFromResponse(response);
+  }
+
   /// True if succesful.
   bool get isSuccessful => statusCode < 400;
 
-  final Response _response;
+  Response get _response => response;
 
   /// Http response.
-  Response get response => _response;
+  Response get response;
 
   /// Http status code.
   int get statusCode => _response.statusCode;
@@ -35,11 +97,8 @@ class HttpClientResponse {
   /// Body bytes.
   Uint8List get bodyBytes => _response.bodyBytes;
 
-  /// Create a client response from an http response.
-  HttpClientResponse(this._response);
-
   /// Response headers.
-  Map<String, String> get headers => _response.headers;
+  HttpMapHeaders get headers => HttpMapHeadersFromMap(_response.headers);
 
   /// Response reason phrase.
   String reasonPhrase;
@@ -48,8 +107,7 @@ class HttpClientResponse {
   String toString() {
     var sb = StringBuffer();
     try {
-      sb.write(
-          'HTTP $statusCode size ${bodyBytes.length} headers ${headers.length}');
+      sb.write('HTTP $statusCode size ${bodyBytes.length} headers ${headers}');
     } catch (e) {
       sb.write(' error: $e');
     }

@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'dart:convert';
 //import 'dart:io';
 
@@ -8,11 +7,15 @@ import 'dart:typed_data';
 import 'package:http/http.dart';
 import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/src/http.dart';
-import 'package:tekartik_http/src/http_server_memory.dart';
 import 'package:tekartik_http/src/http_server.dart';
+import 'package:tekartik_http/src/http_server_memory.dart';
+import 'package:tekartik_http/src/utils.dart';
 
 class HttpHeadersMemory implements HttpHeaders {
   final Map<String, List<String>> map = {};
+
+  /// Keys
+  Iterable<String> get keys => map.keys;
 
   /*
   @override
@@ -43,7 +46,10 @@ class HttpHeadersMemory implements HttpHeaders {
   @override
   List<String> operator [](String name) => map[getKey(name)];
 
+  int get length => map.length;
+
   String getKey(String name) => name.toLowerCase();
+
   @override
   void add(String name, Object value) {
     var key = getKey(name);
@@ -99,6 +105,12 @@ class HttpHeadersMemory implements HttpHeaders {
     }
   }
 
+  void addMap(Map<String, String> map) {
+    map.forEach((key, value) {
+      add(key, value);
+    });
+  }
+
   @override
   String value(String name) => map[getKey(name)]?.first?.toString();
 
@@ -114,6 +126,10 @@ class HttpHeadersMemory implements HttpHeaders {
     }
     return null;
   }
+
+  void clear() {
+    map.clear();
+  }
 }
 
 class HttpRequestMemory extends Stream<Uint8List> implements HttpRequest {
@@ -125,9 +141,11 @@ class HttpRequestMemory extends Stream<Uint8List> implements HttpRequest {
   @override
   int contentLength;
 
-  HttpRequestMemory(this.method, this.uri,
+  HttpRequestMemory(this.method, Uri uri,
       {Map<String, String> headers, this.body, this.encoding})
-      : port = parseUri(uri).port {
+      : port = parseUri(uri).port,
+        // Remove the fragment that should not reach the server
+        uri = uri.removeFragment() {
     headers?.forEach((key, value) {
       this.headers.set(key, value);
     });
@@ -193,6 +211,7 @@ class HttpRequestMemory extends Stream<Uint8List> implements HttpRequest {
   Uri get requestedUri => throw 'not implemented yet';
 
   HttpResponseMemory _response;
+
   @override
   HttpResponseMemory get response =>
       _response ??= HttpResponseMemory(Request(method, uri));
@@ -206,19 +225,22 @@ class HttpRequestMemory extends Stream<Uint8List> implements HttpRequest {
   Future close() => throw 'not implemented yet';
 }
 
-class HttpResponseMemory extends StreamSink<List<int>> implements HttpResponse {
+class HttpResponseMemory extends StreamSink<Uint8List> implements HttpResponse {
   final Request _request;
-  var streamCtlr = StreamController<List<int>>();
+  var streamCtlr = StreamController<Uint8List>();
   var responseCompleter = Completer<ResponseMemory>();
 
   HttpResponseMemory(this._request);
+
   Future<ResponseMemory> get responseMemory => responseCompleter.future;
+
   /*
   @override
   bool bufferOutput;
   */
   @override
   int contentLength;
+
 /*
   @override
   Duration deadline;
@@ -239,7 +261,7 @@ class HttpResponseMemory extends StreamSink<List<int>> implements HttpResponse {
   final HttpHeaders headers = HttpHeadersMemory();
 
   @override
-  void add(List<int> data) {
+  void add(Uint8List data) {
     streamCtlr.add(data);
   }
 
@@ -249,7 +271,7 @@ class HttpResponseMemory extends StreamSink<List<int>> implements HttpResponse {
   }
 
   @override
-  Future addStream(Stream<List<int>> stream) => streamCtlr.addStream(stream);
+  Future addStream(Stream<Uint8List> stream) => streamCtlr.addStream(stream);
 
   @override
   Future close() async {
@@ -294,9 +316,10 @@ class HttpResponseMemory extends StreamSink<List<int>> implements HttpResponse {
   @override
   void write(Object obj) {
     if (obj is String) {
-      add(utf8.encode(obj));
+      add(asUint8List(utf8.encode(obj)));
     } else {
-      add(obj as List<int>);
+      // Only type supported
+      add(asUint8List(obj as List<int>));
     }
   }
 
@@ -315,7 +338,7 @@ class HttpResponseMemory extends StreamSink<List<int>> implements HttpResponse {
     write('$obj\n');
   }
 
-  /*
+/*
   @override
   void writeAll(Iterable objects, [String separator = '']) =>
       throw 'not implemented yet';
@@ -331,6 +354,7 @@ class HttpResponseMemory extends StreamSink<List<int>> implements HttpResponse {
 class ResponseMemory implements Response {
   final Request _request;
   final HttpResponseMemory httpResponseMemory;
+
   ResponseMemory(this._request, this.httpResponseMemory, this.bodyBytes) {
     httpResponseMemory.headers.forEach((name, values) {
       if (values.length > 1) {
@@ -351,7 +375,7 @@ class ResponseMemory implements Response {
   int get contentLength => bodyBytes.length;
 
   @override
-  final Map<String, String> headers = {};
+  final headers = {};
 
   // TODO: implement isRedirect
   @override
@@ -490,5 +514,6 @@ class HttpClientFactoryMemory extends HttpClientFactory {
 }
 
 HttpClientFactoryMemory _httpClientFactoryMemory;
+
 HttpClientFactoryMemory get httpClientFactoryMemory =>
     _httpClientFactoryMemory ??= HttpClientFactoryMemory();

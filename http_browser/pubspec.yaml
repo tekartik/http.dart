@@ -1,10 +1,10 @@
 name: tekartik_http_browser
 description: Http browser
-version: 0.5.3
+version: 0.6.0
 publish_to: none
 
 environment:
-  sdk: '>=2.5.0 <3.0.0'
+  sdk: '>=2.10.0-0 <3.0.0'
 
 dependencies:
   tekartik_http:
@@ -12,7 +12,7 @@ dependencies:
       url: git://github.com/tekartik/http.dart
       path: http
       ref: dart2
-    version: '>=0.5.0'
+    version: '>=0.6.0'
 dev_dependencies:
   test: ">=1.2.0"
   dev_test: '>=0.13.2-dev.3'

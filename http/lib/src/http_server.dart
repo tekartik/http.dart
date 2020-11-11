@@ -311,7 +311,7 @@ abstract class HttpRequest implements Stream<Uint8List> {
 ///
 /// An exception is thrown if you use the `write()` method
 /// while an unsupported content-type is set.
-abstract class HttpResponse implements StreamSink<List<int>>, StringSink {
+abstract class HttpResponse implements StreamSink<Uint8List>, StringSink {
   // TODO(ajohnsen): Add documentation of how to pipe a file to the response.
   /// Gets and sets the content length of the response. If the size of
   /// the response is not known in advance set the content length to
@@ -963,6 +963,7 @@ abstract class HttpHeaders {
   /// directly. Mutating the returned current value will have no
   /// effect.
   ContentType contentType;
+
   /*
 
   /// Gets and sets the content length header value.
