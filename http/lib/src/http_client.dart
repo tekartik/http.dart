@@ -131,14 +131,12 @@ class HttpClientException extends http.ClientException
 
 /// if [throwOnFailure] is true, throw on HttpClientException if not successful
 Future<HttpClientResponse> httpClientSend(
-    http.Client client,
-    String method,
-    /* Uri | String */ dynamic url,
+    http.Client client, String method, Uri uri,
     {Map<String, String> headers,
     dynamic body,
     Encoding encoding,
     bool throwOnFailure}) async {
-  var uri = parseUri(url);
+  //var uri = parseUri(url);
 
   var request = http.Request(method, uri);
 
@@ -166,14 +164,9 @@ Future<HttpClientResponse> httpClientSend(
 }
 
 /// Throws a [HttpClientException] on Error
-Future<String> httpClientRead(
-    http.Client client,
-    String method,
-/* Uri | String */ dynamic url,
-    {Map<String, String> headers,
-    dynamic body,
-    Encoding encoding}) async {
-  var response = await httpClientSend(client, method, url,
+Future<String> httpClientRead(http.Client client, String method, Uri uri,
+    {Map<String, String> headers, dynamic body, Encoding encoding}) async {
+  var response = await httpClientSend(client, method, uri,
       headers: headers, body: body, encoding: encoding);
   if (_checkResponseSuccess(response)) {
     return response.body;

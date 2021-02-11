@@ -22,7 +22,7 @@ void main() {
 
   test('connected', () async {
     var client = httpFactoryIo.client.newClient();
-    var content = await client.read('https://api.github.com',
+    var content = await client.read(Uri.parse('https://api.github.com'),
         headers: {'User-Agent': 'tekartik_http_node'});
     var map = jsonDecode(content);
     expect(map['current_user_url'], 'https://api.github.com/user');
@@ -52,7 +52,8 @@ void main() {
       await request.response.redirect(Uri.parse('https://www.google.com'));
     });
     var client = httpFactoryIo.client.newClient();
-    var response = await client.get('http://127.0.0.1:${server.port}');
+    var response =
+        await client.get(Uri.parse('http://127.0.0.1:${server.port}'));
     // print(response.body);
     expect(response.statusCode, 200);
     client.close();

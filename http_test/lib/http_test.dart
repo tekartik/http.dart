@@ -29,7 +29,8 @@ void run(HttpFactory httpFactory) {
           ..close();
       });
       var client = httpClientFactory.newClient();
-      expect(await client.read('http://$localhost:${server.port}'), 'test');
+      expect(await client.read(Uri.parse('http://$localhost:${server.port}')),
+          'test');
       client.close();
       await server.close();
     });
@@ -79,7 +80,7 @@ void run(HttpFactory httpFactory) {
         //var response = await client.get('${uri}/?statusCode=200');
 
         var response = await httpClientSend(
-            client, httpMethodGet, '${uri}?statusCode=none');
+            client, httpMethodGet, Uri.parse('${uri}?statusCode=none'));
         expect(response.isSuccessful, isTrue);
 
         expect(response.statusCode, 200);
@@ -95,7 +96,7 @@ void run(HttpFactory httpFactory) {
           //var response = await client.get('${uri}/?statusCode=200');
 
           var response = await httpClientSend(
-              client, httpMethodGet, '${uri}?statusCode=200');
+              client, httpMethodGet, Uri.parse('${uri}?statusCode=200'));
           expect(response.isSuccessful, isTrue);
 
           expect(response.toString().startsWith('HTTP 200 size 0 headers '),
@@ -108,7 +109,7 @@ void run(HttpFactory httpFactory) {
         () async {
           var uri = httpServerGetUri(server);
           var response = await httpClientSend(
-              client, httpMethodGet, '${uri}?statusCode=400');
+              client, httpMethodGet, Uri.parse('${uri}?statusCode=400'));
           expect(response.isSuccessful, isFalse);
           expect(response.statusCode, 400);
         },
@@ -119,8 +120,8 @@ void run(HttpFactory httpFactory) {
         () async {
           var uri = httpServerGetUri(server);
           try {
-            await httpClientSend(
-                client, httpMethodGet, '${uri}?statusCode=400&body=test',
+            await httpClientSend(client, httpMethodGet,
+                Uri.parse('${uri}?statusCode=400&body=test'),
                 throwOnFailure: true);
             fail('should fail');
           } on HttpClientException catch (e) {
@@ -143,16 +144,16 @@ void run(HttpFactory httpFactory) {
 
       test('httpClientRead', () async {
         var uri = httpServerGetUri(server);
-        var result = await httpClientRead(
-            client, httpMethodGet, '${uri}?statusCode=200&body=test');
+        var result = await httpClientRead(client, httpMethodGet,
+            Uri.parse('${uri}?statusCode=200&body=test'));
         expect(result, 'test');
       });
 
       test('httpClientRead', () async {
         var uri = httpServerGetUri(server);
         try {
-          await httpClientRead(
-              client, httpMethodGet, '${uri}?statusCode=400&body=test');
+          await httpClientRead(client, httpMethodGet,
+              Uri.parse('${uri}?statusCode=400&body=test'));
           fail('should fail');
         } on HttpClientException catch (e) {
           expect(e.statusCode, 400);
@@ -175,8 +176,8 @@ void run(HttpFactory httpFactory) {
         await request.response.close();
       });
       var client = httpClientFactory.newClient();
-      var response = await client
-          .get('${httpServerGetUri(server)}/some_path#some_fragment');
+      var response = await client.get(
+          Uri.parse('${httpServerGetUri(server)}/some_path#some_fragment'));
       expect(response.body, '');
       expect(response.statusCode, 200);
       client.close();
@@ -193,7 +194,7 @@ void run(HttpFactory httpFactory) {
         await request.response.close();
       });
       var client = httpClientFactory.newClient();
-      var response = await client.post('${httpServerGetUri(server)}',
+      var response = await client.post(Uri.parse('${httpServerGetUri(server)}'),
           body: Uint8List.fromList([1, 2, 3]));
       expect(response.bodyBytes, [1, 2, 3]);
       expect(response.statusCode, 200);
@@ -264,7 +265,7 @@ void run(HttpFactory httpFactory) {
 
     test('make get request', () async {
       var client = httpClientFactory.newClient();
-      var response = await client.get(url);
+      var response = await client.get(Uri.parse(url));
       expect(response.statusCode, 200);
       expect(response.contentLength, greaterThan(0));
       expect(response.body, equals('ok'));
@@ -276,7 +277,7 @@ void run(HttpFactory httpFactory) {
 
     test('make post request with a body', () async {
       var client = httpClientFactory.newClient();
-      var response = await client.post(url, body: 'hello');
+      var response = await client.post(Uri.parse(url), body: 'hello');
       expect(response.statusCode, 200);
       expect(response.contentLength, greaterThan(0));
       expect(response.body, equals('hello'));
@@ -285,7 +286,7 @@ void run(HttpFactory httpFactory) {
 
     test('make get request with library-level get method', () async {
       var client = httpClientFactory.newClient();
-      var response = await client.get(url);
+      var response = await client.get(Uri.parse(url));
       // devPrint(response.headers);
       expect(response.statusCode, 200);
       expect(response.contentLength, greaterThan(0));
@@ -306,7 +307,8 @@ void run(HttpFactory httpFactory) {
           ..close();
       });
       var client = httpClientFactory.newClient();
-      expect(await client.read('http://$localhost:${server.port}'), 'test\n');
+      expect(await client.read(Uri.parse('http://$localhost:${server.port}')),
+          'test\n');
       client.close();
       await server.close();
     });
@@ -319,8 +321,8 @@ void run(HttpFactory httpFactory) {
           ..close();
       });
       var client = httpClientFactory.newClient();
-      expect(
-          await client.read('http://$localhost:${server.port}'), 'test,true,1');
+      expect(await client.read(Uri.parse('http://$localhost:${server.port}')),
+          'test,true,1');
       client.close();
       await server.close();
     });
@@ -334,7 +336,8 @@ void run(HttpFactory httpFactory) {
           ..close();
       });
       var client = httpClientFactory.newClient();
-      expect(await client.read('http://$localhost:${server.port}'), 'é');
+      expect(await client.read(Uri.parse('http://$localhost:${server.port}')),
+          'é');
       client.close();
       await server.close();
     }, skip: true);
@@ -349,7 +352,7 @@ void run(HttpFactory httpFactory) {
     });
     var client = httpClientFactory.newClient();
     var url = 'http://$localhost:${server.port}';
-    final bytes = await client.readBytes(url);
+    final bytes = await client.readBytes(Uri.parse(url));
     expect(bytes, const TypeMatcher<Uint8List>());
 
     client.close();
