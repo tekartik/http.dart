@@ -5,7 +5,7 @@ import 'package:tekartik_build_utils/android/android_import.dart';
 var topDir = '..';
 
 Future main() async {
-  if (dartVersion >= Version(2, 12, 0, pre: '0'))
+  if (dartVersion >= Version(2, 12, 0, pre: '0')) {
     for (var dir in [
       'http',
       'http_browser',
@@ -16,4 +16,5 @@ Future main() async {
     ]) {
       await packageRunCi(join(topDir, dir));
     }
+  }
 }

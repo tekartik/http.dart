@@ -13,6 +13,12 @@ dependencies:
       path: http
       ref: null_safety
     version: '>=0.6.0'
+  tekartik_http_test:
+    git:
+      url: git://github.com/tekartik/http.dart
+      path: http_test
+      ref: null_safety
+    version: '>=0.6.0'
   shelf: any
 
 dev_dependencies:
