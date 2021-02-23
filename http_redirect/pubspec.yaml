@@ -4,42 +4,39 @@ version: 0.5.2
 publish_to: none
 
 environment:
-  sdk: '>=2.5.0 <3.0.0'
+  sdk: '>=2.12.0-259.15.beta <3.0.0'
 
 dependencies:
   tekartik_http:
     git:
       url: git://github.com/tekartik/http.dart
       path: http
-      ref: dart2
+      ref: null_safety
     version: '>=0.5.0'
   tekartik_http_io:
     git:
       url: git://github.com/tekartik/http.dart
       path: http_io
-      ref: dart2
+      ref: null_safety
     version: '>=0.5.0'
   tekartik_common_utils:
     git:
       url: git://github.com/tekartik/common_utils.dart
-      ref: dart2
-  args: any
+      ref: null_safety
+  args: '>=2.0.0'
 
 
 
 dev_dependencies:
-  dev_test: '>=0.13.2-dev.3'
-  test: '>=1.2.0'
-  build_runner: ">=0.9.0"
+  dev_test: '>=0.15.0'
+  test: '>=1.16.0'
   build_test:
   # build_node_compilers: ">=0.2.2"
   # build_web_compilers: ">=0.4.2"
-  process_run: '>=0.10.0+1'
+  process_run: '>=0.12.0'
 
 dependency_overrides:
   tekartik_http:
     path: ../http
   tekartik_http_io:
     path: ../http_io
-  tekartik_http_node:
-    path: ../http_node

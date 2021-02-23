@@ -9,7 +9,7 @@ class HttpClientFactoryBrowser implements HttpClientFactory {
   }
 }
 
-HttpClientFactoryBrowser _httpClientFactoryBrowser;
+HttpClientFactoryBrowser? _httpClientFactoryBrowser;
 
 HttpClientFactoryBrowser get httpClientFactoryBrowser =>
     _httpClientFactoryBrowser ??= HttpClientFactoryBrowser();

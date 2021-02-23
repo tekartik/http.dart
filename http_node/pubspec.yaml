@@ -30,11 +30,18 @@ dev_dependencies:
   build_runner: '>=1.7.0'
   build_test: '>=0.10.8'
   build_node_compilers: ">=0.2.2"
-  tekartik_build_utils:
+  tekartik_http_test:
     git:
-      url: git://github.com/tekartik/build_utils.dart
+      url: git://github.com/tekartik/http.dart
+      path: http_test
       ref: dart2
-    version: '>=0.6.5+1'
+    version: '>=0.1.0'
+  tekartik_http_redirect:
+    git:
+      url: git://github.com/tekartik/http.dart
+      path: http_redirect
+      ref: dart2
+    version: '>=0.1.0'
   tekartik_platform_node:
     git:
       url: git://github.com/tekartik/platform.dart
@@ -48,9 +55,11 @@ dev_dependencies:
       ref: dart2
     version: '>=0.2.3'
 dependency_overrides:
-  tekartik_http:
-    path: ../http
-  tekartik_http_io:
-    path: ../http_io
-  tekartik_http_test:
-    path: ../http_test
+#  tekartik_http:
+#    path: ../http
+#  tekartik_http_io:
+#    path: ../http_io
+#  tekartik_http_test:
+#    path: ../http_test
+#  tekartik_http_redirect:
+#    path: ../http_redirect

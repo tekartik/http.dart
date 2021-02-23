@@ -8,7 +8,7 @@ import 'package:tekartik_http/http_server.dart';
 import 'package:tekartik_http/http_client.dart';
 import 'package:http/http.dart' as http;
 
-Level logLevel;
+Level? logLevel;
 
 const String redirectBaseUrlHeader = 'x-tekartik-redirect-base-url';
 
@@ -20,8 +20,8 @@ const String redirectUrlHeader = 'x-tekartik-redirect-url';
 final http.Client _client = http.Client();
 
 /// Proxy the HTTP request to the specified server.
-Future proxyHttpRequest(Options options, HttpRequest request, String baseUrl,
-    {Uri uri}) async {
+Future proxyHttpRequest(Options options, HttpRequest request, String? baseUrl,
+    {Uri? uri}) async {
   if (uri == null) {
     var path = request.uri.path;
     if (path.startsWith('/')) {
@@ -29,26 +29,26 @@ Future proxyHttpRequest(Options options, HttpRequest request, String baseUrl,
     }
 
     print('baseUrl: ${baseUrl}, path: ${path}, headers: ${request.headers}');
-    String url;
+    String? url;
     if (path == '' || path == '.' || path == '/') {
       url = baseUrl;
     } else {
-      url = _path.url.join(baseUrl, path);
+      url = _path.url.join(baseUrl!, path);
       print('baseUrl: ${baseUrl}, path: ${path}, url ${url}');
     }
-    uri = Uri.parse(url);
+    uri = Uri.parse(url!);
   }
   print('calling ${request.method} $uri');
 
-  var headers = <String, String>{};
+  Map<String, String>? headers = <String, String>{};
 
   request.headers.forEach((name, List<String> values) {
     void _set() {
-      headers[name] = values.join(',');
+      headers![name] = values.join(',');
     }
 
     if (options.forwardedHeaders != null) {
-      for (var forwardedHeaders in options.forwardedHeaders) {
+      for (var forwardedHeaders in options.forwardedHeaders!) {
         if (forwardedHeaders.toLowerCase() == name.toLowerCase()) {
           _set();
         }
@@ -83,7 +83,7 @@ Future proxyHttpRequest(Options options, HttpRequest request, String baseUrl,
     bytes.addAll(list);
   }
 
-  if ((!options.forwardHeaders) || false) {
+  if ((!options.forwardHeaders!) || false) {
     headers = null;
   }
 
@@ -130,35 +130,35 @@ Future proxyHttpRequest(Options options, HttpRequest request, String baseUrl,
 }
 
 class Options {
-  bool handleCors;
-  bool forwardHeaders;
-  int port;
+  late bool handleCors;
+  bool? forwardHeaders;
+  int? port;
   var host;
 
-  List<String> forwardedHeaders;
+  List<String>? forwardedHeaders;
 
   bool containsHeader(String name) {
     return _lowerCaseCorsHeaders.contains(name.toLowerCase());
   }
 
   // The default url to redirect too
-  String baseUrl;
+  String? baseUrl;
 
   set corsHeaders(List<String> corsHeaders) {
     _corsHeaders = List.from(corsHeaders);
-    _corsHeaders.add(redirectBaseUrlHeader);
-    _corsHeaders.add(redirectUrlHeader);
+    _corsHeaders!.add(redirectBaseUrlHeader);
+    _corsHeaders!.add(redirectUrlHeader);
     _lowerCaseCorsHeaders = <String>[];
-    _corsHeaders.forEach((name) {
+    _corsHeaders!.forEach((name) {
       _lowerCaseCorsHeaders.add(name.toLowerCase());
     });
   }
 
-  List<String> get corsHeaders => _corsHeaders;
+  List<String> get corsHeaders => _corsHeaders!;
 
-  List<String> _corsHeaders;
-  List<String> _lowerCaseCorsHeaders;
-  String _corsHeadersText;
+  List<String>? _corsHeaders;
+  late List<String> _lowerCaseCorsHeaders;
+  String? _corsHeadersText;
 
   String get corsHeadersText => _corsHeadersText ??= () {
         if (_corsHeaders == null) {
@@ -182,7 +182,7 @@ Future<HttpServer> startServer(
     print('default redirection to ${options.baseUrl}');
   }
   server.listen((request) async {
-    print('uri: ${request?.uri} ${request.method}');
+    print('uri: ${request.uri} ${request.method}');
     if (options.handleCors) {
       //request.response.headers.set(HttpHeaders.CONTENT_TYPE, 'text/plain; charset=UTF-8');
       request.response.headers.add(

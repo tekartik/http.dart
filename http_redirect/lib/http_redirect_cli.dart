@@ -35,8 +35,8 @@ Future main(List<String> arguments) async {
   var options = Options();
   options.handleCors = _argsResult[corsArgName] == true;
   options.corsHeaders = _argsResult[corsHeadersArgName] as List<String>;
-  options.baseUrl = _argsResult[redirectBaseUrlArgName] as String;
-  options.forwardHeaders = _argsResult[forwardHeaderFlagName] as bool;
+  options.baseUrl = _argsResult[redirectBaseUrlArgName] as String?;
+  options.forwardHeaders = _argsResult[forwardHeaderFlagName] as bool?;
 
   final help = _argsResult[helpArgName] as bool;
   if (help) {
@@ -45,7 +45,7 @@ Future main(List<String> arguments) async {
     print(parser.usage);
     return;
   }
-  final logLevelText = _argsResult[logArgName] as String;
+  final logLevelText = _argsResult[logArgName] as String?;
   if (logLevelText != null) {
     logLevel = parseLogLevel(logLevelText);
     Logger.root.level = logLevel;
@@ -54,7 +54,7 @@ Future main(List<String> arguments) async {
   }
 
   options.baseUrl = _argsResult[redirectBaseUrlArgName]
-      as String; // parseHostPort(_argsResult[redirectHostArgName]);
+      as String?; // parseHostPort(_argsResult[redirectHostArgName]);
   options.port = parseInt(_argsResult[portArgName]) ?? 8100;
   //var proxies = new Map<HostPort, HttpRequestProxy>();
 
