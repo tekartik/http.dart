@@ -239,7 +239,7 @@ class HttpResponseMemory extends StreamSink<Uint8List> implements HttpResponse {
   bool bufferOutput;
   */
   @override
-  int? contentLength;
+  late int contentLength;
 
 /*
   @override

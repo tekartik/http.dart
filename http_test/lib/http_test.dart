@@ -248,7 +248,7 @@ void run(HttpFactory httpFactory) {
             'set-cookie', ['JSESSIONID=verylongid; Path=/somepath; HttpOnly']);
         request.response.statusCode = 200;
         // devPrint('body ${body} ${body.length}');
-        if (body != null && body.isNotEmpty) {
+        if (body.isNotEmpty) {
           request.response.write(body);
         } else {
           request.response.write('ok');

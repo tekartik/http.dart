@@ -316,7 +316,7 @@ abstract class HttpResponse implements StreamSink<Uint8List>, StringSink {
   /// Gets and sets the content length of the response. If the size of
   /// the response is not known in advance set the content length to
   /// -1, which is also the default if not set.
-  int? contentLength;
+  int contentLength = -1;
 
   /// Gets and sets the status code. Any integer value is accepted. For
   /// the official HTTP status codes use the fields from

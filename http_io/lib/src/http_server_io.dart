@@ -23,13 +23,15 @@ class InternetAddressIo implements InternetAddress {
 }
 
 InternetAddressType wrapInternetAddressType(
-    io.InternetAddressType ioAddressType) {
+    io.InternetAddressType? ioAddressType) {
+  // default...ipv4
+  ioAddressType ??= io.InternetAddressType.IPv4;
   if (ioAddressType == io.InternetAddressType.IPv4) {
     return InternetAddressType.IPv4;
   } else if (ioAddressType == io.InternetAddressType.IPv6) {
     return InternetAddressType.IPv6;
   }
-  return ioAddressType != null ? InternetAddressTypeIo(ioAddressType) : null;
+  return InternetAddressTypeIo(ioAddressType);
 }
 
 class InternetAddressTypeIo implements InternetAddressType {
@@ -48,7 +50,7 @@ class HttpHeadersIo with HttpHeadersMixin implements HttpHeaders {
   HttpHeadersIo(this.ioHttpHeaders);
 
   @override
-  List<String> operator [](String name) => ioHttpHeaders[name];
+  List<String>? operator [](String name) => ioHttpHeaders[name];
 
   @override
   void add(String name, Object value) => ioHttpHeaders.add(name, value);
@@ -61,10 +63,10 @@ class HttpHeadersIo with HttpHeadersMixin implements HttpHeaders {
   void set(String name, Object value) => ioHttpHeaders.set(name, value);
 
   @override
-  String value(String name) => ioHttpHeaders.value(name);
+  String? value(String name) => ioHttpHeaders.value(name);
 
   @override
-  set contentType(ContentType contentType) =>
+  set contentType(ContentType? contentType) =>
       ioHttpHeaders.contentType = io.ContentType.parse(contentType.toString());
 }
 
@@ -90,7 +92,7 @@ class HttpResponseIo extends Sink<Uint8List> implements HttpResponse {
   void add(Uint8List data) => ioHttpResponse.add(data);
 
   @override
-  void addError(Object error, [StackTrace stackTrace]) =>
+  void addError(Object error, [StackTrace? stackTrace]) =>
       ioHttpResponse.addError(error, stackTrace);
 
   @override
@@ -110,12 +112,11 @@ class HttpResponseIo extends Sink<Uint8List> implements HttpResponse {
   HttpHeaders get headers => HttpHeadersIo(ioHttpResponse.headers);
 
   @override
-  void write(Object obj) => ioHttpResponse.write(obj);
+  void write(Object? obj) => ioHttpResponse.write(obj);
 
   @override
   Future redirect(Uri location, {int status = httpStatusMovedTemporarily}) =>
-      ioHttpResponse.redirect(location,
-          status: status ?? httpStatusMovedTemporarily);
+      ioHttpResponse.redirect(location, status: status);
 
   @override
   void writeAll(Iterable objects, [String separator = '']) {
@@ -128,7 +129,7 @@ class HttpResponseIo extends Sink<Uint8List> implements HttpResponse {
   }
 
   @override
-  void writeln([Object obj = '']) {
+  void writeln([Object? obj = '']) {
     ioHttpResponse.writeln(obj);
   }
 }
@@ -145,8 +146,8 @@ class HttpRequestIo extends Stream<Uint8List> implements HttpRequest {
   HttpHeaders get headers => HttpHeadersIo(ioHttpRequest.headers);
 
   @override
-  StreamSubscription<Uint8List> listen(void Function(Uint8List event) onData,
-      {Function onError, void Function() onDone, bool cancelOnError}) {
+  StreamSubscription<Uint8List> listen(void Function(Uint8List event)? onData,
+      {Function? onError, void Function()? onDone, bool? cancelOnError}) {
     return intListStreamToUint8ListStream(ioHttpRequest).listen(onData,
         onError: onError, onDone: onDone, cancelOnError: cancelOnError);
   }
@@ -174,10 +175,10 @@ class HttpServerIo extends Stream<HttpRequest> implements HttpServer {
 
   @override
   StreamSubscription<HttpRequest> listen(
-      void Function(HttpRequest event) onData,
-      {Function onError,
-      void Function() onDone,
-      bool cancelOnError}) {
+      void Function(HttpRequest event)? onData,
+      {Function? onError,
+      void Function()? onDone,
+      bool? cancelOnError}) {
     return ioHttpServer.transform<HttpRequest>(
         StreamTransformer<io.HttpRequest, HttpRequest>.fromHandlers(
             handleData: (request, sink) {
@@ -195,7 +196,7 @@ class HttpServerIo extends Stream<HttpRequest> implements HttpServer {
 
 /// Convert to common address
 InternetAddress wrapInternetAddress(io.InternetAddress address) {
-  return address != null ? InternetAddressIo(address) : null;
+  return InternetAddressIo(address);
 }
 
 /// Convert to a native internet address case by case...
@@ -215,14 +216,11 @@ class IoHttpServerFactory implements HttpServerFactory {
   Future<HttpServer> bind(address, int port) async {
     address = unwrapInternetAddress(address);
     var ioHttpServer = await io.HttpServer.bind(address, port);
-    if (ioHttpServer != null) {
-      return HttpServerIo(ioHttpServer);
-    }
-    return null;
+    return HttpServerIo(ioHttpServer);
   }
 }
 
-IoHttpServerFactory _ioHttpServerFactory;
+IoHttpServerFactory? _ioHttpServerFactory;
 
 IoHttpServerFactory get httpServerFactoryIo =>
     _ioHttpServerFactory ??= IoHttpServerFactory();

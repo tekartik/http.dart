@@ -32,8 +32,8 @@ void main() {
     var server = await httpFactoryIo.server.bind(InternetAddress.anyIPv4, 0);
     expect(server.uri.toString(), startsWith('http://localhost:'));
     expect(server.port, isNot(0));
-    expect(server.address.type, InternetAddressType.IPv4);
-    expect(server.address.address, '0.0.0.0');
+    expect(server.address!.type, InternetAddressType.IPv4);
+    expect(server.address!.address, '0.0.0.0');
     await server.close();
   });
 
@@ -42,7 +42,7 @@ void main() {
         await httpFactoryIo.server.bind(InternetAddress.any, httpPortAny);
     expect(server.uri.toString(), startsWith('http://localhost:'));
     expect(server.port, isNot(0));
-    expect(server.address.address, '0.0.0.0');
+    expect(server.address!.address, '0.0.0.0');
     await server.close();
   });
 
