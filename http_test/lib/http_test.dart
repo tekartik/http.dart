@@ -48,8 +48,8 @@ void run(HttpFactory httpFactory) {
   group(
     'http_client_response',
     () {
-      HttpServer server;
-      Client client;
+      late HttpServer server;
+      late Client client;
       setUpAll(() async {
         server = await httpServerFactory.bind(localhost, 0);
         server.listen((request) async {
@@ -230,11 +230,11 @@ void run(HttpFactory httpFactory) {
     });
   });
   group('client_server', () {
-    HttpServer server;
-    Client client;
+    late HttpServer server;
+    late Client client;
 
     var host = '127.0.0.1';
-    String url;
+    late String url;
     setUpAll(() async {
       server = await httpServerFactory.bind(host, 0);
       url = 'http://$host:${server.port}';

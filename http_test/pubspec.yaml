@@ -1,25 +1,25 @@
 name: tekartik_http_test
 description: Http test
-version: 0.5.2
+version: 0.7.0
 publish_to: none
 
 environment:
-  sdk: '>=2.5.0 <3.0.0'
+  sdk: '>=2.12.0-259.15.beta <3.0.0'
 
 dependencies:
   tekartik_http:
     git:
       url: git://github.com/tekartik/http.dart
       path: http
-      ref: dart2
-    version: '>=0.5.0'
-  build_runner: ">=0.9.0"
+      ref: null_safety
+    version: '>=0.7.0'
+  # build_runner: ">=0.9.0"
   build_test:
   test: '>=1.2.0'
 
 dev_dependencies:
-  dev_test: any
-  process_run: '>=0.10.0+1'
+  dev_test: '>=0.15.0'
+  process_run: '>=0.12.0'
 
 dependency_overrides:
   tekartik_http:
