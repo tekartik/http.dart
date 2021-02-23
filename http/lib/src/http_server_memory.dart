@@ -9,14 +9,14 @@ import 'package:tekartik_http/src/http_server.dart';
 import 'package:tekartik_http/src/http_server_mixin.dart';
 import 'package:tekartik_http/src/utils.dart';
 
-Uint8List getBodyAsBytes(body, {Encoding encoding}) {
-  List<int> bytes;
+Uint8List getBodyAsBytes(body, {Encoding? encoding}) {
+  List<int>? bytes;
   if (body is String) {
     bytes = utf8.encode(body);
   } else {
-    bytes = body as List<int>;
+    bytes = body as List<int>?;
   }
-  return asUint8List(bytes);
+  return asUint8List(bytes!);
 }
 
 class HttpServerMemory extends Stream<HttpRequest>
@@ -36,7 +36,7 @@ class HttpServerMemory extends Stream<HttpRequest>
   */
 
   @override
-  final InternetAddress address;
+  final InternetAddress? address;
 
   HttpServerMemory(this.address, this.port);
 
@@ -64,10 +64,10 @@ class HttpServerMemory extends Stream<HttpRequest>
   */
   @override
   StreamSubscription<HttpRequest> listen(
-      void Function(HttpRequest event) onData,
-      {Function onError,
-      void Function() onDone,
-      bool cancelOnError}) {
+      void Function(HttpRequest event)? onData,
+      {Function? onError,
+      void Function()? onDone,
+      bool? cancelOnError}) {
     return requestCtlr.stream.listen(onData,
         onError: onError, onDone: onDone, cancelOnError: cancelOnError);
   }
@@ -89,7 +89,7 @@ class HttpDataMemory {
   final Map<int, HttpServerMemory> servers = {};
 }
 
-HttpDataMemory _httpDataMemory;
+HttpDataMemory? _httpDataMemory;
 
 HttpDataMemory get httpDataMemory => _httpDataMemory ??= HttpDataMemory();
 
@@ -104,7 +104,7 @@ class HttpServerFactoryMemory extends HttpServerFactory {
     if (httpDataMemory.servers[port] != null) {
       throw Exception('port $port is busy');
     }
-    InternetAddress internetAddress;
+    InternetAddress? internetAddress;
     if (address is InternetAddress) {
       internetAddress = address;
     }
@@ -114,7 +114,7 @@ class HttpServerFactoryMemory extends HttpServerFactory {
   }
 }
 
-HttpServerFactoryMemory _httpServerFactoryMemory;
+HttpServerFactoryMemory? _httpServerFactoryMemory;
 
 HttpServerFactoryMemory get httpServerFactoryMemory =>
     _httpServerFactoryMemory ??= HttpServerFactoryMemory();

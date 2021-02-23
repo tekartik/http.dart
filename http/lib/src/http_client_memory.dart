@@ -44,7 +44,7 @@ class HttpHeadersMemory implements HttpHeaders {
   */
 
   @override
-  List<String> operator [](String name) => map[getKey(name)];
+  List<String>? operator [](String name) => map[getKey(name)];
 
   int get length => map.length;
 
@@ -55,10 +55,10 @@ class HttpHeadersMemory implements HttpHeaders {
     var key = getKey(name);
     var list = map[key];
     if (list == null) {
-      list = [value?.toString()];
+      list = [value.toString()];
       map[key] = list;
     } else {
-      list.add(value?.toString());
+      list.add(value.toString());
     }
   }
 
@@ -101,7 +101,7 @@ class HttpHeadersMemory implements HttpHeaders {
     if (value is List) {
       map[key] = value.cast<String>();
     } else {
-      map[key] = [value?.toString()];
+      map[key] = [value.toString()];
     }
   }
 
@@ -112,14 +112,14 @@ class HttpHeadersMemory implements HttpHeaders {
   }
 
   @override
-  String value(String name) => map[getKey(name)]?.first?.toString();
+  String? value(String name) => map[getKey(name)]?.first.toString();
 
   @override
-  set contentType(ContentType contentType) =>
+  set contentType(ContentType? contentType) =>
       set(httpHeaderContentType, contentType.toString());
 
   @override
-  ContentType get contentType {
+  ContentType? get contentType {
     var contentTypeValue = value(httpHeaderContentType);
     if (contentTypeValue != null) {
       return ContentType.parse(contentTypeValue);
@@ -137,12 +137,12 @@ class HttpRequestMemory extends Stream<Uint8List> implements HttpRequest {
   final Uri uri;
   final int port;
   final body;
-  final Encoding encoding;
+  final Encoding? encoding;
   @override
-  int contentLength;
+  int? contentLength;
 
   HttpRequestMemory(this.method, Uri uri,
-      {Map<String, String> headers, this.body, this.encoding})
+      {Map<String, String>? headers, this.body, this.encoding})
       : port = parseUri(uri).port,
         // Remove the fragment that should not reach the server
         uri = uri.removeFragment() {
@@ -168,8 +168,8 @@ class HttpRequestMemory extends Stream<Uint8List> implements HttpRequest {
   }
 
   @override
-  StreamSubscription<Uint8List> listen(void Function(Uint8List event) onData,
-      {Function onError, void Function() onDone, bool cancelOnError}) {
+  StreamSubscription<Uint8List> listen(void Function(Uint8List event)? onData,
+      {Function? onError, void Function()? onDone, bool? cancelOnError}) {
     return streamCtlr.stream.listen(onData,
         onError: onError, onDone: onDone, cancelOnError: cancelOnError);
   }
@@ -210,7 +210,7 @@ class HttpRequestMemory extends Stream<Uint8List> implements HttpRequest {
   @override
   Uri get requestedUri => throw 'not implemented yet';
 
-  HttpResponseMemory _response;
+  HttpResponseMemory? _response;
 
   @override
   HttpResponseMemory get response =>
@@ -239,7 +239,7 @@ class HttpResponseMemory extends StreamSink<Uint8List> implements HttpResponse {
   bool bufferOutput;
   */
   @override
-  int contentLength;
+  int? contentLength;
 
 /*
   @override
@@ -255,7 +255,9 @@ class HttpResponseMemory extends StreamSink<Uint8List> implements HttpResponse {
   String reasonPhrase;
   */
   @override
-  int statusCode;
+  int get statusCode => _statusCode!;
+
+  int? _statusCode;
 
   @override
   final HttpHeaders headers = HttpHeadersMemory();
@@ -266,7 +268,7 @@ class HttpResponseMemory extends StreamSink<Uint8List> implements HttpResponse {
   }
 
   @override
-  void addError(Object error, [StackTrace stackTrace]) {
+  void addError(Object error, [StackTrace? stackTrace]) {
     streamCtlr.addError(error, stackTrace);
   }
 
@@ -276,7 +278,7 @@ class HttpResponseMemory extends StreamSink<Uint8List> implements HttpResponse {
   @override
   Future close() async {
     // Default status code
-    statusCode ??= httpStatusCodeOk;
+    _statusCode ??= httpStatusCodeOk;
     var futureBytes = streamCtlr.stream.toList();
     await streamCtlr.close();
     var data = <int>[];
@@ -314,7 +316,7 @@ class HttpResponseMemory extends StreamSink<Uint8List> implements HttpResponse {
       throw 'not implemented yet';
 
   @override
-  void write(Object obj) {
+  void write(Object? obj) {
     if (obj is String) {
       add(asUint8List(utf8.encode(obj)));
     } else {
@@ -334,8 +336,13 @@ class HttpResponseMemory extends StreamSink<Uint8List> implements HttpResponse {
   }
 
   @override
-  void writeln([Object obj = '']) {
+  void writeln([Object? obj = '']) {
     write('$obj\n');
+  }
+
+  @override
+  set statusCode(int statusCode) {
+    _statusCode = statusCode;
   }
 
 /*
@@ -399,49 +406,50 @@ class ResponseMemory implements Response {
 
 abstract class HttpClientMixin implements Client {
   Future<Response> httpCall(String method, url,
-      {Map<String, String> headers, body, Encoding encoding});
+      {Map<String, String>? headers, body, Encoding? encoding});
 
   Future<StreamedResponse> httpSend(String method, url,
-      {Map<String, String> headers, body, Encoding encoding});
+      {Map<String, String>? headers, body, Encoding? encoding});
 
   @override
-  Future<Response> delete(url, {Map<String, String> headers}) =>
+  Future<Response> delete(url,
+          {Map<String, String>? headers, Object? body, Encoding? encoding}) =>
       httpCall(httpMethodDelete, url, headers: headers);
 
   @override
-  Future<Response> get(url, {Map<String, String> headers}) =>
+  Future<Response> get(url, {Map<String, String>? headers}) =>
       httpCall(httpMethodGet, url, headers: headers);
 
   @override
-  Future<Response> head(url, {Map<String, String> headers}) =>
+  Future<Response> head(url, {Map<String, String>? headers}) =>
       httpCall(httpMethodHead, url, headers: headers);
 
   @override
   Future<Response> patch(url,
-          {Map<String, String> headers, body, Encoding encoding}) =>
+          {Map<String, String>? headers, body, Encoding? encoding}) =>
       httpCall(httpMethodPatch, url,
           headers: headers, body: body, encoding: encoding);
 
   @override
   Future<Response> post(url,
-          {Map<String, String> headers, body, Encoding encoding}) =>
+          {Map<String, String>? headers, body, Encoding? encoding}) =>
       httpCall(httpMethodPost, url,
           headers: headers, body: body, encoding: encoding);
 
   @override
   Future<Response> put(url,
-          {Map<String, String> headers, body, Encoding encoding}) =>
+          {Map<String, String>? headers, body, Encoding? encoding}) =>
       httpCall(httpMethodPut, url,
           headers: headers, body: body, encoding: encoding);
 
   @override
-  Future<String> read(url, {Map<String, String> headers}) async {
+  Future<String> read(url, {Map<String, String>? headers}) async {
     var response = await get(url, headers: headers);
     return response.body;
   }
 
   @override
-  Future<Uint8List> readBytes(url, {Map<String, String> headers}) async {
+  Future<Uint8List> readBytes(url, {Map<String, String>? headers}) async {
     var response = await get(url, headers: headers);
     return response.bodyBytes;
   }
@@ -475,7 +483,7 @@ class HttpClientMemory extends Object with HttpClientMixin implements Client {
 
   @override
   Future<ResponseMemory> httpCall(String method, url,
-      {Map<String, String> headers, body, Encoding encoding}) async {
+      {Map<String, String>? headers, body, Encoding? encoding}) async {
     var request = HttpRequestMemory(method, parseUri(url),
         headers: headers, body: body, encoding: encoding);
     var server = httpDataMemory.servers[request.port];
@@ -493,7 +501,7 @@ class HttpClientMemory extends Object with HttpClientMixin implements Client {
 
   @override
   Future<StreamedResponse> httpSend(String method, url,
-      {Map<String, String> headers, body, Encoding encoding}) async {
+      {Map<String, String>? headers, body, Encoding? encoding}) async {
     var response = await httpCall(method, url,
         headers: headers, body: body, encoding: encoding);
     return StreamedResponse(() async* {
@@ -513,7 +521,7 @@ class HttpClientFactoryMemory extends HttpClientFactory {
   }
 }
 
-HttpClientFactoryMemory _httpClientFactoryMemory;
+HttpClientFactoryMemory? _httpClientFactoryMemory;
 
 HttpClientFactoryMemory get httpClientFactoryMemory =>
     _httpClientFactoryMemory ??= HttpClientFactoryMemory();

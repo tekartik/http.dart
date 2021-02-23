@@ -4,7 +4,6 @@ import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
-import 'package:meta/meta.dart';
 import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/http_client.dart' as http_client;
@@ -26,7 +25,7 @@ class _HttpClientResponseFromResponse extends HttpClientResponse {
 
 abstract class HttpMapHeaders implements Map<String, String> {
   /// Get a single value
-  String value(String key);
+  String? value(String key);
 }
 
 /// Read only
@@ -40,13 +39,13 @@ class HttpMapHeadersFromMap
   }
 
   @override
-  String operator [](Object key) => _map.value(key as String);
+  String? operator [](Object? key) => _map.value(key as String);
 
   @override
   void operator []=(String key, String value) => _map.set(key, value);
 
   @override
-  String value(String key) => _map.value(key);
+  String? value(String key) => _map.value(key);
 
   @override
   void clear() {
@@ -57,7 +56,7 @@ class HttpMapHeadersFromMap
   Iterable<String> get keys => _map.keys;
 
   @override
-  String remove(Object key) {
+  String? remove(Object? key) {
     var value = this.value(key as String);
     _map.map.remove(key);
     return value;
@@ -89,7 +88,7 @@ abstract class HttpClientResponse {
   /// Http status code.
   int get statusCode => _response.statusCode;
 
-  String _body;
+  String? _body;
 
   /// Body as a string.
   String get body => _body ??= _response.body;
@@ -101,7 +100,7 @@ abstract class HttpClientResponse {
   HttpMapHeaders get headers => HttpMapHeadersFromMap(_response.headers);
 
   /// Response reason phrase.
-  String reasonPhrase;
+  String? reasonPhrase;
 
   @override
   String toString() {
@@ -122,8 +121,8 @@ class HttpClientException extends http.ClientException
   final HttpClientResponse response;
 
   /// Creates an exception with a message and a response.
-  HttpClientException({String message, @required this.response})
-      : super(message, parseUri(response.response.request.url));
+  HttpClientException({required String message, required this.response})
+      : super(message, parseUri(response.response.request!.url));
 
   @override
   int get statusCode => response.statusCode;
@@ -132,10 +131,10 @@ class HttpClientException extends http.ClientException
 /// if [throwOnFailure] is true, throw on HttpClientException if not successful
 Future<HttpClientResponse> httpClientSend(
     http.Client client, String method, Uri uri,
-    {Map<String, String> headers,
+    {Map<String, String>? headers,
     dynamic body,
-    Encoding encoding,
-    bool throwOnFailure}) async {
+    Encoding? encoding,
+    bool? throwOnFailure}) async {
   //var uri = parseUri(url);
 
   var request = http.Request(method, uri);
@@ -165,13 +164,14 @@ Future<HttpClientResponse> httpClientSend(
 
 /// Throws a [HttpClientException] on Error
 Future<String> httpClientRead(http.Client client, String method, Uri uri,
-    {Map<String, String> headers, dynamic body, Encoding encoding}) async {
+    {Map<String, String>? headers, dynamic body, Encoding? encoding}) async {
   var response = await httpClientSend(client, method, uri,
       headers: headers, body: body, encoding: encoding);
   if (_checkResponseSuccess(response)) {
     return response.body;
   } else {
-    throw HttpClientException(response: response);
+    throw HttpClientException(
+        message: 'Error ${response.statusCode}', response: response);
   }
 }
 
@@ -182,7 +182,7 @@ bool _checkResponseSuccess(HttpClientResponse response) {
   }
 
   var message =
-      'Request to ${response.response.request.url} failed with status ${response.statusCode}';
+      'Request to ${response.response.request!.url} failed with status ${response.statusCode}';
   if (response.reasonPhrase != null) {
     message = '$message: ${response.reasonPhrase}';
   }

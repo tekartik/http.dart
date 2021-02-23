@@ -12,7 +12,7 @@ class HttpFactoryMemory implements HttpFactory {
   HttpServerFactory get server => memory.httpServerFactoryMemory;
 }
 
-HttpFactoryMemory _httpFactoryMemory;
+HttpFactoryMemory? _httpFactoryMemory;
 
 /// Global memory http factory.
 HttpFactory get httpFactoryMemory => _httpFactoryMemory ??= HttpFactoryMemory();
