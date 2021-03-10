@@ -28,13 +28,13 @@ Future proxyHttpRequest(Options options, HttpRequest request, String baseUrl,
       path = path.substring(1);
     }
 
-    print('baseUrl: ${baseUrl}, path: ${path}, headers: ${request.headers}');
+    print('baseUrl: $baseUrl, path: $path, headers: ${request.headers}');
     String url;
     if (path == '' || path == '.' || path == '/') {
       url = baseUrl;
     } else {
       url = _path.url.join(baseUrl, path);
-      print('baseUrl: ${baseUrl}, path: ${path}, url ${url}');
+      print('baseUrl: $baseUrl, path: $path, url $url');
     }
     uri = Uri.parse(url);
   }
@@ -76,7 +76,7 @@ Future proxyHttpRequest(Options options, HttpRequest request, String baseUrl,
       _set();
     }
   });
-  print('headers: ${headers}');
+  print('headers: $headers');
 
   var bytes = <int>[];
   for (var list in await request.toList()) {
@@ -218,8 +218,7 @@ Future<HttpServer> startServer(
       print('no host port');
       request.response
         ..statusCode = 405
-        ..write(
-            'missing ${redirectBaseUrlHeader} header or ${redirectUrlHeader}');
+        ..write('missing $redirectBaseUrlHeader header or $redirectUrlHeader');
       await request.response.flush();
       await request.response.close();
     } else {
@@ -227,7 +226,7 @@ Future<HttpServer> startServer(
         await proxyHttpRequest(options, request, baseUrl,
             uri: fullUrl != null ? Uri.parse(fullUrl) : null);
       } catch (e) {
-        print('proxyHttpRequest error ${e}');
+        print('proxyHttpRequest error $e');
         try {
           request.response
             ..statusCode = 405

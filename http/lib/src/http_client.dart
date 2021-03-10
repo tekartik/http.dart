@@ -107,7 +107,7 @@ abstract class HttpClientResponse {
   String toString() {
     var sb = StringBuffer();
     try {
-      sb.write('HTTP $statusCode size ${bodyBytes.length} headers ${headers}');
+      sb.write('HTTP $statusCode size ${bodyBytes.length} headers $headers');
     } catch (e) {
       sb.write(' error: $e');
     }

@@ -1123,7 +1123,7 @@ abstract class HttpServerFactory {
 
 /// not exported
 Uri httpServerGetDefaultUri(HttpServer server) =>
-    Uri.parse('http://${localhost}:${server.port}/');
+    Uri.parse('http://$localhost:${server.port}/');
 
 /// Node does not support root uri. / appendend on puropose
 Uri httpServerGetUri(HttpServer server) {

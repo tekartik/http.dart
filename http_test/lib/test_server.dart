@@ -25,7 +25,7 @@ Future<HttpServer> serve(HttpServerFactory factory, int port) async {
     await request.response.close();
   });
   var uri = httpServerGetUri(server);
-  print('simple body <${uri}?body=test>');
-  print('Failed <${uri}?body=test&statusCode=400>');
+  print('simple body <$uri?body=test>');
+  print('Failed <$uri?body=test&statusCode=400>');
   return server;
 }
