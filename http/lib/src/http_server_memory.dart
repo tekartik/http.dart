@@ -73,7 +73,7 @@ class HttpServerMemory extends Stream<HttpRequest>
   }
 
   @override
-  Uri get uri => Uri.parse('http://_memory:${port}/');
+  Uri get uri => Uri.parse('http://_memory:$port/');
 
 /*
   @override

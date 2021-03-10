@@ -80,7 +80,7 @@ void run(HttpFactory httpFactory) {
         //var response = await client.get('${uri}/?statusCode=200');
 
         var response = await httpClientSend(
-            client, httpMethodGet, Uri.parse('${uri}?statusCode=none'));
+            client, httpMethodGet, Uri.parse('$uri?statusCode=none'));
         expect(response.isSuccessful, isTrue);
 
         expect(response.statusCode, 200);
@@ -96,7 +96,7 @@ void run(HttpFactory httpFactory) {
           //var response = await client.get('${uri}/?statusCode=200');
 
           var response = await httpClientSend(
-              client, httpMethodGet, Uri.parse('${uri}?statusCode=200'));
+              client, httpMethodGet, Uri.parse('$uri?statusCode=200'));
           expect(response.isSuccessful, isTrue);
 
           expect(response.toString().startsWith('HTTP 200 size 0 headers '),
@@ -109,7 +109,7 @@ void run(HttpFactory httpFactory) {
         () async {
           var uri = httpServerGetUri(server);
           var response = await httpClientSend(
-              client, httpMethodGet, Uri.parse('${uri}?statusCode=400'));
+              client, httpMethodGet, Uri.parse('$uri?statusCode=400'));
           expect(response.isSuccessful, isFalse);
           expect(response.statusCode, 400);
         },
@@ -121,7 +121,7 @@ void run(HttpFactory httpFactory) {
           var uri = httpServerGetUri(server);
           try {
             await httpClientSend(client, httpMethodGet,
-                Uri.parse('${uri}?statusCode=400&body=test'),
+                Uri.parse('$uri?statusCode=400&body=test'),
                 throwOnFailure: true);
             fail('should fail');
           } on HttpClientException catch (e) {
@@ -144,8 +144,8 @@ void run(HttpFactory httpFactory) {
 
       test('httpClientRead', () async {
         var uri = httpServerGetUri(server);
-        var result = await httpClientRead(client, httpMethodGet,
-            Uri.parse('${uri}?statusCode=200&body=test'));
+        var result = await httpClientRead(
+            client, httpMethodGet, Uri.parse('$uri?statusCode=200&body=test'));
         expect(result, 'test');
       });
 
@@ -153,7 +153,7 @@ void run(HttpFactory httpFactory) {
         var uri = httpServerGetUri(server);
         try {
           await httpClientRead(client, httpMethodGet,
-              Uri.parse('${uri}?statusCode=400&body=test'));
+              Uri.parse('$uri?statusCode=400&body=test'));
           fail('should fail');
         } on HttpClientException catch (e) {
           expect(e.statusCode, 400);

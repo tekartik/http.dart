@@ -488,7 +488,7 @@ class HttpClientMemory extends Object with HttpClientMixin implements Client {
         headers: headers, body: body, encoding: encoding);
     var server = httpDataMemory.servers[request.port];
     if (server == null) {
-      throw Exception('no server found for url ${url} port ${request.port}');
+      throw Exception('no server found for url $url port ${request.port}');
     }
     //request.add(getBodyAsBytes(getBodyAsBytes(body, encoding: encoding)));
     //request.close();
