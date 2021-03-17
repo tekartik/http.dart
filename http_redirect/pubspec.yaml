@@ -41,5 +41,3 @@ dependency_overrides:
     path: ../http
   tekartik_http_io:
     path: ../http_io
-  tekartik_http_node:
-    path: ../http_node

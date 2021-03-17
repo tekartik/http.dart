@@ -9,12 +9,6 @@ environment:
 dev_dependencies:
   test: ">=1.2.0"
   dev_test: any
-  grinder: any
-  tekartik_build_utils:
-    git:
-      url: git://github.com/tekartik/build_utils.dart
-      ref: dart2
-    version: '>=0.6.5+1'
   # test dependencies without version
   tekartik_http_io:
     git:
