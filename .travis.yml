@@ -10,7 +10,7 @@ addons:
 script:
   - cd repo_support
   - dart pub get
-  - dart run tool/travis.dart
+  - dart run tool/run_ci.dart
 
 cache:
   directories:
