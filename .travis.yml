@@ -1,34 +1,17 @@
-# Created with https://github.com/dart-lang/mono_repo
 language: dart
-
+dart:
+  - stable
+  - beta
+  - dev
 sudo: required
 addons:
   chrome: stable
 
-before_install:
-- nvm install node
-- node --version
-
-script: ./http_support/root_travis.sh
-
-jobs:
-  include:
-    - stage: stable
-      dart: stable
-    - stage: beta
-      dart: beta
-    - stage: dev
-      dart: dev
-
-stages:
-  - stable
-  - beta
-  - dev
+script:
+  - cd repo_support
+  - dart pub get
+  - dart run tool/travis.dart
 
 cache:
   directories:
     - $HOME/.pub-cache
-
-jobs:
-  allow_failures:
-    - dart: dev
