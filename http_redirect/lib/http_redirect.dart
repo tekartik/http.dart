@@ -133,7 +133,7 @@ class Options {
   late bool handleCors;
   bool? forwardHeaders;
   int? port;
-  var host;
+  Object? host;
 
   List<String>? forwardedHeaders;
 

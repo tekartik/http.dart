@@ -136,7 +136,7 @@ class HttpRequestMemory extends Stream<Uint8List> implements HttpRequest {
   @override
   final Uri uri;
   final int port;
-  final body;
+  final Object? body;
   final Encoding? encoding;
   @override
   int? contentLength;
