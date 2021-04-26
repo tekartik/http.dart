@@ -3,9 +3,9 @@
 
 library tekartik_http.http_memory_test;
 
+import 'package:tekartik_http/http.dart' show httpServerGetUri;
 import 'package:tekartik_http/http_memory.dart';
 import 'package:tekartik_http_test/http_test.dart';
-import 'package:tekartik_http/http.dart' show httpServerGetUri;
 import 'package:test/test.dart';
 
 void main() {

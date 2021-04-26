@@ -60,6 +60,7 @@ class InternetAddressType {
 abstract class InternetAddress {
   /// Tekartik extension;
   static InternetAddress get any => anyIPv4;
+
   /*
   /// IP version 4 loopback address. Use this address when listening on
   /// or connecting to the loopback adapter using IP version 4 (IPv4).
@@ -73,9 +74,11 @@ abstract class InternetAddress {
   @Deprecated("Use loopbackIPv6 instead")
   external static InternetAddress get LOOPBACK_IP_V6;
   */
+
   /// IP version 4 any address. Use this address when listening on
   /// all adapters IP addresses using IP version 4 (IPv4).
   static final anyIPv4 = _InternetAddress(InternetAddressType.IPv4, null);
+
   /*
   @Deprecated("Use anyIPv4 instead")
   external static InternetAddress get ANY_IP_V4;
@@ -86,6 +89,7 @@ abstract class InternetAddress {
   @Deprecated("Use anyIPv6 instead")
   external static InternetAddress get ANY_IP_V6;
   */
+
   /// The [type] of the [InternetAddress] specified what IP protocol.
   InternetAddressType get type;
 
@@ -94,7 +98,7 @@ abstract class InternetAddress {
   /// hexadecimal representation.
   String? get address;
 
-  /*
+/*
   /// The host used to lookup the address. If there is no host
   /// associated with the address this returns the numeric address.
   String get host;
@@ -255,6 +259,7 @@ abstract class HttpRequest implements Stream<Uint8List> {
   /// Returns [:null:] if the socket is not available.
   HttpConnectionInfo get connectionInfo;
   */
+
   /// The [HttpResponse] object, used for sending back the response to the
   /// client.
   ///
@@ -360,6 +365,7 @@ abstract class HttpResponse implements StreamSink<Uint8List>, StringSink {
   /// performance, when writing many small chunks.
   bool bufferOutput;
   */
+
   /// Returns the response headers.
   ///
   /// The response headers can be modified until the response body is
@@ -370,6 +376,7 @@ abstract class HttpResponse implements StreamSink<Uint8List>, StringSink {
   /// Cookies to set in the client (in the 'set-cookie' header).
   List<Cookie> get cookies;
   */
+
   /// Respond with a redirect to [location].
   ///
   /// The URI in [location] should be absolute, but there are no checks
@@ -382,6 +389,7 @@ abstract class HttpResponse implements StreamSink<Uint8List>, StringSink {
   /// This method will also call `close`, and the returned future is
   /// the future returned by `close`.
   Future redirect(Uri location, {int status = httpStatusMovedTemporarily});
+
   /*
 
   /// Detaches the underlying socket from the HTTP server. When the
@@ -656,6 +664,7 @@ abstract class HttpServer implements Stream<HttpRequest> {
   factory HttpServer.listenOn(ServerSocket serverSocket) =>
       _HttpServer.listenOn(serverSocket);
   */
+
   /// Permanently stops this [HttpServer] from listening for new
   /// connections.  This closes the [Stream] of [HttpRequest]s with a
   /// done event. The returned future completes when the server is
@@ -675,7 +684,7 @@ abstract class HttpServer implements Stream<HttpRequest> {
   /// a lookup from a hostname.
   InternetAddress? get address;
 
-  /*
+/*
   /// Sets the timeout, in seconds, for sessions of this [HttpServer].
   /// The default timeout is 20 minutes.
   set sessionTimeout(int timeout);
@@ -958,6 +967,7 @@ abstract class HttpHeaders {
   /// connection.
   int port;
   */
+
   /// Gets and sets the content type. Note that the content type in the
   /// header will only be updated if this field is set
   /// directly. Mutating the returned current value will have no
@@ -975,6 +985,7 @@ abstract class HttpHeaders {
   /// Gets and sets the chunked transfer encoding header value.
   bool chunkedTransferEncoding;
   */
+
   /// Returns the list of values for the header named [name]. If there
   /// is no header with the provided name, [:null:] will be returned.
   List<String>? operator [](String name);
@@ -997,6 +1008,7 @@ abstract class HttpHeaders {
   /// Sets a header. The header named [name] will have all its values
   /// cleared before the value [value] is added as its value.
   void set(String name, Object value);
+
   /*
   /// Removes a specific value for a header name. Some headers have
   /// system supplied values and for these the system supplied values
@@ -1009,11 +1021,12 @@ abstract class HttpHeaders {
   /// header.
   void removeAll(String name);
   */
+
   /// Enumerates the headers, applying the function [f] to each
   /// header. The header name passed in [:name:] will be all lower
   /// case.
   void forEach(void Function(String name, List<String> values) f);
-  /*
+/*
 
   /// Disables folding for the header named [name] when sending the HTTP
   /// header. By default, multiple header values are folded into a
@@ -1030,8 +1043,7 @@ abstract class HttpHeaders {
 
 /// Representation of a content type. An instance of [ContentType] is
 /// immutable.
-abstract class ContentType
-// implements HeaderValue
+abstract class ContentType // implements HeaderValue
 {
   /*
   /// Content type for plain text using UTF-8 encoding.
@@ -1074,6 +1086,7 @@ abstract class ContentType
     return _ContentType(primaryType, subType, charset, parameters);
   }
   */
+
   /// Creates a new content type object from parsing a Content-Type
   /// header value. As primary type, sub type and parameter names and
   /// values are not case sensitive all these values will be converted
@@ -1087,7 +1100,7 @@ abstract class ContentType
     // return _ContentType.parse(value);
     return ContentTypeImpl(value);
   }
-  /*
+/*
 
   /// Gets the mime-type, without any parameters.
   String get mimeType;
