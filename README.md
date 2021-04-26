@@ -12,6 +12,6 @@ dependencies:
     git:
       url: git://github.com/tekartik/http.dart
       path: http_io
-      ref: dart2
+      ref: null_safety
     version: '>=0.2.0+2'
 ```yaml
