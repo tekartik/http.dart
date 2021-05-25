@@ -1,6 +1,6 @@
 name: tekartik_http_browser
 description: Http browser
-version: 0.6.0
+version: 0.6.0+1
 publish_to: none
 
 environment:
@@ -13,6 +13,7 @@ dependencies:
       path: http
       ref: null_safety
     version: '>=0.6.0'
+
 dev_dependencies:
   test: ">=1.16.0"
   dev_test: '>=0.15.0'

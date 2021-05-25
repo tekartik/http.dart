@@ -1,12 +1,10 @@
-import 'dart:async';
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:tekartik_common_utils/common_utils_import.dart';
-import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/http_client.dart' as http_client;
+import 'package:tekartik_http/src/http_common.dart';
 
 import 'http_client_memory.dart';
 
@@ -115,13 +113,13 @@ abstract class HttpClientResponse {
 }
 
 /// Http client exception.
-class HttpClientException extends http.ClientException
+class HttpClientExceptionImpl extends http.ClientException
     implements http_client.HttpClientException {
   @override
   final HttpClientResponse response;
 
   /// Creates an exception with a message and a response.
-  HttpClientException({required String message, required this.response})
+  HttpClientExceptionImpl({required String message, required this.response})
       : super(message, parseUri(response.response.request!.url));
 
   @override
@@ -162,7 +160,7 @@ Future<HttpClientResponse> httpClientSend(
   return httpResponse;
 }
 
-/// Throws a [HttpClientException] on Error
+/// Throws a [HttpClientExceptionImpl] on Error
 Future<String> httpClientRead(http.Client client, String method, Uri uri,
     {Map<String, String>? headers, dynamic body, Encoding? encoding}) async {
   var response = await httpClientSend(client, method, uri,
@@ -170,7 +168,7 @@ Future<String> httpClientRead(http.Client client, String method, Uri uri,
   if (_checkResponseSuccess(response)) {
     return response.body;
   } else {
-    throw HttpClientException(
+    throw HttpClientExceptionImpl(
         message: 'Error ${response.statusCode}', response: response);
   }
 }
@@ -186,5 +184,5 @@ bool _checkResponseSuccess(HttpClientResponse response) {
   if (response.reasonPhrase != null) {
     message = '$message: ${response.reasonPhrase}';
   }
-  throw HttpClientException(message: message, response: response);
+  throw HttpClientExceptionImpl(message: message, response: response);
 }

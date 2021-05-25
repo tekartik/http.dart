@@ -1,4 +1,4 @@
-import 'package:tekartik_http/http.dart';
+import 'package:tekartik_http/http_client.dart';
 import 'package:test/test.dart';
 
 void main() async {

@@ -3,7 +3,6 @@ import 'dart:io' as io;
 import 'dart:typed_data';
 
 import 'package:tekartik_http/http.dart';
-import 'package:tekartik_http/http_server.dart';
 import 'package:tekartik_http/src/compat.dart'; // ignore: implementation_imports
 import 'package:tekartik_http/src/http_server_mixin.dart'; // ignore: implementation_imports
 

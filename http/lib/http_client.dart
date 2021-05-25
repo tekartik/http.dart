@@ -1,8 +1,9 @@
-import 'package:tekartik_http/http.dart';
+import 'package:tekartik_http/src/http_client.dart';
 
 export 'package:tekartik_http/http_memory.dart' show httpClientFactoryMemory;
 export 'package:tekartik_http/src/http_client.dart'
     show HttpClientFactory, httpClientSend, HttpClientResponse, httpClientRead;
+export 'package:tekartik_http/src/http_constant.dart';
 
 /// Http client exception.
 abstract class HttpClientException {

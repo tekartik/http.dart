@@ -5,8 +5,8 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:http/http.dart';
-import 'package:tekartik_http/http.dart';
-import 'package:tekartik_http/src/http.dart';
+import 'package:tekartik_http/http_client.dart';
+import 'package:tekartik_http/src/http_common.dart';
 import 'package:tekartik_http/src/http_server.dart';
 import 'package:tekartik_http/src/http_server_memory.dart';
 import 'package:tekartik_http/src/utils.dart';
@@ -404,53 +404,16 @@ class ResponseMemory implements Response {
   BaseRequest get request => _request;
 }
 
-abstract class HttpClientMixin implements Client {
-  Future<Response> httpCall(String method, url,
+mixin HttpClientMixin implements Client {
+  Future<Response> httpCall(String method, Uri url,
       {Map<String, String>? headers, body, Encoding? encoding});
 
-  Future<StreamedResponse> httpSend(String method, url,
+  Future<StreamedResponse> httpSend(String method, Uri url,
       {Map<String, String>? headers, body, Encoding? encoding});
-
-  @override
-  Future<Response> delete(url,
-          {Map<String, String>? headers, Object? body, Encoding? encoding}) =>
-      httpCall(httpMethodDelete, url, headers: headers);
-
-  @override
-  Future<Response> get(url, {Map<String, String>? headers}) =>
-      httpCall(httpMethodGet, url, headers: headers);
-
-  @override
-  Future<Response> head(url, {Map<String, String>? headers}) =>
-      httpCall(httpMethodHead, url, headers: headers);
-
-  @override
-  Future<Response> patch(url,
-          {Map<String, String>? headers, body, Encoding? encoding}) =>
-      httpCall(httpMethodPatch, url,
-          headers: headers, body: body, encoding: encoding);
-
-  @override
-  Future<Response> post(url,
-          {Map<String, String>? headers, body, Encoding? encoding}) =>
-      httpCall(httpMethodPost, url,
-          headers: headers, body: body, encoding: encoding);
-
-  @override
-  Future<Response> put(url,
-          {Map<String, String>? headers, body, Encoding? encoding}) =>
-      httpCall(httpMethodPut, url,
-          headers: headers, body: body, encoding: encoding);
-
-  @override
-  Future<String> read(url, {Map<String, String>? headers}) async {
-    var response = await get(url, headers: headers);
-    return response.body;
-  }
 
   @override
   Future<Uint8List> readBytes(url, {Map<String, String>? headers}) async {
-    var response = await get(url, headers: headers);
+    var response = await this.get(url, headers: headers);
     return response.bodyBytes;
   }
 
@@ -462,27 +425,22 @@ abstract class HttpClientMixin implements Client {
       data.addAll(part);
     }).asFuture();
     body = data;
-    /*
-    if (request is Request) {
-      body = request.body;
-    } else {
 
-    }
-
-     */
     return httpSend(request.method, request.url,
         headers: request.headers, body: body);
   }
 }
 
-class HttpClientMemory extends Object with HttpClientMixin implements Client {
+class HttpClientMemory extends BaseClient
+    with HttpClientMixin
+    implements Client {
   @override
   void close() {
     // TODO: implement close
   }
 
   @override
-  Future<ResponseMemory> httpCall(String method, url,
+  Future<Response> httpCall(String method, Uri url,
       {Map<String, String>? headers, body, Encoding? encoding}) async {
     var request = HttpRequestMemory(method, parseUri(url),
         headers: headers, body: body, encoding: encoding);
@@ -500,7 +458,7 @@ class HttpClientMemory extends Object with HttpClientMixin implements Client {
   }
 
   @override
-  Future<StreamedResponse> httpSend(String method, url,
+  Future<StreamedResponse> httpSend(String method, Uri url,
       {Map<String, String>? headers, body, Encoding? encoding}) async {
     var response = await httpCall(method, url,
         headers: headers, body: body, encoding: encoding);
