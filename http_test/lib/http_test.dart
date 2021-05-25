@@ -1,15 +1,12 @@
 // Copyright (c) 2017, Alexandre Roux. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:http/http.dart';
 import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_http/http.dart';
-import 'package:tekartik_http/http_client.dart';
 import 'package:tekartik_http/http_memory.dart';
-import 'package:tekartik_http/http_server.dart';
 import 'package:test/test.dart';
 
 void main() {

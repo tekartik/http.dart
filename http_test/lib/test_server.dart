@@ -1,6 +1,5 @@
 import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_http/http.dart';
-import 'package:tekartik_http/http_server.dart';
 
 /// Use port 0 for automatic
 Future<HttpServer> serve(HttpServerFactory factory, int port) async {
