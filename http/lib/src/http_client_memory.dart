@@ -413,7 +413,7 @@ mixin HttpClientMixin implements Client {
 
   @override
   Future<Uint8List> readBytes(url, {Map<String, String>? headers}) async {
-    var response = await get(url, headers: headers);
+    var response = await this.get(url, headers: headers);
     return response.bodyBytes;
   }
 
