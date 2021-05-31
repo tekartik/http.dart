@@ -160,13 +160,38 @@ Future<HttpClientResponse> httpClientSend(
   return httpResponse;
 }
 
-/// Throws a [HttpClientExceptionImpl] on Error
+/// Read a string using responseEncoding.
+///
+/// Throws a [HttpClientExceptionImpl] on Error.
+///
+/// If reponseEncoding is set it is used
 Future<String> httpClientRead(http.Client client, String method, Uri uri,
+    {Map<String, String>? headers,
+    dynamic body,
+    Encoding? encoding,
+    Encoding? responseEncoding}) async {
+  var response = await httpClientSend(client, method, uri,
+      headers: headers, body: body, encoding: encoding);
+  if (_checkResponseSuccess(response)) {
+    if (responseEncoding == null) {
+      return response.body;
+    } else {
+      return responseEncoding.decode(response.bodyBytes);
+    }
+  } else {
+    throw HttpClientExceptionImpl(
+        message: 'Error ${response.statusCode}', response: response);
+  }
+}
+
+/// Throws a [HttpClientExceptionImpl] on Error
+Future<Uint8List> httpClientReadBytes(
+    http.Client client, String method, Uri uri,
     {Map<String, String>? headers, dynamic body, Encoding? encoding}) async {
   var response = await httpClientSend(client, method, uri,
       headers: headers, body: body, encoding: encoding);
   if (_checkResponseSuccess(response)) {
-    return response.body;
+    return response.bodyBytes;
   } else {
     throw HttpClientExceptionImpl(
         message: 'Error ${response.statusCode}', response: response);

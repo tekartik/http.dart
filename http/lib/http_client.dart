@@ -2,7 +2,12 @@ import 'package:tekartik_http/src/http_client.dart';
 
 export 'package:tekartik_http/http_memory.dart' show httpClientFactoryMemory;
 export 'package:tekartik_http/src/http_client.dart'
-    show HttpClientFactory, httpClientSend, HttpClientResponse, httpClientRead;
+    show
+        HttpClientFactory,
+        httpClientSend,
+        HttpClientResponse,
+        httpClientRead,
+        httpClientReadBytes;
 export 'package:tekartik_http/src/http_constant.dart';
 
 /// Http client exception.

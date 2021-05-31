@@ -139,14 +139,14 @@ void run(HttpFactory httpFactory) {
         expect(port1, isNot(port2));
       });
 
-      test('httpClientRead', () async {
+      test('httpClientRead1', () async {
         var uri = httpServerGetUri(server);
         var result = await httpClientRead(
             client, httpMethodGet, Uri.parse('$uri?statusCode=200&body=test'));
         expect(result, 'test');
       });
 
-      test('httpClientRead', () async {
+      test('httpClientRead2', () async {
         var uri = httpServerGetUri(server);
         try {
           await httpClientRead(client, httpMethodGet,
@@ -157,6 +157,23 @@ void run(HttpFactory httpFactory) {
           expect(e.response.statusCode, 400);
           expect(e.response.body, 'test');
         }
+      });
+
+      test('httpClientReadEncoding', () async {
+        var uri = httpServerGetUri(server);
+        var body = Uri.encodeComponent('é');
+        var bytes = await httpClientReadBytes(
+            client, httpMethodGet, Uri.parse('$uri?body=$body'));
+        expect(bytes, [195, 169]);
+        expect(
+            await httpClientRead(
+                client, httpMethodGet, Uri.parse('$uri?body=$body')),
+            'Ã©');
+        expect(
+            await httpClientRead(
+                client, httpMethodGet, Uri.parse('$uri?body=$body'),
+                responseEncoding: utf8),
+            'é');
       });
       tearDownAll(() async {
         client.close();
