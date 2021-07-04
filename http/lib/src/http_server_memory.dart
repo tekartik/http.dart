@@ -49,7 +49,7 @@ class HttpServerMemory extends Stream<HttpRequest>
     httpDataMemory.servers.remove(port);
     // This hangs if the server was not listened to
     // https://github.com/dart-lang/sdk/issues/19095
-    unawaited(requestCtlr.close());
+    requestCtlr.close().unawait();
   }
 
 /*

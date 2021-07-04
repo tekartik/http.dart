@@ -1,6 +1,6 @@
 name: tekartik_http_redirect
 description: A sample command-line application.
-version: 0.5.2
+version: 0.7.2
 publish_to: none
 
 environment:
