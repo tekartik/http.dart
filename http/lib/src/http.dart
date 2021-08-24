@@ -2,17 +2,17 @@ export 'http_constant.dart';
 
 // Old...
 /// deprecated.
-@deprecated
+@Deprecated('typo')
 const int httpSttatusCodeBadRequest = 400;
 
 /// deprecated.
-@deprecated
+@Deprecated('typo')
 const int httpSttatusCodeNotFound = 404;
 
 /// deprecated.
-@deprecated
+@Deprecated('typo')
 const int httpSttatusCodeRequestTimeout = 408;
 
 /// deprecated.
-@deprecated
+@Deprecated('typo')
 const int httpSttatusCodeInternalServerError = 500;
