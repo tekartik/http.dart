@@ -144,9 +144,9 @@ class Options {
     _corsHeaders!.add(redirectBaseUrlHeader);
     _corsHeaders!.add(redirectUrlHeader);
     _lowerCaseCorsHeaders = <String>[];
-    _corsHeaders!.forEach((name) {
+    for (var name in _corsHeaders!) {
       _lowerCaseCorsHeaders.add(name.toLowerCase());
-    });
+    }
   }
 
   List<String> get corsHeaders => _corsHeaders!;
