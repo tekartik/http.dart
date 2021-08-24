@@ -140,13 +140,13 @@ class Options {
   String? baseUrl;
 
   set corsHeaders(List<String> corsHeaders) {
-    _corsHeaders = List.from(corsHeaders);
-    _corsHeaders!.add(redirectBaseUrlHeader);
-    _corsHeaders!.add(redirectUrlHeader);
+    corsHeaders = _corsHeaders = List<String>.from(corsHeaders);
+    corsHeaders.add(redirectBaseUrlHeader);
+    corsHeaders.add(redirectUrlHeader);
     _lowerCaseCorsHeaders = <String>[];
-    _corsHeaders!.forEach((name) {
+    for (var name in corsHeaders) {
       _lowerCaseCorsHeaders.add(name.toLowerCase());
-    });
+    }
   }
 
   List<String> get corsHeaders => _corsHeaders!;
