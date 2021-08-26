@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:tekartik_common_utils/list_utils.dart';
 import 'package:tekartik_http/http.dart';
 
 import 'http_server_mixin.dart';
@@ -267,6 +268,15 @@ abstract class HttpRequest implements Stream<Uint8List> {
   /// any write calls on the [HttpResponse] automatically drain the request
   /// body.
   HttpResponse get response;
+}
+
+/// read body bytes mixin
+extension HttpRequestBodyBytesExt on HttpRequest {
+  /// Get the body bytes. To call only once instead of listening the stream.
+  Future<Uint8List> getBodyBytes() async {
+    var listOfList = await toList();
+    return Uint8List.fromList(listFlatten(listOfList));
+  }
 }
 
 /// An HTTP response, which returns the headers and data

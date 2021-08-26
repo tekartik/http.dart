@@ -8,4 +8,5 @@ export 'package:tekartik_http/src/http_server.dart'
         InternetAddress,
         InternetAddressType,
         HttpHeaders,
-        ContentType;
+        ContentType,
+        HttpRequestBodyBytesExt;

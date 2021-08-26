@@ -11,8 +11,8 @@ dependencies:
   tekartik_common_utils:
     git:
       url: git://github.com/tekartik/common_utils.dart
-      ref: 'null_safety'
-    version: '>=0.1.0'
+      ref: null_safety
+    version: '>=0.12.1'
   web_socket_channel: '>=2.0.0'
 
 dev_dependencies:

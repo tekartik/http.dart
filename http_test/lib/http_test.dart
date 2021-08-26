@@ -1,12 +1,12 @@
 // Copyright (c) 2017, Alexandre Roux. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
-
 import 'dart:typed_data';
 
 import 'package:http/http.dart';
 import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/http_memory.dart';
+import 'package:tekartik_http/http_server.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -31,6 +31,16 @@ void run(HttpFactory httpFactory) {
       client.close();
       await server.close();
     });
+  });
+
+  group('server', () {
+    test('address', () async {
+      var server = await httpServerFactory.bind(InternetAddress.anyIPv4, 0);
+      expect(server.address, isNotNull);
+      expect(server.port, isNotNull);
+      expect(server.port, isNot(0));
+      await server.close();
+    });
     test('flush', () async {
       var server = await httpServerFactory.bind(localhost, 0);
       // print('### PORT ${server.port}');
@@ -45,14 +55,23 @@ void run(HttpFactory httpFactory) {
       client.close();
       await server.close();
     });
-  });
-
-  group('server', () {
-    test('address', () async {
-      var server = await httpServerFactory.bind(InternetAddress.anyIPv4, 0);
-      expect(server.address, isNotNull);
-      expect(server.port, isNotNull);
-      expect(server.port, isNot(0));
+    test('HttpRequest.toBytes', () async {
+      var server = await httpServerFactory.bind(localhost, 0);
+      // print('### PORT ${server.port}');
+      server.listen((request) async {
+        var bytes = await request.getBodyBytes();
+        expect(utf8.decode(bytes), 'test');
+        request.response.write('test');
+        await request.response.flush();
+        await request.response.close();
+      });
+      var client = httpClientFactory.newClient();
+      expect(
+          (await client.post(Uri.parse('http://$localhost:${server.port}'),
+                  body: 'test'))
+              .body,
+          'test');
+      client.close();
       await server.close();
     });
   });
