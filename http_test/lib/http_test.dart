@@ -31,6 +31,20 @@ void run(HttpFactory httpFactory) {
       client.close();
       await server.close();
     });
+    test('flush', () async {
+      var server = await httpServerFactory.bind(localhost, 0);
+      // print('### PORT ${server.port}');
+      server.listen((request) async {
+        request.response.write('test');
+        await request.response.flush();
+        await request.response.close();
+      });
+      var client = httpClientFactory.newClient();
+      expect(await client.read(Uri.parse('http://$localhost:${server.port}')),
+          'test');
+      client.close();
+      await server.close();
+    });
   });
 
   group('server', () {
