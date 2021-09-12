@@ -1,10 +1,13 @@
+@Deprecated('Use https://github.com/tekartik/http_redirect.dart')
+library obsolete_tekartik_http_redirect_cli;
+
 import 'dart:async';
 import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:tekartik_common_utils/int_utils.dart';
 import 'package:tekartik_common_utils/log_utils.dart';
-import 'package:tekartik_http_io/http_server_io.dart';
+import 'package:tekartik_http_io/http_io.dart';
 import 'package:tekartik_http_redirect/http_redirect.dart';
 
 const String helpArgName = 'help';
@@ -36,7 +39,7 @@ Future main(List<String> arguments) async {
   options.handleCors = _argsResult[corsArgName] == true;
   options.corsHeaders = _argsResult[corsHeadersArgName] as List<String>;
   options.baseUrl = _argsResult[redirectBaseUrlArgName] as String?;
-  options.forwardHeaders = _argsResult[forwardHeaderFlagName] as bool?;
+  options.forwardHeaders = _argsResult[forwardHeaderFlagName] as bool;
 
   final help = _argsResult[helpArgName] as bool;
   if (help) {
@@ -61,5 +64,6 @@ Future main(List<String> arguments) async {
   // var proxy = new HttpRequestProxy('localhost', 8000);
   //var host = InternetAddress.ANY_IP_V6;
   options.host = InternetAddress.anyIPv4;
-  await startServer(httpServerFactoryIo, options);
+  await HttpRedirectServer.startServer(
+      httpFactory: httpFactoryIo, options: options);
 }

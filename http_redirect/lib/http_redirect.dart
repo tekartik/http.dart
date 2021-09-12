@@ -1,7 +1,13 @@
+@Deprecated('Use https://github.com/tekartik/http_redirect.dart')
+library obsolete_tekartik_http_redirect;
+
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as _path;
 import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_http/http.dart';
+import 'package:tekartik_http_redirect/src/http_redirect_server.dart';
+
+export 'src/http_redirect_server.dart' show HttpRedirectServer;
 
 Level? logLevel;
 
@@ -12,11 +18,9 @@ const String hostHeader = 'host';
 // response
 const String redirectUrlHeader = 'x-tekartik-redirect-url';
 
-final http.Client _client = http.Client();
-
 /// Proxy the HTTP request to the specified server.
 Future proxyHttpRequest(Options options, HttpRequest request, String? baseUrl,
-    {Uri? uri}) async {
+    {Uri? uri, required http.Client client}) async {
   if (uri == null) {
     var path = request.uri.path;
     if (path.startsWith('/')) {
@@ -78,11 +82,11 @@ Future proxyHttpRequest(Options options, HttpRequest request, String? baseUrl,
     bytes.addAll(list);
   }
 
-  if ((!options.forwardHeaders!) || false) {
+  if ((!options.forwardHeaders) || false) {
     headers = null;
   }
 
-  var innerResponse = await httpClientSend(_client, request.method, uri,
+  var innerResponse = await httpClientSend(client, request.method, uri,
       body: bytes, headers: headers);
   var innerBody = innerResponse.bodyBytes;
   var innerHeaders = innerResponse.headers;
@@ -118,15 +122,39 @@ Future proxyHttpRequest(Options options, HttpRequest request, String? baseUrl,
   print('fwd response headers: ${r.headers}');
   r.headers.set(redirectUrlHeader, uri.toString());
 
-  await r.addStream(Stream.fromIterable([innerBody]));
-  await r.flush();
-  await r.close();
+  try {
+    if (innerBody.isNotEmpty) {
+      await r.addStream(Stream.fromIterable([innerBody]));
+    }
+  } catch (e, st) {
+    if (debugHttpRedirectServer) {
+      print(st);
+    }
+    rethrow;
+  }
+  try {
+    await r.flush();
+  } catch (e, st) {
+    print('Error flushing $e');
+    if (debugHttpRedirectServer) {
+      print(st);
+    }
+  }
+
+  try {
+    await r.close();
+  } catch (e, st) {
+    print('Error closing $e');
+    if (debugHttpRedirectServer) {
+      print(st);
+    }
+  }
   print('done');
 }
 
 class Options {
-  late bool handleCors;
-  bool? forwardHeaders;
+  var handleCors = false;
+  var forwardHeaders = false;
   int? port;
   Object? host;
 
@@ -166,12 +194,13 @@ class Options {
 ///
 /// start http redirect server
 ///
+@Deprecated('Use Redirect server')
 Future<HttpServer> startServer(
     HttpServerFactory factory, Options options) async {
   var host = options.host ?? InternetAddress.anyIPv4;
   var port = options.port ?? 8180;
   final server = await factory.bind(host, port);
-  print('listing on $host port $port');
+  print('listening on $host port $port');
   print('from http://localhost:$port');
   if (options.baseUrl != null) {
     print('default redirection to ${options.baseUrl}');
@@ -219,7 +248,8 @@ Future<HttpServer> startServer(
     } else {
       try {
         await proxyHttpRequest(options, request, baseUrl,
-            uri: fullUrl != null ? Uri.parse(fullUrl) : null);
+            uri: fullUrl != null ? Uri.parse(fullUrl) : null,
+            client: http.Client());
       } catch (e) {
         print('proxyHttpRequest error $e');
         try {

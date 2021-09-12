@@ -1,6 +1,8 @@
 import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/http_memory.dart' as memory;
 
+var httpMemoryHost = '_memory';
+
 /// Http memory factory.
 ///
 /// To use for testing.

@@ -309,7 +309,9 @@ class HttpResponseMemory extends StreamSink<Uint8List> implements HttpResponse {
   Future get done => streamCtlr.done;
 
   @override
-  Future flush() => throw 'not implemented yet';
+  Future<void> flush() async {
+    // No action
+  }
 
   @override
   Future redirect(Uri location, {int status = httpStatusMovedTemporarily}) =>

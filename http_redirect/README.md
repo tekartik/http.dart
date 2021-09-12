@@ -1,10 +1,3 @@
-## Node Test
+## Obsolete
 
-     pbr test -- -p node
-
-
-## VM test
-
-
-    pbr test
-
+Use https://github.com/tekartik/http_redirect.dart

@@ -1,10 +1,11 @@
-import 'package:tekartik_http_io/http_server_io.dart';
+import 'package:tekartik_http_io/http_io.dart';
+// ignore: deprecated_member_use_from_same_package
 import 'package:tekartik_http_redirect/http_redirect.dart';
 
-Future main() async {
-  await startServer(
-      httpServerFactoryIo,
-      Options()
+Future<void> main() async {
+  await HttpRedirectServer.startServer(
+      httpFactory: httpFactoryIo,
+      options: Options()
         ..handleCors = true
         ..forwardHeaders = false);
 }

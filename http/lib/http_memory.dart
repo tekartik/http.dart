@@ -7,6 +7,7 @@ export 'package:tekartik_http/src/http_client_memory.dart' show HttpClientMixin;
 
 export 'http_client.dart';
 export 'http_server.dart';
+export 'src/http_memory.dart' show httpMemoryHost;
 
 /// Memory http client factory.
 HttpClientFactory get httpClientFactoryMemory => memory.httpClientFactoryMemory;
