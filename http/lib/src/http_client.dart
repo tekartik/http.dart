@@ -76,7 +76,7 @@ abstract class HttpClientResponse {
   }
 
   /// True if succesful.
-  bool get isSuccessful => statusCode < 400;
+  bool get isSuccessful => http_client.isHttpStatusCodeSuccessful(statusCode);
 
   Response get _response => response;
 
