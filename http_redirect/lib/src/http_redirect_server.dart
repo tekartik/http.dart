@@ -1,7 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_http/http.dart';
-import 'package:tekartik_http/http_client.dart';
 // ignore: deprecated_member_use_from_same_package
 import 'package:tekartik_http_redirect/http_redirect.dart';
 
