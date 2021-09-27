@@ -9,39 +9,14 @@ import 'package:tekartik_http/http_client.dart';
 import 'package:tekartik_http/src/http_common.dart';
 import 'package:tekartik_http/src/http_server.dart';
 import 'package:tekartik_http/src/http_server_memory.dart';
+import 'package:tekartik_http/src/http_server_mixin.dart';
 import 'package:tekartik_http/src/utils.dart';
 
-class HttpHeadersMemory implements HttpHeaders {
+class HttpHeadersMemory with HttpHeadersMixin implements HttpHeaders {
   final Map<String, List<String>> map = {};
 
   /// Keys
   Iterable<String> get keys => map.keys;
-
-  /*
-  @override
-  bool chunkedTransferEncoding;
-
-  @override
-  int contentLength;
-
-  @override
-  DateTime date;
-
-  @override
-  DateTime expires;
-
-  @override
-  String host;
-
-  @override
-  DateTime ifModifiedSince;
-
-  @override
-  bool persistentConnection;
-
-  @override
-  int port;
-  */
 
   @override
   List<String>? operator [](String name) => map[getKey(name)];
@@ -62,38 +37,9 @@ class HttpHeadersMemory implements HttpHeaders {
     }
   }
 
-  /*
-  @override
-  void clear() {
-    map.clear();
-  }
-  */
-
   @override
   void forEach(void Function(String name, List<String> values) f) =>
       map.forEach(f);
-
-  /*
-  @override
-  void noFolding(String name) => throw 'not implemented yet';
-
-  @override
-  void remove(String name, Object value) {
-    var key = getKey(name);
-    var list = map[key];
-    if (list != null) {
-      list.remove(value?.toString());
-      if (list == null) {
-        map.remove(key);
-      }
-    }
-  }
-
-  @override
-  void removeAll(String name) {
-    map.remove(getKey(name));
-  }
-  */
 
   @override
   void set(String name, Object value) {

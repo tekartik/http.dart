@@ -6,7 +6,6 @@ import 'package:http/http.dart';
 import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/http_memory.dart';
-import 'package:tekartik_http/http_server.dart';
 import 'package:test/test.dart';
 
 void main() {

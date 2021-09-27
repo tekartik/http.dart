@@ -6,3 +6,6 @@ Uint8List asUint8List(List<int> bytes) {
   }
   return Uint8List.fromList(bytes);
 }
+
+/// True if succesful.
+bool isHttpStatusCodeSuccessful(int statusCode) => statusCode < 400;

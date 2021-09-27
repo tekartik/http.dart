@@ -9,6 +9,7 @@ export 'package:tekartik_http/src/http_client.dart'
         httpClientRead,
         httpClientReadBytes;
 export 'package:tekartik_http/src/http_constant.dart';
+export 'package:tekartik_http/src/utils.dart' show isHttpStatusCodeSuccessful;
 
 /// Http client exception.
 abstract class HttpClientException {
