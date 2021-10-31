@@ -1,6 +1,6 @@
 name: tekartik_http_io
 description: Http io
-version: 0.7.2
+version: 0.7.3
 publish_to: none
 
 environment:
