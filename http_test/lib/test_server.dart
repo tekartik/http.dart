@@ -13,7 +13,7 @@ class HttpServerState {
 
   Uri get uri => serverInfo.uri;
   Future<void> close() async {
-    await httpServer.close(force: true);
+    await httpServer.close();
   }
 }
 
