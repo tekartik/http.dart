@@ -8,8 +8,8 @@ Abstract Http client and server
 dependencies:
   tekartik_http:
     git:
-      url: git://github.com/tekartik/http.dart
+      url: https://github.com/tekartik/http.dart
       path: http
-      ref: null_safety
+      ref: dart2_3
     version: '>=0.5.5'
 ```

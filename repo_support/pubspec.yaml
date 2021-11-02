@@ -9,15 +9,17 @@ environment:
 dev_dependencies:
   test: ">=1.2.0"
   dev_test: any
+
+_dev_dependencies:
   # test dependencies without version
   tekartik_http_io:
     git:
-      url: git://github.com/tekartik/http.dart
-      ref: null_safety
+      url: https://github.com/tekartik/http.dart
+      ref: dart2_3
       path: http_io
   tekartik_http_browser:
     git:
-      url: git://github.com/tekartik/http.dart
-      ref: null_safety
+      url: https://github.com/tekartik/http.dart
+      ref: dart2_3
       path: http_browser
 

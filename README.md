@@ -10,8 +10,8 @@ Dart abstraction for Http client and server
 dependencies:
   tekartik_http_io:
     git:
-      url: git://github.com/tekartik/http.dart
+      url: https://github.com/tekartik/http.dart
       path: http_io
-      ref: null_safety
+      ref: dart2_3
     version: '>=0.2.0+2'
 ```yaml
