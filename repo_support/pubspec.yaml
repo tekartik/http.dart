@@ -9,6 +9,11 @@ environment:
 dev_dependencies:
   test: ">=1.2.0"
   dev_test: any
+  tekartik_lints:
+    git:
+      url: https://github.com/tekartik/common.dart
+      ref: dart2_3
+      path: packages/lints
 
 _dev_dependencies:
   # test dependencies without version
