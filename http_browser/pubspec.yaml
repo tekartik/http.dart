@@ -9,9 +9,9 @@ environment:
 dependencies:
   tekartik_http:
     git:
-      url: git://github.com/tekartik/http.dart
+      url: https://github.com/tekartik/http.dart
       path: http
-      ref: null_safety
+      ref: dart2_3
     version: '>=0.6.0'
 
 dev_dependencies:
@@ -22,9 +22,9 @@ dev_dependencies:
   build_web_compilers: '>=2.4.0'
   tekartik_http_test:
     git:
-      url: git://github.com/tekartik/http.dart
+      url: https://github.com/tekartik/http.dart
       path: http_test
-      ref: null_safety
+      ref: dart2_3
     version: '>=0.6.0'
 
 dependency_overrides:

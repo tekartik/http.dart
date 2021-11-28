@@ -6,6 +6,7 @@ import 'package:http/http.dart';
 import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/http_memory.dart';
+import 'package:tekartik_http_test/test_server_test.dart' as test_server;
 import 'package:test/test.dart';
 
 void main() {
@@ -412,4 +413,6 @@ void run(HttpFactory httpFactory) {
     client.close();
     await server.close();
   });
+
+  test_server.run(httpFactory);
 }

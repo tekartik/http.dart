@@ -1,6 +1,6 @@
 name: tekartik_http_test
 description: Http test
-version: 0.7.2
+version: 0.7.3
 publish_to: none
 
 environment:
@@ -9,9 +9,9 @@ environment:
 dependencies:
   tekartik_http:
     git:
-      url: git://github.com/tekartik/http.dart
+      url: https://github.com/tekartik/http.dart
       path: http
-      ref: null_safety
+      ref: dart2_3
     version: '>=0.7.0'
 
 dev_dependencies:

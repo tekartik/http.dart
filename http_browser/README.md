@@ -6,8 +6,8 @@ pubspec.yaml:
 dependencies:
   tekartik_http_browser:
     git:
-      url: git://github.com/tekartik/http.dart
+      url: https://github.com/tekartik/http.dart
       path: http_browser
-      ref: null_safety
+      ref: dart2_3
     version: '>=0.0.1'
 ````

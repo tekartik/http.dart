@@ -5,8 +5,8 @@ pubspec.yaml:
 ```yaml
   tekartik_http_test:
     git:
-      url: git://github.com/tekartik/http.dart
+      url: https://github.com/tekartik/http.dart
       path: http_test
-      ref: null_safety
+      ref: dart2_3
     version: '>=0.5.0'
 ```
