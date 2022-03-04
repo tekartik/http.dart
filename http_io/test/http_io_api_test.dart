@@ -20,6 +20,11 @@ Future main() async {
         httpClientFactoryIo;
         expect(isRunningAsJavascript, isFalse);
       } on UnimplementedError catch (_) {}
+
+      try {
+        httpClientFactoryIoNoSslCheck;
+        expect(isRunningAsJavascript, isFalse);
+      } on UnimplementedError catch (_) {}
     });
     test('httpFactoryIo', () async {
       try {
