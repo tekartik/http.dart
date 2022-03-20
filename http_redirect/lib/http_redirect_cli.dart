@@ -33,22 +33,22 @@ Future main(List<String> arguments) async {
   parser.addFlag(forwardHeaderFlagName,
       abbr: 'w', help: 'forward headers', defaultsTo: true);
 
-  var _argsResult = parser.parse(arguments);
+  var argResults = parser.parse(arguments);
 
   var options = Options();
-  options.handleCors = _argsResult[corsArgName] == true;
-  options.corsHeaders = _argsResult[corsHeadersArgName] as List<String>;
-  options.baseUrl = _argsResult[redirectBaseUrlArgName] as String?;
-  options.forwardHeaders = _argsResult[forwardHeaderFlagName] as bool;
+  options.handleCors = argResults[corsArgName] == true;
+  options.corsHeaders = argResults[corsHeadersArgName] as List<String>;
+  options.baseUrl = argResults[redirectBaseUrlArgName] as String?;
+  options.forwardHeaders = argResults[forwardHeaderFlagName] as bool;
 
-  final help = _argsResult[helpArgName] as bool;
+  final help = argResults[helpArgName] as bool;
   if (help) {
     print('http_proxy_exp [-p <port>] [-h <redirect_host:redirect_post>]');
     print('');
     print(parser.usage);
     return;
   }
-  final logLevelText = _argsResult[logArgName] as String?;
+  final logLevelText = argResults[logArgName] as String?;
   if (logLevelText != null) {
     logLevel = parseLogLevel(logLevelText);
     Logger.root.level = logLevel;
@@ -56,9 +56,9 @@ Future main(List<String> arguments) async {
     //verbose = loA
   }
 
-  options.baseUrl = _argsResult[redirectBaseUrlArgName]
+  options.baseUrl = argResults[redirectBaseUrlArgName]
       as String?; // parseHostPort(_argsResult[redirectHostArgName]);
-  options.port = parseInt(_argsResult[portArgName]) ?? 8100;
+  options.port = parseInt(argResults[portArgName]) ?? 8100;
   //var proxies = new Map<HostPort, HttpRequestProxy>();
 
   // var proxy = new HttpRequestProxy('localhost', 8000);

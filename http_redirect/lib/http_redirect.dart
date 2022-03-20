@@ -2,7 +2,7 @@
 library obsolete_tekartik_http_redirect;
 
 import 'package:http/http.dart' as http;
-import 'package:path/path.dart' as _path;
+import 'package:path/path.dart' as p;
 import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http_redirect/src/http_redirect_server.dart';
@@ -32,7 +32,7 @@ Future proxyHttpRequest(Options options, HttpRequest request, String? baseUrl,
     if (path == '' || path == '.' || path == '/') {
       url = baseUrl;
     } else {
-      url = _path.url.join(baseUrl!, path);
+      url = p.url.join(baseUrl!, path);
       print('baseUrl: $baseUrl, path: $path, url $url');
     }
     uri = Uri.parse(url!);

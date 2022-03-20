@@ -14,7 +14,8 @@ dev_dependencies:
       url: https://github.com/tekartik/common.dart
       ref: dart2_3
       path: packages/lints
-
+  process_run:
+  path:
 _dev_dependencies:
   # test dependencies without version
   tekartik_http_io:
