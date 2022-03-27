@@ -6,5 +6,8 @@ HttpFactory get httpFactoryIo =>
 HttpClientFactory get httpClientFactoryIo =>
     throw UnimplementedError('httpClientFactoryIo io only');
 
+HttpClientFactory get httpClientFactoryIoNoSslCheck =>
+    throw UnimplementedError('httpClientFactoryIoNoSslCheck io only');
+
 HttpServerFactory get httpServerFactoryIo =>
     throw UnimplementedError('httpServerFactoryIo io only');

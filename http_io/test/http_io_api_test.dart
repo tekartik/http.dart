@@ -1,6 +1,7 @@
 @TestOn('vm || browser')
 library tekartik_http_io.test.http_io_api_test;
 
+// ignore: depend_on_referenced_packages
 import 'package:tekartik_common_utils/env_utils.dart';
 import 'package:tekartik_http_io/http_client_io.dart';
 import 'package:tekartik_http_io/http_io.dart';
@@ -18,6 +19,11 @@ Future main() async {
     test('httpClientFactoryIo', () async {
       try {
         httpClientFactoryIo;
+        expect(isRunningAsJavascript, isFalse);
+      } on UnimplementedError catch (_) {}
+
+      try {
+        httpClientFactoryIoNoSslCheck;
         expect(isRunningAsJavascript, isFalse);
       } on UnimplementedError catch (_) {}
     });

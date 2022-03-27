@@ -1,6 +1,6 @@
 name: tekartik_http_io
 description: Http io
-version: 0.7.3
+version: 0.7.4
 publish_to: none
 
 environment:
@@ -13,7 +13,7 @@ dependencies:
       path: http
       ref: dart2_3
     version: '>=0.6.0'
-
+  http:
 dev_dependencies:
   test: '>=1.16.0'
   dev_test: '>=0.15.0'
