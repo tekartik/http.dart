@@ -42,14 +42,14 @@ Future proxyHttpRequest(Options options, HttpRequest request, String? baseUrl,
   Map<String, String>? headers = <String, String>{};
 
   request.headers.forEach((name, List<String> values) {
-    void _set() {
+    void doSet() {
       headers![name] = values.join(',');
     }
 
     if (options.forwardedHeaders != null) {
       for (var forwardedHeaders in options.forwardedHeaders!) {
         if (forwardedHeaders.toLowerCase() == name.toLowerCase()) {
-          _set();
+          doSet();
         }
       }
       return;
@@ -64,7 +64,7 @@ Future proxyHttpRequest(Options options, HttpRequest request, String? baseUrl,
         return;
       }
       if (options.containsHeader(name)) {
-        _set();
+        doSet();
       }
     } else {
       if (name == hostHeader) {
@@ -72,7 +72,7 @@ Future proxyHttpRequest(Options options, HttpRequest request, String? baseUrl,
         // needed for google storage
         return;
       }
-      _set();
+      doSet();
     }
   });
   print('headers: $headers');
