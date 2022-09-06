@@ -1148,11 +1148,17 @@ abstract class HttpServerFactory {
 Uri httpServerGetDefaultUri(HttpServer server) =>
     Uri.parse('http://$localhost:${server.port}/');
 
-/// Node does not support root uri. / appendend on puropose
+/// Node does not support root uri. / appendend on purpose
 Uri httpServerGetUri(HttpServer server) {
   if (server is HttpServerWithUri) {
     return (server as HttpServerWithUri).uri;
   }
 
   return httpServerGetDefaultUri(server);
+}
+
+/// Http server extension
+extension HttpServerClientExt on HttpServer {
+  /// Get the client Uri
+  Uri get clientUri => httpServerGetUri(this);
 }
