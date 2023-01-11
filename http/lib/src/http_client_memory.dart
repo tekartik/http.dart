@@ -354,10 +354,10 @@ class ResponseMemory implements Response {
 
 mixin HttpClientMixin implements Client {
   Future<Response> httpCall(String method, Uri url,
-      {Map<String, String>? headers, body, Encoding? encoding});
+      {Map<String, String>? headers, Object? body, Encoding? encoding});
 
   Future<StreamedResponse> httpSend(String method, Uri url,
-      {Map<String, String>? headers, body, Encoding? encoding});
+      {Map<String, String>? headers, Object? body, Encoding? encoding});
 
   @override
   Future<Uint8List> readBytes(url, {Map<String, String>? headers}) async {
@@ -371,7 +371,7 @@ mixin HttpClientMixin implements Client {
     var data = <int>[];
     await request.finalize().listen((part) {
       data.addAll(part);
-    }).asFuture();
+    }).asFuture<void>();
     body = data;
 
     return httpSend(request.method, request.url,
