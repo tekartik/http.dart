@@ -4,7 +4,7 @@ version: 0.7.2
 publish_to: none
 
 environment:
-  sdk: '>=2.18.0-259.15.beta <3.0.0'
+  sdk: '>=2.18.0 <3.0.0'
 
 dependencies:
   tekartik_http:
@@ -34,4 +34,3 @@ dependency_overrides:
   tekartik_http_test:
     path: ../http_test
   web_socket_channel: any
-
