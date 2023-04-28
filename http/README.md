@@ -11,5 +11,5 @@ dependencies:
       url: https://github.com/tekartik/http.dart
       path: http
       ref: dart2_3
-    version: '>=0.5.5'
+    version: '>=0.7.5'
 ```
