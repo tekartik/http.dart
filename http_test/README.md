@@ -1,3 +1,5 @@
+Deprecated, use http_redirect.dart instead
+
 ## Setup
 
 pubspec.yaml:

@@ -3,7 +3,8 @@ import 'package:tekartik_http/src/http_client_memory.dart' as memory;
 import 'package:tekartik_http/src/http_memory.dart' as memory;
 import 'package:tekartik_http/src/http_server_memory.dart' as memory;
 
-export 'package:tekartik_http/src/http_client_memory.dart' show HttpClientMixin;
+export 'package:tekartik_http/src/http_client_memory.dart'
+    show HttpClientMixin, HttpHeadersMemory;
 
 export 'http_client.dart';
 export 'http_server.dart';
