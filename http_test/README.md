@@ -9,6 +9,6 @@ pubspec.yaml:
     git:
       url: https://github.com/tekartik/http.dart
       path: http_test
-      ref: dart2_3
+      ref: dart3a
     version: '>=0.5.0'
 ```

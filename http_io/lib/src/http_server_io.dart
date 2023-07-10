@@ -69,7 +69,7 @@ class HttpHeadersIo with HttpHeadersMixin implements HttpHeaders {
       ioHttpHeaders.contentType = io.ContentType.parse(contentType.toString());
 }
 
-class HttpResponseIo extends Sink<Uint8List> implements HttpResponse {
+class HttpResponseIo implements Sink<Uint8List>, HttpResponse {
   final io.HttpResponse ioHttpResponse;
 
   HttpResponseIo(this.ioHttpResponse);

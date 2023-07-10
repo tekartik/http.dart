@@ -171,7 +171,7 @@ class HttpRequestMemory extends Stream<Uint8List> implements HttpRequest {
   Future close() => throw 'not implemented yet';
 }
 
-class HttpResponseMemory extends StreamSink<Uint8List> implements HttpResponse {
+class HttpResponseMemory implements StreamSink<Uint8List>, HttpResponse {
   final Request _request;
   var streamCtlr = StreamController<Uint8List>();
   var responseCompleter = Completer<ResponseMemory>();
