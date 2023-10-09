@@ -10,6 +10,6 @@ dependencies:
     git:
       url: https://github.com/tekartik/http.dart
       path: http
-      ref: dart2_3
-    version: '>=0.5.5'
+      ref: dart3a
+    version: '>=0.7.5'
 ```

@@ -31,6 +31,6 @@ Future<Uint8List> httpStreamGetBytes(Stream<Uint8List> stream) async {
   var bytes = Uint8List(0);
   await stream.listen((event) {
     bytes = Uint8List.fromList([...bytes, ...event]);
-  }).asFuture();
+  }).asFuture<void>();
   return bytes;
 }

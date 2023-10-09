@@ -7,7 +7,7 @@ import 'package:tekartik_http/src/http_server.dart';
 import 'package:tekartik_http/src/http_server_mixin.dart';
 import 'package:tekartik_http/src/utils.dart';
 
-Uint8List getBodyAsBytes(body, {Encoding? encoding}) {
+Uint8List getBodyAsBytes(Object? body, {Encoding? encoding}) {
   List<int>? bytes;
   if (body is String) {
     bytes = utf8.encode(body);

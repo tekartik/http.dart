@@ -1,5 +1,4 @@
 import 'package:tekartik_http/http_memory.dart';
-import 'package:tekartik_http/src/http_client_memory.dart';
 import 'package:test/test.dart';
 
 void main() {
