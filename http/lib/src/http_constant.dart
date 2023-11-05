@@ -60,6 +60,9 @@ const String httpContentTypeJson = 'application/json';
 /// Http content type utf8.
 const String httpContentTypeCharsetUtf8 = 'charset=utf-8';
 
+/// URL encoded
+const httpContentTypeWwwFormUrlEncoded = 'application/x-www-form-urlencoded';
+
 /// Http content type html.
 const String httpContentTypeHtml = 'text/html';
 
