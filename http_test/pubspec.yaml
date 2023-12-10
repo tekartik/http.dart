@@ -15,7 +15,6 @@ dependencies:
     version: '>=0.7.0'
   test:
 dev_dependencies:
-  dev_test: '>=0.15.0'
   process_run: '>=0.12.0'
   # build_runner: ">=0.9.0"
   build_test:
