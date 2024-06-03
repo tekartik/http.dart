@@ -20,6 +20,9 @@ dependencies:
       ref: dart3a
     version: '>=0.7.0'
   test:
+  async:
+  http:
+  stream_channel:
 dev_dependencies:
   process_run: '>=0.12.0'
   # build_runner: ">=0.9.0"

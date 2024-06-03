@@ -1,14 +1,14 @@
 @TestOn('vm')
 library;
 
-import 'package:tekartik_http/http.dart';
+import 'package:async/async.dart';
 import 'package:http/http.dart' as http;
+import 'package:stream_channel/stream_channel.dart';
+import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/http_memory.dart';
 import 'package:tekartik_http_io/http_client_io.dart';
 import 'package:tekartik_http_test/src/echo_server.dart';
 import 'package:test/test.dart';
-import 'package:async/async.dart';
-import 'package:stream_channel/stream_channel.dart';
 
 void main() {
   runEchoServerClientTests(httpClientFactoryIo);
