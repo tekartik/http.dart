@@ -54,6 +54,12 @@ const String httpAccessControlAllowOrigin = 'Access-Control-Allow-Origin';
 /// Http header Access-Control-Allow-Methods (CORS).
 const String httpAccessControlAllowMethods = 'Access-Control-Allow-Methods';
 
+/// Http header Access-Control-Allow-Headers (CORS). allowed header in request.
+const String httpAccessControlAllowHeaders = 'Access-Control-Allow-Headers';
+
+/// Http header Access-Control-Expose-Headers (CORS). allowed header in response.
+const String httpAccessControlExposeHeaders = 'Access-Control-Expose-Headers';
+
 /// Http content type json.
 const String httpContentTypeJson = 'application/json';
 

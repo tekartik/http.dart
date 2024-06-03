@@ -5,8 +5,10 @@ library tekartik_http.http_browser_test;
 
 import 'package:tekartik_http_browser/http_client_browser.dart';
 import 'package:test/test.dart';
+import 'package:tekartik_http_test/echo_server_client_test.dart';
 
 void main() {
+  runEchoServerClientTests(httpClientFactoryBrowser);
   test('client', () {
     var client = httpClientFactoryBrowser.newClient();
     expect(client, isNotNull);
