@@ -14,6 +14,9 @@ export 'src/http_common.dart' show parseUri;
 /// Localhost.
 const String localhost = 'localhost';
 
+/// Localhost IP
+const String localhostIpV4 = '127.0.0.1';
+
 /// Use to dynamically assign a port
 const int portDynamic = 0;
 
