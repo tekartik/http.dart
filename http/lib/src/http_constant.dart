@@ -75,6 +75,9 @@ const String httpContentTypeHtml = 'text/html';
 /// Http content type text.
 const String httpContentTypeText = 'text/plain';
 
+/// Http content type text.
+const String httpContentTypeBytes = 'application/octet-stream';
+
 /// Gzip
 const String httpContentEncodingGzip = 'gzip';
 
