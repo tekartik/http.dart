@@ -21,7 +21,7 @@ String? httpDataAsStringOrNull(Object? data) {
   if (data is String) {
     return data;
   } else if (data is Uint8List) {
-    return utf8.decode(data.cast<int>());
+    return utf8.decode(data);
   } else if (data is Map) {
     return jsonEncode(data);
   } else if (data is List) {
