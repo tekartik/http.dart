@@ -94,3 +94,14 @@ extension TekartikHttpResponseExtension on http.Response {
         reasonPhrase: reasonPhrase);
   }
 }
+
+/// Common response extension.
+extension HttpClientResponseExtension on HttpClientResponse {
+  /// Get the body as a map.
+  Map<String, Object?> get bodyAsMap => bodyAsMapOrNull!;
+
+  /// Get the body as a map or null.
+  Map<String, Object?>? get bodyAsMapOrNull {
+    return httpDataAsMapOrNull(body);
+  }
+}

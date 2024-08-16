@@ -39,6 +39,10 @@ void main() {
       HttpRequest? httpRequest;
       expect(httpRequest?.bodyAsMapOrNull, null);
       expect(httpRequest?.bodyAsMap, null);
+
+      HttpClientResponse? clientResponse;
+      expect(clientResponse?.bodyAsMapOrNull, null);
+      expect(clientResponse?.bodyAsMap, null);
     });
   });
 }

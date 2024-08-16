@@ -4,7 +4,8 @@ export 'src/http_utils.dart'
         TekartikHttpRequestExtension,
         TekartikHttpResponseExtension,
         TekartikStreamedResponseExtension,
-        TekartikTkHttpRequestExtension;
+        TekartikTkHttpRequestExtension,
+        HttpClientResponseExtension;
 export 'src/utils.dart'
     show
         httpDataAsMapOrNull,
