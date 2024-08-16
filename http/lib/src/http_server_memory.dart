@@ -7,6 +7,7 @@ import 'package:tekartik_http/src/http_server.dart';
 import 'package:tekartik_http/src/http_server_mixin.dart';
 import 'package:tekartik_http/src/utils.dart';
 
+/// get the body as bytes
 Uint8List getBodyAsBytes(Object? body, {Encoding? encoding}) {
   List<int>? bytes;
   if (body is String) {
@@ -17,6 +18,7 @@ Uint8List getBodyAsBytes(Object? body, {Encoding? encoding}) {
   return asUint8List(bytes!);
 }
 
+/// Http server in memory
 class HttpServerMemory extends Stream<HttpRequest>
     implements HttpServer, HttpServerWithUri {
   @override
@@ -36,12 +38,14 @@ class HttpServerMemory extends Stream<HttpRequest>
   @override
   final InternetAddress? address;
 
+  /// Create a new memory server
   HttpServerMemory(this.address, this.port);
 
-  var requestCtlr = StreamController<HttpRequest>();
+  final _requestCtlr = StreamController<HttpRequest>();
 
+  /// Add a request
   void addRequest(HttpRequestMemory request) {
-    requestCtlr.add(request);
+    _requestCtlr.add(request);
   }
 
   @override
@@ -49,7 +53,7 @@ class HttpServerMemory extends Stream<HttpRequest>
     httpDataMemory.servers.remove(port);
     // This hangs if the server was not listened to
     // https://github.com/dart-lang/sdk/issues/19095
-    requestCtlr.close().unawait();
+    _requestCtlr.close().unawait();
   }
 
 /*
@@ -66,7 +70,7 @@ class HttpServerMemory extends Stream<HttpRequest>
       {Function? onError,
       void Function()? onDone,
       bool? cancelOnError}) {
-    return requestCtlr.stream.listen(onData,
+    return _requestCtlr.stream.listen(onData,
         onError: onError, onDone: onDone, cancelOnError: cancelOnError);
   }
 
@@ -81,17 +85,23 @@ class HttpServerMemory extends Stream<HttpRequest>
   */
 }
 
+/// Http connect in memory
 class HttpConnectionMemory {}
 
+/// Http data in memory
 class HttpDataMemory {
-  final Map<int, HttpServerMemory> servers = {};
+  /// All servers
+  final servers = <int, HttpServerMemory>{};
 }
 
 HttpDataMemory? _httpDataMemory;
 
+/// Get the memory http data
 HttpDataMemory get httpDataMemory => _httpDataMemory ??= HttpDataMemory();
 
+/// Http server factory in memory
 class HttpServerFactoryMemory extends HttpServerFactory {
+  /// Last port used
   int lastPort = 0;
 
   @override
@@ -114,5 +124,6 @@ class HttpServerFactoryMemory extends HttpServerFactory {
 
 HttpServerFactoryMemory? _httpServerFactoryMemory;
 
+/// Get the memory http server factory
 HttpServerFactoryMemory get httpServerFactoryMemory =>
     _httpServerFactoryMemory ??= HttpServerFactoryMemory();

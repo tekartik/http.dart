@@ -21,6 +21,7 @@ class _HttpClientResponseFromResponse extends HttpClientResponse {
   _HttpClientResponseFromResponse(this.response) : super.impl();
 }
 
+/// Http map headers.
 abstract class HttpMapHeaders implements Map<String, String> {
   /// Get a single value
   String? value(String key);
@@ -32,6 +33,7 @@ class HttpMapHeadersFromMap
     implements HttpMapHeaders {
   final _map = HttpHeadersMemory();
 
+  /// Create from a map
   HttpMapHeadersFromMap(Map<String, String> map) {
     _map.addMap(map);
   }
@@ -56,13 +58,14 @@ class HttpMapHeadersFromMap
   @override
   String? remove(Object? key) {
     var value = this.value(key as String);
-    _map.map.remove(key);
+    _map.remove(key);
     return value;
   }
 }
 
 /// Http client response.
 abstract class HttpClientResponse {
+  /// Create a new http client response.
   HttpClientResponse.impl();
 
   /// Create a client response from an http response.

@@ -1,11 +1,16 @@
 import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
+import 'package:tekartik_http/http.dart';
+
+import 'utils.dart';
 
 /// Base request common extension.
 extension TekartikBaseRequestExtension on http.BaseRequest {
   http.Request get _request => this as http.Request;
   http.MultipartRequest get _multipartRequest => this as http.MultipartRequest;
+
+  /// Copy the request.
   http.BaseRequest copyRequest({Uri? url}) {
     http.BaseRequest requestCopy;
     url ??= this.url;
@@ -41,6 +46,49 @@ extension TekartikStreamedResponseExtension on http.StreamedResponse {
         contentLength: contentLength,
         headers: headers,
         request: request,
+        isRedirect: isRedirect,
+        persistentConnection: persistentConnection,
+        reasonPhrase: reasonPhrase);
+  }
+}
+
+/// Common request extension.
+extension TekartikTkHttpRequestExtension on HttpRequest {
+  /// Get the body as a map.
+  Future<Map<String, Object?>> get bodyAsMap async => (await bodyAsMapOrNull)!;
+
+  /// Get the body as a map or null.
+  Future<Map<String, Object?>?> get bodyAsMapOrNull async {
+    return httpDataAsMapOrNull(await getBodyBytes());
+  }
+}
+
+/// Common request extension.
+extension TekartikHttpRequestExtension on http.Request {
+  /// Get the body as a map.
+  Map<String, Object?> get bodyAsMap => bodyAsMapOrNull!;
+
+  /// Get the body as a map or null.
+  Map<String, Object?>? get bodyAsMapOrNull {
+    return httpDataAsMapOrNull(body);
+  }
+}
+
+/// Common response extension.
+extension TekartikHttpResponseExtension on http.Response {
+  /// Get the body as a map.
+  Map<String, Object?> get bodyAsMap => bodyAsMapOrNull!;
+
+  /// Get the body as a map or null.
+  Map<String, Object?>? get bodyAsMapOrNull {
+    return httpDataAsMapOrNull(body);
+  }
+
+  /// Copy an already read response.
+  http.Response copyWithBytes(Uint8List bytes) {
+    return http.Response.bytes(bytes, statusCode,
+        request: request,
+        headers: headers,
         isRedirect: isRedirect,
         persistentConnection: persistentConnection,
         reasonPhrase: reasonPhrase);

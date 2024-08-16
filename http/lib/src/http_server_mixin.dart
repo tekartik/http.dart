@@ -1,5 +1,6 @@
 import 'package:tekartik_http/http_server.dart';
 
+/// Http headers mixin
 mixin HttpHeadersMixin implements HttpHeaders {
   @override
   String toString() {
