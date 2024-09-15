@@ -8,10 +8,10 @@ import 'package:test/test.dart';
 
 Future main() async {
   group('http_browser_api', () {
-    test('httpClientFactoryIo', () async {
+    test('httpClientFactoryBrowser', () async {
       try {
         httpClientFactoryBrowser;
-        expect(isRunningAsJavascript, isTrue);
+        expect(kDartIsWeb, isTrue);
       } on UnimplementedError catch (_) {}
     });
   });

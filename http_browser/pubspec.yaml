@@ -1,6 +1,6 @@
 name: tekartik_http_browser
 description: Http browser
-version: 0.7.2
+version: 0.7.3
 publish_to: none
 
 environment:
@@ -12,7 +12,6 @@ dependencies:
       url: https://github.com/tekartik/http.dart
       path: http
       ref: dart3a
-    version: '>=0.6.0'
   http:
 dev_dependencies:
   process_run:
@@ -25,7 +24,6 @@ dev_dependencies:
       url: https://github.com/tekartik/http.dart
       path: http_test
       ref: dart3a
-    version: '>=0.6.0'
 
 dependency_overrides:
   tekartik_http:

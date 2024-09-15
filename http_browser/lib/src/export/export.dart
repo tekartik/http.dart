@@ -1,1 +1,1 @@
-export 'export_stub.dart' if (dart.library.html) 'export_web.dart';
+export 'export_stub.dart' if (dart.library.js_interop) 'export_web.dart';
