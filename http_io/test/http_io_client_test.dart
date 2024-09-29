@@ -2,7 +2,7 @@
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
 @TestOn('vm')
-library tekartik_http_io.http_io_test;
+library;
 
 import 'package:tekartik_http_io/http_client_io.dart';
 import 'package:tekartik_http_io/http_io.dart';

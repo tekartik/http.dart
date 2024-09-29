@@ -1,4 +1,4 @@
-library tekartik_http;
+library;
 
 import 'dart:typed_data';
 

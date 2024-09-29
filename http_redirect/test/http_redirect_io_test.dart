@@ -1,5 +1,5 @@
 @TestOn('vm')
-library tekartik_http_redirect.test.http_redirector_io_test;
+library;
 
 import 'package:tekartik_http/http_memory.dart';
 import 'package:tekartik_http_io/http_io.dart';

@@ -1,5 +1,5 @@
 @Deprecated('Use https://github.com/tekartik/http_redirect.dart')
-library obsolete_tekartik_http_redirect_cli;
+library;
 
 import 'dart:async';
 

@@ -25,6 +25,10 @@ dev_dependencies:
       path: http_test
       ref: dart3a
 
+  tekartik_common_utils:
+    git:
+      url: https://github.com/tekartik/common_utils.dart
+      ref: dart3a
 dependency_overrides:
   tekartik_http:
     path: ../http

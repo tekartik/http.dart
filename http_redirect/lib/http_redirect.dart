@@ -1,5 +1,5 @@
 @Deprecated('Use https://github.com/tekartik/http_redirect.dart')
-library obsolete_tekartik_http_redirect;
+library;
 
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as p;
