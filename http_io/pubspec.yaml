@@ -7,6 +7,7 @@ environment:
   sdk: ^3.5.0
 
 dependencies:
+  path: ">=1.8.0"
   tekartik_http:
     git:
       url: https://github.com/tekartik/http.dart
@@ -28,6 +29,11 @@ dev_dependencies:
     git:
       url: https://github.com/tekartik/common_utils.dart
       ref: dart3a
+  tekartik_lints:
+    git:
+      url: https://github.com/tekartik/common.dart
+      ref: dart3a
+      path: packages/lints
 dependency_overrides:
   tekartik_http:
     path: ../http

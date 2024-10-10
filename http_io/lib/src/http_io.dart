@@ -2,7 +2,11 @@ import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http_io/http_client_io.dart';
 import 'package:tekartik_http_io/http_server_io.dart';
 
-class HttpFactoryIo implements HttpFactory {
+/// Http factory io
+abstract class HttpFactoryIo implements HttpFactory {}
+
+/// Http factory io
+class _HttpFactoryIo implements HttpFactoryIo {
   @override
   HttpClientFactory get client => httpClientFactoryIo;
 
@@ -12,4 +16,5 @@ class HttpFactoryIo implements HttpFactory {
 
 HttpFactoryIo? _httpFactoryIo;
 
-HttpFactory get httpFactoryIo => _httpFactoryIo ??= HttpFactoryIo();
+/// Http factory io
+HttpFactoryIo get httpFactoryIo => _httpFactoryIo ??= _HttpFactoryIo();

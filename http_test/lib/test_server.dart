@@ -1,6 +1,5 @@
 // ignore_for_file: depend_on_referenced_packages
 
-import 'package:http/http.dart';
 import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_http/http.dart';
 

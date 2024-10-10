@@ -1,5 +1,6 @@
 import 'package:tekartik_http/src/http_client.dart';
 
+export 'package:http/http.dart';
 export 'package:tekartik_http/http_memory.dart' show httpClientFactoryMemory;
 export 'package:tekartik_http/src/http_client.dart'
     show

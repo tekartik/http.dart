@@ -4,7 +4,6 @@
 
 import 'dart:typed_data';
 
-import 'package:http/http.dart';
 import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/http_memory.dart';

@@ -6,9 +6,12 @@ import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/src/compat.dart'; // ignore: implementation_imports
 import 'package:tekartik_http/src/http_server_mixin.dart'; // ignore: implementation_imports
 
+/// Convert to common address
 class InternetAddressIo implements InternetAddress {
+  /// The io address
   final io.InternetAddress ioAddress;
 
+  /// Constructor
   InternetAddressIo(this.ioAddress);
 
   @override
@@ -21,6 +24,7 @@ class InternetAddressIo implements InternetAddress {
   InternetAddressType get type => wrapInternetAddressType(ioAddress.type);
 }
 
+/// Convert to common address type
 InternetAddressType wrapInternetAddressType(
     io.InternetAddressType? ioAddressType) {
   // default...ipv4
@@ -33,19 +37,25 @@ InternetAddressType wrapInternetAddressType(
   return InternetAddressTypeIo(ioAddressType);
 }
 
+/// Convert to common address type
 class InternetAddressTypeIo implements InternetAddressType {
+  /// The io type
   final io.InternetAddressType ioType;
 
+  /// Constructor
   InternetAddressTypeIo(this.ioType);
 }
 
+/// Convert to common headers
 class HttpHeadersIo with HttpHeadersMixin implements HttpHeaders {
+  /// The io headers
   final io.HttpHeaders ioHttpHeaders;
 
   @override
   ContentType get contentType =>
       ContentType.parse(ioHttpHeaders.contentType.toString());
 
+  /// Constructor
   HttpHeadersIo(this.ioHttpHeaders);
 
   @override
@@ -69,9 +79,12 @@ class HttpHeadersIo with HttpHeadersMixin implements HttpHeaders {
       ioHttpHeaders.contentType = io.ContentType.parse(contentType.toString());
 }
 
+/// Convert to common response
 class HttpResponseIo implements Sink<Uint8List>, HttpResponse {
+  /// The io response
   final io.HttpResponse ioHttpResponse;
 
+  /// Constructor
   HttpResponseIo(this.ioHttpResponse);
 
   @override
@@ -133,9 +146,12 @@ class HttpResponseIo implements Sink<Uint8List>, HttpResponse {
   }
 }
 
+/// Convert to common request
 class HttpRequestIo extends Stream<Uint8List> implements HttpRequest {
+  /// The io request
   final io.HttpRequest ioHttpRequest;
 
+  /// Constructor
   HttpRequestIo(this.ioHttpRequest);
 
   @override
@@ -164,10 +180,16 @@ class HttpRequestIo extends Stream<Uint8List> implements HttpRequest {
   Uri get uri => ioHttpRequest.uri;
 }
 
-class HttpServerIo extends Stream<HttpRequest> implements HttpServer {
+/// Http server io
+abstract class HttpServerIo implements HttpServer {}
+
+/// Http server io
+class _HttpServerIo extends Stream<HttpRequest> implements HttpServerIo {
+  /// The io server
   final io.HttpServer ioHttpServer;
 
-  HttpServerIo(this.ioHttpServer);
+  /// Constructor
+  _HttpServerIo(this.ioHttpServer);
 
   @override
   Future close({bool force = false}) => ioHttpServer.close(force: force);
@@ -210,16 +232,21 @@ dynamic unwrapInternetAddress(dynamic address) {
   return address;
 }
 
-class IoHttpServerFactory implements HttpServerFactory {
+/// Http server factory io
+abstract class HttpServerFactoryIo implements HttpServerFactory {}
+
+/// Http server factory io
+class _HttpServerFactoryIo implements HttpServerFactoryIo {
   @override
   Future<HttpServer> bind(address, int port) async {
     address = unwrapInternetAddress(address);
     var ioHttpServer = await io.HttpServer.bind(address, port);
-    return HttpServerIo(ioHttpServer);
+    return _HttpServerIo(ioHttpServer);
   }
 }
 
-IoHttpServerFactory? _ioHttpServerFactory;
+HttpServerFactoryIo? _ioHttpServerFactory;
 
-IoHttpServerFactory get httpServerFactoryIo =>
-    _ioHttpServerFactory ??= IoHttpServerFactory();
+/// Http server factory io
+HttpServerFactoryIo get httpServerFactoryIo =>
+    _ioHttpServerFactory ??= _HttpServerFactoryIo();

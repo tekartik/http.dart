@@ -1,13 +1,19 @@
-import 'package:tekartik_http/http.dart';
+import 'package:tekartik_http_io/src/http_client_io.dart';
+import 'package:tekartik_http_io/src/http_io.dart';
+import 'package:tekartik_http_io/src/http_server_io.dart';
 
-HttpFactory get httpFactoryIo =>
+/// Http factory io
+HttpFactoryIo get httpFactoryIo =>
     throw UnimplementedError('httpFactoryIo io only');
 
-HttpClientFactory get httpClientFactoryIo =>
+/// Http client factory io
+HttpClientFactoryIo get httpClientFactoryIo =>
     throw UnimplementedError('httpClientFactoryIo io only');
 
-HttpClientFactory get httpClientFactoryIoNoSslCheck =>
+/// Special IO client without SSL check
+HttpClientFactoryIo get httpClientFactoryIoNoSslCheck =>
     throw UnimplementedError('httpClientFactoryIoNoSslCheck io only');
 
-HttpServerFactory get httpServerFactoryIo =>
+/// Http server factory io
+HttpServerFactoryIo get httpServerFactoryIo =>
     throw UnimplementedError('httpServerFactoryIo io only');
