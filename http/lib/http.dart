@@ -4,8 +4,6 @@ import 'dart:typed_data';
 
 import 'http_memory.dart';
 
-export 'package:http/http.dart' show Client;
-export 'package:tekartik_http/src/http.dart';
 export 'package:tekartik_http/src/http_constant.dart';
 
 export 'http_client.dart';

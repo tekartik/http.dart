@@ -1,4 +1,3 @@
-export 'package:http/http.dart';
 export 'package:tekartik_http/src/http_server.dart'
     show
         HttpServerFactory,

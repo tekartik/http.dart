@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:http/http.dart';
 import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/http_utils.dart';
 import 'package:test/test.dart';

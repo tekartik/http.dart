@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'dart:typed_data';
 
+import 'package:http/http.dart';
 import 'package:tekartik_http/http_client.dart';
 import 'package:tekartik_http/src/http_common.dart';
 import 'package:tekartik_http/src/http_server.dart';
