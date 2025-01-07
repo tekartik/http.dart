@@ -1,13 +1,11 @@
 import 'package:tekartik_http/http_server.dart';
+import 'package:tekartik_http/src/http_headers.dart';
 
 /// Http headers mixin
 mixin HttpHeadersMixin implements HttpHeaders {
   @override
   String toString() {
-    var map = <String, dynamic>{};
-    forEach((name, values) {
-      map[name] = values;
-    });
+    var map = toMap();
     return map.toString();
   }
 }

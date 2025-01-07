@@ -14,7 +14,13 @@ void main() {
       });
       test('headers', () async {
         var headers = HttpHeadersMemory();
-        expect(headers.toString(), '{}');
+        expect(headers.toMap(), isEmpty);
+        headers.set('name', 'value');
+        headers.set('name2', ['value1', 'value2']);
+        expect(headers.toMap(), {
+          'name': ['value'],
+          'name2': ['value1', 'value2']
+        });
       });
     });
   });

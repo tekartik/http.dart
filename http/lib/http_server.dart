@@ -1,3 +1,5 @@
+export 'package:tekartik_http/src/http_headers.dart'
+    show HttpHeaders, HttpHeadersExt;
 export 'package:tekartik_http/src/http_server.dart'
     show
         HttpServerFactory,
@@ -7,7 +9,6 @@ export 'package:tekartik_http/src/http_server.dart'
         HttpResponse,
         InternetAddress,
         InternetAddressType,
-        HttpHeaders,
         ContentType,
         HttpRequestBodyBytesExt,
         HttpServerClientExt;
