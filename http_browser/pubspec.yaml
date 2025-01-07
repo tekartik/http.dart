@@ -29,9 +29,5 @@ dev_dependencies:
     git:
       url: https://github.com/tekartik/common_utils.dart
       ref: dart3a
-dependency_overrides:
-  tekartik_http:
-    path: ../http
-  tekartik_http_test:
-    path: ../http_test
-  web_socket_channel: any
+
+resolution: workspace

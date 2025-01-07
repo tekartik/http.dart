@@ -34,8 +34,5 @@ dev_dependencies:
       url: https://github.com/tekartik/common.dart
       ref: dart3a
       path: packages/lints
-dependency_overrides:
-  tekartik_http:
-    path: ../http
-  tekartik_http_test:
-    path: ../http_test
+
+resolution: workspace

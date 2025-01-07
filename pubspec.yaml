@@ -1,0 +1,11 @@
+name: _
+publish_to: none
+environment:
+  sdk: ^3.6.0
+workspace:
+  - http
+  - http_browser
+  - http_io
+  - http_redirect
+  - http_test
+  - repo_support

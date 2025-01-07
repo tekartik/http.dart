@@ -34,8 +34,4 @@ dev_dependencies:
   # build_node_compilers: ">=0.2.2"
   # build_web_compilers: ">=0.4.2"
 
-dependency_overrides:
-  tekartik_http:
-    path: ../http
-  tekartik_http_io:
-    path: ../http_io
+resolution: workspace

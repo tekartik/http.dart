@@ -28,3 +28,4 @@ _dev_dependencies:
       url: https://github.com/tekartik/http.dart
       ref: dart3a
       path: http_browser
+resolution: workspace
