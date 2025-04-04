@@ -72,6 +72,11 @@ const httpContentTypeWwwFormUrlEncoded = 'application/x-www-form-urlencoded';
 /// Http content type html.
 const String httpContentTypeHtml = 'text/html';
 
+/// Http content type html recommended
+/// 'text/html; charset=utf-8'
+const String httpContentTypeHtmlStrict =
+    '$httpContentTypeHtml; $httpContentTypeCharsetUtf8';
+
 /// Http content type text.
 const String httpContentTypeText = 'text/plain';
 
