@@ -4,8 +4,10 @@ import 'package:tekartik_http_redirect/http_redirect.dart';
 
 Future<void> main() async {
   await HttpRedirectServer.startServer(
-      httpFactory: httpFactoryIo,
-      options: Options()
-        ..handleCors = true
-        ..forwardHeaders = false);
+    httpFactory: httpFactoryIo,
+    options:
+        Options()
+          ..handleCors = true
+          ..forwardHeaders = false,
+  );
 }

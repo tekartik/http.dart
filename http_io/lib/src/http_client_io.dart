@@ -30,8 +30,9 @@ HttpClientFactoryIo get httpClientFactoryIo =>
     _httpClientFactoryIo ??= _HttpClientFactoryIo();
 
 /// Special IO client without SSL check
-var httpClientFactoryIoNoSslCheck =
-    _HttpClientFactoryIo(ioHttpClientBuilder: ioHttpClientWithoutSslCheck);
+var httpClientFactoryIoNoSslCheck = _HttpClientFactoryIo(
+  ioHttpClientBuilder: ioHttpClientWithoutSslCheck,
+);
 
 /// Special IO client without SSL check
 io.HttpClient ioHttpClientWithoutSslCheck() {

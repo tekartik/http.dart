@@ -18,25 +18,28 @@ class HttpRedirectServer {
 
   final Options options;
 
-  HttpRedirectServer._(
-      {required HttpClientFactory httpClientFactory,
-      required HttpServerFactory httpServerFactory,
-      required this.options}) {
+  HttpRedirectServer._({
+    required HttpClientFactory httpClientFactory,
+    required HttpServerFactory httpServerFactory,
+    required this.options,
+  }) {
     _httpClientFactory = httpClientFactory;
     _httpServerFactory = httpServerFactory;
   }
 
   int get port => _httpServer!.port;
 
-  static Future<HttpRedirectServer> startServer(
-      {HttpFactory? httpFactory,
-      HttpClientFactory? httpClientFactory,
-      HttpServerFactory? httpServerFactory,
-      required Options options}) async {
+  static Future<HttpRedirectServer> startServer({
+    HttpFactory? httpFactory,
+    HttpClientFactory? httpClientFactory,
+    HttpServerFactory? httpServerFactory,
+    required Options options,
+  }) async {
     var server = HttpRedirectServer._(
-        httpClientFactory: httpClientFactory ?? httpFactory!.client,
-        httpServerFactory: httpServerFactory ?? httpFactory!.server,
-        options: options);
+      httpClientFactory: httpClientFactory ?? httpFactory!.client,
+      httpServerFactory: httpServerFactory ?? httpFactory!.server,
+      options: options,
+    );
     try {
       await server._startServer(options);
     } catch (e) {
@@ -61,13 +64,16 @@ class HttpRedirectServer {
       print('uri: ${request.uri} ${request.method}');
       if (options.handleCors) {
         //request.response.headers.set(HttpHeaders.CONTENT_TYPE, 'text/plain; charset=UTF-8');
-        request.response.headers.add('Access-Control-Allow-Methods',
-            'POST, OPTIONS, GET, PATCH, DELETE');
+        request.response.headers.add(
+          'Access-Control-Allow-Methods',
+          'POST, OPTIONS, GET, PATCH, DELETE',
+        );
         request.response.headers.add('Access-Control-Allow-Origin', '*');
         request.response.headers.add(
-            'Access-Control-Allow-Headers',
-            // 'Origin,Content-Type,Authorization,Accept,connection,content-length,host,user-agent');
-            options.corsHeadersText);
+          'Access-Control-Allow-Headers',
+          // 'Origin,Content-Type,Authorization,Accept,connection,content-length,host,user-agent');
+          options.corsHeadersText,
+        );
 
         if (request.method == 'OPTIONS') {
           request.response
@@ -83,7 +89,8 @@ class HttpRedirectServer {
     var redirectHostPort = overridenRedirectHostPort ?? hostPort;
     */
       // compat
-      var baseUrl = request.headers.value(redirectBaseUrlHeader) ??
+      var baseUrl =
+          request.headers.value(redirectBaseUrlHeader) ??
           // compat
           request.headers.value('_tekartik_redirect_host') ??
           options.baseUrl;
@@ -95,15 +102,20 @@ class HttpRedirectServer {
         request.response
           ..statusCode = 405
           ..write(
-              'missing $redirectBaseUrlHeader header or $redirectUrlHeader');
+            'missing $redirectBaseUrlHeader header or $redirectUrlHeader',
+          );
         await request.response.flush();
         await request.response.close();
       } else {
         client ??= _httpClientFactory.newClient();
         try {
-          await proxyHttpRequest(options, request, baseUrl,
-              uri: fullUrl != null ? Uri.parse(fullUrl) : null,
-              client: client!);
+          await proxyHttpRequest(
+            options,
+            request,
+            baseUrl,
+            uri: fullUrl != null ? Uri.parse(fullUrl) : null,
+            client: client!,
+          );
         } catch (e) {
           print('proxyHttpRequest error $e');
           try {

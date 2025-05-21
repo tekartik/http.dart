@@ -32,20 +32,29 @@ void run(EchoServerClient client) {
   var uri = client.uri;
   group('test_server', () {
     test('body param', () async {
-      expect(await client.read(uri.replace(queryParameters: {'body': 'test'})),
-          'test');
+      expect(
+        await client.read(uri.replace(queryParameters: {'body': 'test'})),
+        'test',
+      );
     });
     test('body content', () async {
       expect(
-          await httpClientRead(client.client, httpMethodPost,
-              uri.replace(queryParameters: {'use_body': 'true'}),
-              body: 'test'),
-          'test');
+        await httpClientRead(
+          client.client,
+          httpMethodPost,
+          uri.replace(queryParameters: {'use_body': 'true'}),
+          body: 'test',
+        ),
+        'test',
+      );
     });
     test('get header', () async {
-      var text = await httpClientRead(client.client, httpMethodPost,
-          uri.replace(queryParameters: {'header_get_demo': 'true'}),
-          headers: {'x-demo': 'true'});
+      var text = await httpClientRead(
+        client.client,
+        httpMethodPost,
+        uri.replace(queryParameters: {'header_get_demo': 'true'}),
+        headers: {'x-demo': 'true'},
+      );
       expect(text, 'true');
     });
     test('set header', () async {

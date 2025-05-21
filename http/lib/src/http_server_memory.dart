@@ -56,7 +56,7 @@ class HttpServerMemory extends Stream<HttpRequest>
     _requestCtlr.close().unawait();
   }
 
-/*
+  /*
   @override
   HttpConnectionsInfo connectionsInfo() => throw 'not implemented yet';
 
@@ -66,18 +66,23 @@ class HttpServerMemory extends Stream<HttpRequest>
   */
   @override
   StreamSubscription<HttpRequest> listen(
-      void Function(HttpRequest event)? onData,
-      {Function? onError,
-      void Function()? onDone,
-      bool? cancelOnError}) {
-    return _requestCtlr.stream.listen(onData,
-        onError: onError, onDone: onDone, cancelOnError: cancelOnError);
+    void Function(HttpRequest event)? onData, {
+    Function? onError,
+    void Function()? onDone,
+    bool? cancelOnError,
+  }) {
+    return _requestCtlr.stream.listen(
+      onData,
+      onError: onError,
+      onDone: onDone,
+      cancelOnError: cancelOnError,
+    );
   }
 
   @override
   Uri get uri => Uri.parse('http://_memory:$port/');
 
-/*
+  /*
   @override
   set sessionTimeout(int timeout) {
     // TODO: implement sessionTimeout

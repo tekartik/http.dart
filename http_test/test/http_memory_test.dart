@@ -13,8 +13,10 @@ void main() {
 
     group('server', () {
       test('address', () async {
-        var server =
-            await httpServerFactoryMemory.bind(InternetAddress.anyIPv4, 1);
+        var server = await httpServerFactoryMemory.bind(
+          InternetAddress.anyIPv4,
+          1,
+        );
         expect(server.address, InternetAddress.anyIPv4);
         expect(httpServerGetUri(server), Uri.parse('http://_memory:1/'));
         await server.close();

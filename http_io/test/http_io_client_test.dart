@@ -13,11 +13,11 @@ void main() {
   run(httpFactoryIo);
 
   test('google', () async {
-    await httpClientFactoryIo
-        .newClient()
-        .read(Uri.parse('http://www.google.com'));
-    await httpClientFactoryIoNoSslCheck
-        .newClient()
-        .read(Uri.parse('http://www.google.com'));
+    await httpClientFactoryIo.newClient().read(
+      Uri.parse('http://www.google.com'),
+    );
+    await httpClientFactoryIoNoSslCheck.newClient().read(
+      Uri.parse('http://www.google.com'),
+    );
   });
 }

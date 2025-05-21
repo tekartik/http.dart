@@ -26,7 +26,8 @@ class InternetAddressIo implements InternetAddress {
 
 /// Convert to common address type
 InternetAddressType wrapInternetAddressType(
-    io.InternetAddressType? ioAddressType) {
+  io.InternetAddressType? ioAddressType,
+) {
   // default...ipv4
   ioAddressType ??= io.InternetAddressType.IPv4;
   if (ioAddressType == io.InternetAddressType.IPv4) {
@@ -161,10 +162,18 @@ class HttpRequestIo extends Stream<Uint8List> implements HttpRequest {
   HttpHeaders get headers => HttpHeadersIo(ioHttpRequest.headers);
 
   @override
-  StreamSubscription<Uint8List> listen(void Function(Uint8List event)? onData,
-      {Function? onError, void Function()? onDone, bool? cancelOnError}) {
-    return intListStreamToUint8ListStream(ioHttpRequest).listen(onData,
-        onError: onError, onDone: onDone, cancelOnError: cancelOnError);
+  StreamSubscription<Uint8List> listen(
+    void Function(Uint8List event)? onData, {
+    Function? onError,
+    void Function()? onDone,
+    bool? cancelOnError,
+  }) {
+    return intListStreamToUint8ListStream(ioHttpRequest).listen(
+      onData,
+      onError: onError,
+      onDone: onDone,
+      cancelOnError: cancelOnError,
+    );
   }
 
   @override
@@ -196,16 +205,25 @@ class _HttpServerIo extends Stream<HttpRequest> implements HttpServerIo {
 
   @override
   StreamSubscription<HttpRequest> listen(
-      void Function(HttpRequest event)? onData,
-      {Function? onError,
-      void Function()? onDone,
-      bool? cancelOnError}) {
-    return ioHttpServer.transform<HttpRequest>(
-        StreamTransformer<io.HttpRequest, HttpRequest>.fromHandlers(
+    void Function(HttpRequest event)? onData, {
+    Function? onError,
+    void Function()? onDone,
+    bool? cancelOnError,
+  }) {
+    return ioHttpServer
+        .transform<HttpRequest>(
+          StreamTransformer<io.HttpRequest, HttpRequest>.fromHandlers(
             handleData: (request, sink) {
-      sink.add(HttpRequestIo(request));
-    })).listen(onData,
-        onDone: onDone, onError: onError, cancelOnError: cancelOnError);
+              sink.add(HttpRequestIo(request));
+            },
+          ),
+        )
+        .listen(
+          onData,
+          onDone: onDone,
+          onError: onError,
+          cancelOnError: cancelOnError,
+        );
   }
 
   @override

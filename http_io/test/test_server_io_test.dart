@@ -19,8 +19,10 @@ Future<void> main() async {
 
   test('arguments', () async {
     var shell = Shell(
-        environment: ShellEnvironment()..vars[uriVarKey] = uri.toString());
-    await shell
-        .run('dart test -p vm test/test_server_client_only_io_test.dart');
+      environment: ShellEnvironment()..vars[uriVarKey] = uri.toString(),
+    );
+    await shell.run(
+      'dart test -p vm test/test_server_client_only_io_test.dart',
+    );
   });
 }

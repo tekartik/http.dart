@@ -20,8 +20,10 @@ void main() {
 
   test('connected', () async {
     var client = httpFactoryIo.client.newClient();
-    var content = await client.read(Uri.parse('https://api.github.com'),
-        headers: {'User-Agent': 'tekartik_http_node'});
+    var content = await client.read(
+      Uri.parse('https://api.github.com'),
+      headers: {'User-Agent': 'tekartik_http_node'},
+    );
     var map = jsonDecode(content) as Map;
     expect(map['current_user_url'], 'https://api.github.com/user');
   }, skip: runningOnTravis);
@@ -36,8 +38,10 @@ void main() {
   });
 
   test('server_any', () async {
-    var server =
-        await httpFactoryIo.server.bind(InternetAddress.any, httpPortAny);
+    var server = await httpFactoryIo.server.bind(
+      InternetAddress.any,
+      httpPortAny,
+    );
     expect(server.uri.toString(), startsWith('http://localhost:'));
     expect(server.port, isNot(0));
     expect(server.address!.address, '0.0.0.0');
@@ -50,8 +54,9 @@ void main() {
       await request.response.redirect(Uri.parse('https://www.google.com'));
     });
     var client = httpFactoryIo.client.newClient();
-    var response =
-        await client.get(Uri.parse('http://127.0.0.1:${server.port}'));
+    var response = await client.get(
+      Uri.parse('http://127.0.0.1:${server.port}'),
+    );
     // print(response.body);
     expect(response.statusCode, 200);
     client.close();

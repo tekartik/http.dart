@@ -99,7 +99,7 @@ abstract class InternetAddress {
   /// hexadecimal representation.
   String? get address;
 
-/*
+  /*
   /// The host used to lookup the address. If there is no host
   /// associated with the address this returns the numeric address.
   String get host;
@@ -694,7 +694,7 @@ abstract class HttpServer implements Stream<HttpRequest> {
   /// a lookup from a hostname.
   InternetAddress? get address;
 
-/*
+  /*
   /// Sets the timeout, in seconds, for sessions of this [HttpServer].
   /// The default timeout is 20 minutes.
   set sessionTimeout(int timeout);
@@ -764,7 +764,8 @@ abstract class ContentType // implements HeaderValue
     // return _ContentType.parse(value);
     return ContentTypeImpl(value);
   }
-/*
+
+  /*
 
   /// Gets the mime-type, without any parameters.
   String get mimeType;

@@ -11,10 +11,12 @@ Stream<Uint8List> intListStreamToUint8ListStream(Stream stream) {
     return stream.cast<Uint8List>();
   } else if (stream is Stream<List<int>>) {
     return stream.transform(
-        StreamTransformer<List<int>, Uint8List>.fromHandlers(
-            handleData: (list, sink) {
-      sink.add(Uint8List.fromList(list));
-    }));
+      StreamTransformer<List<int>, Uint8List>.fromHandlers(
+        handleData: (list, sink) {
+          sink.add(Uint8List.fromList(list));
+        },
+      ),
+    );
   } else {
     throw ArgumentError('Invalid stream type: ${stream.runtimeType}');
   }

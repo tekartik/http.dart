@@ -104,11 +104,15 @@ class HttpRequestMemory extends Stream<Uint8List> implements HttpRequest {
   int? contentLength;
 
   /// Create a new http request.
-  HttpRequestMemory(this.method, Uri uri,
-      {Map<String, String>? headers, this.body, this.encoding})
-      : port = parseUri(uri).port,
-        // Remove the fragment that should not reach the server
-        uri = uri.removeFragment() {
+  HttpRequestMemory(
+    this.method,
+    Uri uri, {
+    Map<String, String>? headers,
+    this.body,
+    this.encoding,
+  }) : port = parseUri(uri).port,
+       // Remove the fragment that should not reach the server
+       uri = uri.removeFragment() {
     headers?.forEach((key, value) {
       this.headers.set(key, value);
     });
@@ -131,10 +135,18 @@ class HttpRequestMemory extends Stream<Uint8List> implements HttpRequest {
   }
 
   @override
-  StreamSubscription<Uint8List> listen(void Function(Uint8List event)? onData,
-      {Function? onError, void Function()? onDone, bool? cancelOnError}) {
-    return _streamCtlr.stream.listen(onData,
-        onError: onError, onDone: onDone, cancelOnError: cancelOnError);
+  StreamSubscription<Uint8List> listen(
+    void Function(Uint8List event)? onData, {
+    Function? onError,
+    void Function()? onDone,
+    bool? cancelOnError,
+  }) {
+    return _streamCtlr.stream.listen(
+      onData,
+      onError: onError,
+      onDone: onDone,
+      cancelOnError: cancelOnError,
+    );
   }
 
   @override
@@ -209,7 +221,7 @@ class HttpResponseMemory implements StreamSink<Uint8List>, HttpResponse {
   @override
   late int contentLength;
 
-/*
+  /*
   @override
   Duration deadline;
 
@@ -254,8 +266,9 @@ class HttpResponseMemory implements StreamSink<Uint8List>, HttpResponse {
     for (var list in bytesLists) {
       data.addAll(list);
     }
-    _responseCompleter
-        .complete(ResponseMemory(_request, this, Uint8List.fromList(data)));
+    _responseCompleter.complete(
+      ResponseMemory(_request, this, Uint8List.fromList(data)),
+    );
   }
 
   /*
@@ -315,7 +328,7 @@ class HttpResponseMemory implements StreamSink<Uint8List>, HttpResponse {
     _statusCode = statusCode;
   }
 
-/*
+  /*
   @override
   void writeAll(Iterable objects, [String separator = '']) =>
       throw 'not implemented yet';
@@ -379,12 +392,22 @@ class ResponseMemory implements Response {
 /// Http client mixin.
 mixin HttpClientMixin implements Client {
   /// httpCall
-  Future<Response> httpCall(String method, Uri url,
-      {Map<String, String>? headers, Object? body, Encoding? encoding});
+  Future<Response> httpCall(
+    String method,
+    Uri url, {
+    Map<String, String>? headers,
+    Object? body,
+    Encoding? encoding,
+  });
 
   /// httpSend
-  Future<StreamedResponse> httpSend(String method, Uri url,
-      {Map<String, String>? headers, Object? body, Encoding? encoding});
+  Future<StreamedResponse> httpSend(
+    String method,
+    Uri url, {
+    Map<String, String>? headers,
+    Object? body,
+    Encoding? encoding,
+  });
 
   @override
   Future<Uint8List> readBytes(url, {Map<String, String>? headers}) async {
@@ -401,8 +424,12 @@ mixin HttpClientMixin implements Client {
     }).asFuture<void>();
     body = data;
 
-    return httpSend(request.method, request.url,
-        headers: request.headers, body: body);
+    return httpSend(
+      request.method,
+      request.url,
+      headers: request.headers,
+      body: body,
+    );
   }
 }
 
@@ -416,10 +443,20 @@ class HttpClientMemory extends BaseClient
   }
 
   @override
-  Future<Response> httpCall(String method, Uri url,
-      {Map<String, String>? headers, body, Encoding? encoding}) async {
-    var request = HttpRequestMemory(method, parseUri(url),
-        headers: headers, body: body, encoding: encoding);
+  Future<Response> httpCall(
+    String method,
+    Uri url, {
+    Map<String, String>? headers,
+    body,
+    Encoding? encoding,
+  }) async {
+    var request = HttpRequestMemory(
+      method,
+      parseUri(url),
+      headers: headers,
+      body: body,
+      encoding: encoding,
+    );
     var server = httpDataMemory.servers[request.port];
     if (server == null) {
       throw Exception('no server found for url $url port ${request.port}');
@@ -434,16 +471,29 @@ class HttpClientMemory extends BaseClient
   }
 
   @override
-  Future<StreamedResponse> httpSend(String method, Uri url,
-      {Map<String, String>? headers, body, Encoding? encoding}) async {
-    var response = await httpCall(method, url,
-        headers: headers, body: body, encoding: encoding);
-    return StreamedResponse(() async* {
-      yield response.bodyBytes;
-    }(), response.statusCode,
-        contentLength: response.contentLength,
-        headers: response.headers,
-        request: response.request);
+  Future<StreamedResponse> httpSend(
+    String method,
+    Uri url, {
+    Map<String, String>? headers,
+    body,
+    Encoding? encoding,
+  }) async {
+    var response = await httpCall(
+      method,
+      url,
+      headers: headers,
+      body: body,
+      encoding: encoding,
+    );
+    return StreamedResponse(
+      () async* {
+        yield response.bodyBytes;
+      }(),
+      response.statusCode,
+      contentLength: response.contentLength,
+      headers: response.headers,
+      request: response.request,
+    );
   }
 }
 

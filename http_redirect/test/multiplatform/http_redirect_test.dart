@@ -29,19 +29,23 @@ void run({
       //devPrint('port: $port');
 
       var httpRedirectServer = await HttpRedirectServer.startServer(
-          httpClientFactory: testServerHttpFactory?.client ?? clientFactory,
-          httpServerFactory: serverFactory,
-          options: Options()
-            ..host = localhost
-            ..port = 0
-            ..baseUrl = 'http://$localhost:$port');
+        httpClientFactory: testServerHttpFactory?.client ?? clientFactory,
+        httpServerFactory: serverFactory,
+        options:
+            Options()
+              ..host = localhost
+              ..port = 0
+              ..baseUrl = 'http://$localhost:$port',
+      );
 
       var client = clientFactory.newClient();
       var redirectPort = httpRedirectServer.port;
       //devPrint('redirectPort: $redirectPort');
       expect(port, isNot(redirectPort));
-      expect(await client.read(Uri.parse('http://$localhost:$port')),
-          'tekartik_http_redirect');
+      expect(
+        await client.read(Uri.parse('http://$localhost:$port')),
+        'tekartik_http_redirect',
+      );
       client.close();
 
       await httpRedirectServer.close();

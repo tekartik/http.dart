@@ -42,8 +42,9 @@ class EchoServerClient {
 
   /// Ping query
   Future<void> ping() async {
-    var text = await read(uri.replace(queryParameters: {'body': 'ping'}))
-        .timeout(Duration(milliseconds: 10000));
+    var text = await read(
+      uri.replace(queryParameters: {'body': 'ping'}),
+    ).timeout(Duration(milliseconds: 10000));
     if (text != 'ping') {
       throw StateError('Server not running');
     }
@@ -52,8 +53,10 @@ class EchoServerClient {
 
 void handleEchoRequest(HttpRequest request) async {
   request.response.headers
-    ..set(httpAccessControlAllowMethods,
-        [httpMethodPost, httpMethodGet].join(', '))
+    ..set(
+      httpAccessControlAllowMethods,
+      [httpMethodPost, httpMethodGet].join(', '),
+    )
     ..set(httpAccessControlAllowOrigin, '*')
     ..set(httpAccessControlAllowHeaders, '*')
     ..set(httpAccessControlExposeHeaders, '*');
@@ -69,8 +72,9 @@ void handleEchoRequest(HttpRequest request) async {
   var body = request.uri.queryParameters['body'];
   var useBody = request.uri.queryParameters.containsKey('use_body');
   var setDemoHeader = request.uri.queryParameters['header_set_demo'];
-  var getDemoHeader =
-      request.uri.queryParameters.containsKey('header_get_demo');
+  var getDemoHeader = request.uri.queryParameters.containsKey(
+    'header_get_demo',
+  );
   if (statusCode != null) {
     request.response.statusCode = statusCode;
   }
@@ -88,7 +92,7 @@ void handleEchoRequest(HttpRequest request) async {
     if (body != null) {
       request.response.write(body);
     } else {
-// needed for node
+      // needed for node
       request.response.write('');
     }
   }
@@ -113,8 +117,9 @@ Future<HttpServer> serve(HttpServerFactory factory, int port) async {
   server.listen((request) async {
     var statusCode = parseInt(request.uri.queryParameters['statusCode']);
 
-    request.response.headers.contentType =
-        ContentType.parse(httpContentTypeText);
+    request.response.headers.contentType = ContentType.parse(
+      httpContentTypeText,
+    );
     var body = request.uri.queryParameters['body'];
 
     if (statusCode != null) {
@@ -123,7 +128,7 @@ Future<HttpServer> serve(HttpServerFactory factory, int port) async {
     if (body != null) {
       request.response.write(body);
     } else {
-// needed for node
+      // needed for node
       request.response.write('');
     }
 

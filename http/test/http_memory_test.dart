@@ -5,8 +5,10 @@ void main() {
   group('memory', () {
     group('server', () {
       test('address', () async {
-        var server =
-            await httpServerFactoryMemory.bind(InternetAddress.anyIPv4, 1);
+        var server = await httpServerFactoryMemory.bind(
+          InternetAddress.anyIPv4,
+          1,
+        );
         expect(server.address, InternetAddress.anyIPv4);
         var uri = httpServerGetUri(server);
         expect(uri.host, httpMemoryHost);
@@ -19,7 +21,7 @@ void main() {
         headers.set('name2', ['value1', 'value2']);
         expect(headers.toMap(), {
           'name': ['value'],
-          'name2': ['value1', 'value2']
+          'name2': ['value1', 'value2'],
         });
       });
     });

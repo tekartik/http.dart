@@ -123,7 +123,7 @@ class HttpClientExceptionImpl extends http.ClientException
 
   /// Creates an exception with a message and a response.
   HttpClientExceptionImpl({required String message, required this.response})
-      : super(message, parseUri(response.response.request!.url));
+    : super(message, parseUri(response.response.request!.url));
 
   @override
   int get statusCode => response.statusCode;
@@ -131,11 +131,14 @@ class HttpClientExceptionImpl extends http.ClientException
 
 /// if [throwOnFailure] is true, throw on HttpClientException if not successful
 Future<HttpClientResponse> httpClientSend(
-    http.Client client, String method, Uri uri,
-    {Map<String, String>? headers,
-    dynamic body,
-    Encoding? encoding,
-    bool? throwOnFailure}) async {
+  http.Client client,
+  String method,
+  Uri uri, {
+  Map<String, String>? headers,
+  dynamic body,
+  Encoding? encoding,
+  bool? throwOnFailure,
+}) async {
   //var uri = parseUri(url);
 
   var request = http.Request(method, uri);
@@ -168,13 +171,23 @@ Future<HttpClientResponse> httpClientSend(
 /// Throws a [HttpClientExceptionImpl] on Error.
 ///
 /// If reponseEncoding is set it is used
-Future<String> httpClientRead(http.Client client, String method, Uri uri,
-    {Map<String, String>? headers,
-    dynamic body,
-    Encoding? encoding,
-    Encoding? responseEncoding}) async {
-  var response = await httpClientSend(client, method, uri,
-      headers: headers, body: body, encoding: encoding);
+Future<String> httpClientRead(
+  http.Client client,
+  String method,
+  Uri uri, {
+  Map<String, String>? headers,
+  dynamic body,
+  Encoding? encoding,
+  Encoding? responseEncoding,
+}) async {
+  var response = await httpClientSend(
+    client,
+    method,
+    uri,
+    headers: headers,
+    body: body,
+    encoding: encoding,
+  );
   if (_checkResponseSuccess(response)) {
     if (responseEncoding == null) {
       return response.body;
@@ -183,21 +196,36 @@ Future<String> httpClientRead(http.Client client, String method, Uri uri,
     }
   } else {
     throw HttpClientExceptionImpl(
-        message: 'Error ${response.statusCode}', response: response);
+      message: 'Error ${response.statusCode}',
+      response: response,
+    );
   }
 }
 
 /// Throws a [HttpClientExceptionImpl] on Error
 Future<Uint8List> httpClientReadBytes(
-    http.Client client, String method, Uri uri,
-    {Map<String, String>? headers, dynamic body, Encoding? encoding}) async {
-  var response = await httpClientSend(client, method, uri,
-      headers: headers, body: body, encoding: encoding);
+  http.Client client,
+  String method,
+  Uri uri, {
+  Map<String, String>? headers,
+  dynamic body,
+  Encoding? encoding,
+}) async {
+  var response = await httpClientSend(
+    client,
+    method,
+    uri,
+    headers: headers,
+    body: body,
+    encoding: encoding,
+  );
   if (_checkResponseSuccess(response)) {
     return response.bodyBytes;
   } else {
     throw HttpClientExceptionImpl(
-        message: 'Error ${response.statusCode}', response: response);
+      message: 'Error ${response.statusCode}',
+      response: response,
+    );
   }
 }
 

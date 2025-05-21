@@ -21,16 +21,34 @@ Future main(List<String> arguments) async {
   var parser = ArgParser(allowTrailingOptions: true);
   parser.addFlag(helpArgName, abbr: 'h', help: 'Usage help', negatable: false);
   parser.addFlag(corsArgName, abbr: 'c', help: 'Handle CORS');
-  parser.addMultiOption(corsHeadersArgName,
-      abbr: 'o', help: 'CORS headers', defaultsTo: corsDefaultHeaders);
-  parser.addOption(logArgName,
-      abbr: 'l', help: 'Log level (fine, debug, info...)');
-  parser.addOption(portArgName,
-      abbr: 'p', help: 'Post number', defaultsTo: '8180');
-  parser.addOption(redirectBaseUrlArgName,
-      abbr: 'b', help: 'redirect baseUrl (http[s]://host:[port]/base_path');
-  parser.addFlag(forwardHeaderFlagName,
-      abbr: 'w', help: 'forward headers', defaultsTo: true);
+  parser.addMultiOption(
+    corsHeadersArgName,
+    abbr: 'o',
+    help: 'CORS headers',
+    defaultsTo: corsDefaultHeaders,
+  );
+  parser.addOption(
+    logArgName,
+    abbr: 'l',
+    help: 'Log level (fine, debug, info...)',
+  );
+  parser.addOption(
+    portArgName,
+    abbr: 'p',
+    help: 'Post number',
+    defaultsTo: '8180',
+  );
+  parser.addOption(
+    redirectBaseUrlArgName,
+    abbr: 'b',
+    help: 'redirect baseUrl (http[s]://host:[port]/base_path',
+  );
+  parser.addFlag(
+    forwardHeaderFlagName,
+    abbr: 'w',
+    help: 'forward headers',
+    defaultsTo: true,
+  );
 
   var argResults = parser.parse(arguments);
 
@@ -55,8 +73,9 @@ Future main(List<String> arguments) async {
     //verbose = loA
   }
 
-  options.baseUrl = argResults[redirectBaseUrlArgName]
-      as String?; // parseHostPort(_argsResult[redirectHostArgName]);
+  options.baseUrl =
+      argResults[redirectBaseUrlArgName]
+          as String?; // parseHostPort(_argsResult[redirectHostArgName]);
   options.port = parseInt(argResults[portArgName]) ?? 8100;
   //var proxies = new Map<HostPort, HttpRequestProxy>();
 
@@ -64,5 +83,7 @@ Future main(List<String> arguments) async {
   //var host = InternetAddress.ANY_IP_V6;
   options.host = InternetAddress.anyIPv4;
   await HttpRedirectServer.startServer(
-      httpFactory: httpFactoryIo, options: options);
+    httpFactory: httpFactoryIo,
+    options: options,
+  );
 }

@@ -13,8 +13,10 @@ Future<void> main() async {
   // uri = 'http://localhost:8180';
   EchoServerClient? client;
   if (uri != null) {
-    client =
-        EchoServerClient(factory: httpClientFactoryIo, uri: Uri.parse(uri));
+    client = EchoServerClient(
+      factory: httpClientFactoryIo,
+      uri: Uri.parse(uri),
+    );
   }
   group('echo client', () {
     if (uri != null) {
