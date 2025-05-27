@@ -8,12 +8,14 @@ extension TekartikHttpRequestCorsExtension on HttpRequest {
   /// Handle a CORS preflight request:
   /// https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#preflighted_requests
   bool handleCors() {
-    response.headers.add(
-      httpAccessControlAllowMethods,
-      '$httpMethodPost, $httpMethodOptions, $httpMethodGet, $httpMethodPatch, $httpMethodPut, $httpMethodDelete',
-    );
-    response.headers.add(httpAccessControlAllowOrigin, '*');
-    response.headers.add(httpAccessControlAllowHeaders, '*');
+    response.headers
+      ..add(
+        httpAccessControlAllowMethods,
+        '$httpMethodPost, $httpMethodOptions, $httpMethodGet, $httpMethodPatch, $httpMethodPut, $httpMethodDelete',
+      )
+      ..add(httpAccessControlAllowOrigin, '*')
+      ..add(httpAccessControlAllowHeaders, '*')
+      ..add(httpAccessControlExposeHeaders, '*');
 
     if (method == httpMethodOptions) {
       response.close();
