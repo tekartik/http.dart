@@ -2,6 +2,7 @@
 
 import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_http/http.dart';
+import 'package:tekartik_http/http_utils.dart';
 
 /// Server state upon creation
 class HttpServerState {
@@ -52,20 +53,11 @@ class EchoServerClient {
 }
 
 void handleEchoRequest(HttpRequest request) async {
-  request.response.headers
-    ..set(
-      httpAccessControlAllowMethods,
-      [httpMethodPost, httpMethodGet].join(', '),
-    )
-    ..set(httpAccessControlAllowOrigin, '*')
-    ..set(httpAccessControlAllowHeaders, '*')
-    ..set(httpAccessControlExposeHeaders, '*');
-  if (request.method == httpMethodOptions) {
-    // Handle a CORS preflight request:
-    // https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#preflighted_requests
-    await request.response.close();
+  if (request.handleCors()) {
+    // CORS preflight request handled
     return;
   }
+
   var statusCode = parseInt(request.uri.queryParameters['statusCode']);
 
   request.response.headers.contentType = ContentType.parse(httpContentTypeText);

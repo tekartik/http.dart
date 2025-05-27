@@ -1,3 +1,4 @@
+export 'src/cors.dart' show TekartikHttpRequestCorsExtension;
 export 'src/http_utils.dart'
     show
         TekartikBaseRequestExtension,
