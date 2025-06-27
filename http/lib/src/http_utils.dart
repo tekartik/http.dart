@@ -15,15 +15,13 @@ extension TekartikBaseRequestExtension on http.BaseRequest {
     http.BaseRequest requestCopy;
     url ??= this.url;
     if (this is http.Request) {
-      requestCopy =
-          http.Request(method, url)
-            ..encoding = _request.encoding
-            ..bodyBytes = _request.bodyBytes;
+      requestCopy = http.Request(method, url)
+        ..encoding = _request.encoding
+        ..bodyBytes = _request.bodyBytes;
     } else if (this is http.MultipartRequest) {
-      requestCopy =
-          http.MultipartRequest(method, url)
-            ..fields.addAll(_multipartRequest.fields)
-            ..files.addAll(_multipartRequest.files);
+      requestCopy = http.MultipartRequest(method, url)
+        ..fields.addAll(_multipartRequest.fields)
+        ..files.addAll(_multipartRequest.files);
     } else if (this is http.StreamedRequest) {
       throw Exception('copying streamed requests is not supported');
     } else {

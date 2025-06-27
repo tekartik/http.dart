@@ -31,11 +31,10 @@ void run({
       var httpRedirectServer = await HttpRedirectServer.startServer(
         httpClientFactory: testServerHttpFactory?.client ?? clientFactory,
         httpServerFactory: serverFactory,
-        options:
-            Options()
-              ..host = localhost
-              ..port = 0
-              ..baseUrl = 'http://$localhost:$port',
+        options: Options()
+          ..host = localhost
+          ..port = 0
+          ..baseUrl = 'http://$localhost:$port',
       );
 
       var client = clientFactory.newClient();

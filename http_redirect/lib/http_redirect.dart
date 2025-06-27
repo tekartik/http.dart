@@ -193,13 +193,12 @@ class Options {
   late List<String> _lowerCaseCorsHeaders;
   String? _corsHeadersText;
 
-  String get corsHeadersText =>
-      _corsHeadersText ??= () {
-        if (_corsHeaders == null) {
-          corsHeaders = corsDefaultHeaders;
-        }
-        return corsHeaders.join(',');
-      }();
+  String get corsHeadersText => _corsHeadersText ??= () {
+    if (_corsHeaders == null) {
+      corsHeaders = corsDefaultHeaders;
+    }
+    return corsHeaders.join(',');
+  }();
 }
 
 ///
