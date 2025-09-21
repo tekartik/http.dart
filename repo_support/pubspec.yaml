@@ -12,7 +12,6 @@ dev_dependencies:
   tekartik_lints:
     git:
       url: https://github.com/tekartik/common.dart
-      ref: dart3a
       path: packages/lints
   process_run: ">=1.2.1+1"
   path: ">=1.9.0"
@@ -21,11 +20,9 @@ _dev_dependencies:
   tekartik_http_io:
     git:
       url: https://github.com/tekartik/http.dart
-      ref: dart3a
       path: http_io
   tekartik_http_browser:
     git:
       url: https://github.com/tekartik/http.dart
-      ref: dart3a
       path: http_browser
 resolution: workspace

@@ -12,7 +12,6 @@ dependencies:
     git:
       url: https://github.com/tekartik/http.dart
       path: http
-      ref: dart3a
     version: '>=0.6.0'
   http:
 dev_dependencies:
@@ -22,17 +21,14 @@ dev_dependencies:
     git:
       url: https://github.com/tekartik/http.dart
       path: http_test
-      ref: dart3a
     version: '>=0.6.0'
 
   tekartik_common_utils:
     git:
       url: https://github.com/tekartik/common_utils.dart
-      ref: dart3a
   tekartik_lints:
     git:
       url: https://github.com/tekartik/common.dart
-      ref: dart3a
       path: packages/lints
 
 resolution: workspace
