@@ -45,11 +45,11 @@ Future proxyHttpRequest(
   }
   print('calling ${request.method} $uri');
 
-  Map<String, String>? headers = <String, String>{};
+  final headers = <String, String>{};
 
   request.headers.forEach((name, List<String> values) {
     void doSet() {
-      headers![name] = values.join(',');
+      headers[name] = values.join(',');
     }
 
     if (options.forwardedHeaders != null) {
@@ -88,9 +88,9 @@ Future proxyHttpRequest(
     bytes.addAll(list);
   }
 
-  if ((!options.forwardHeaders) || false) {
-    headers = null;
-  }
+  // if ((!options.forwardHeaders) || false) {
+  //  headers = null;
+  // }
 
   var innerResponse = await httpClientSend(
     client,
