@@ -244,7 +244,7 @@ dynamic unwrapInternetAddress(dynamic address) {
     if (address == InternetAddress.anyIPv4) {
       address = io.InternetAddress.anyIPv4;
     } else {
-      throw 'address $address not supported';
+      throw UnsupportedError('address $address not supported');
     }
   }
   return address;

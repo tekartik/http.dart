@@ -6,6 +6,11 @@ import 'package:tekartik_http_redirect/http_redirect.dart';
 
 var debugHttpRedirectServer = false; // devWarning(true); // false
 
+void _log(Object? object) {
+  // ignore: avoid_print
+  print(object);
+}
+
 class HttpRedirectServer {
   late final HttpClientFactory _httpClientFactory;
   late final HttpServerFactory _httpServerFactory;
@@ -54,14 +59,18 @@ class HttpRedirectServer {
     var port = options.port ?? 8180;
     final server = await _httpServerFactory.bind(host, port);
     if (debugHttpRedirectServer) {
-      print('listening on ${httpServerGetUri(server)}');
+      _log('listening on ${httpServerGetUri(server)}');
+      _log('from http://localhost:$port');
     }
-    print('from http://localhost:$port');
     if (options.baseUrl != null) {
-      print('default redirection to ${options.baseUrl}');
+      if (debugHttpRedirectServer) {
+        _log('default redirection to ${options.baseUrl}');
+      }
     }
     server.listen((request) async {
-      print('uri: ${request.uri} ${request.method}');
+      if (debugHttpRedirectServer) {
+        _log('uri: ${request.uri} ${request.method}');
+      }
       if (options.handleCors) {
         //request.response.headers.set(HttpHeaders.CONTENT_TYPE, 'text/plain; charset=UTF-8');
         request.response.headers.add(
@@ -98,7 +107,7 @@ class HttpRedirectServer {
       var fullUrl = request.headers.value(redirectUrlHeader);
 
       if (baseUrl == null && fullUrl == null) {
-        print('no host port');
+        _log('no host port');
         request.response
           ..statusCode = 405
           ..write(
@@ -117,7 +126,7 @@ class HttpRedirectServer {
             client: client!,
           );
         } catch (e) {
-          print('proxyHttpRequest error $e');
+          _log('proxyHttpRequest error $e');
           try {
             request.response
               ..statusCode = 405

@@ -52,7 +52,7 @@ class EchoServerClient {
   }
 }
 
-void handleEchoRequest(HttpRequest request) async {
+Future<void> handleEchoRequest(HttpRequest request) async {
   if (request.handleCors()) {
     // CORS preflight request handled
     return;
@@ -98,7 +98,9 @@ Future<HttpServerState> echoServe(HttpServerFactory factory, int port) async {
   var server = await factory.bind(localhost, port);
   server.listen(handleEchoRequest);
   var uri = httpServerGetUri(server);
+  // ignore: avoid_print
   print('simple body <$uri?body=test>');
+  // ignore: avoid_print
   print('Failed <$uri?body=test&statusCode=400>');
   return HttpServerState(httpServer: server);
 }
@@ -127,7 +129,9 @@ Future<HttpServer> serve(HttpServerFactory factory, int port) async {
     await request.response.close();
   });
   var uri = httpServerGetUri(server);
+  // ignore: avoid_print
   print('simple body <$uri?body=test>');
+  // ignore: avoid_print
   print('Failed <$uri?body=test&statusCode=400>');
   return server;
 }

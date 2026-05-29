@@ -4,7 +4,7 @@ version: 0.7.2
 publish_to: none
 
 environment:
-  sdk: ^3.9.0
+  sdk: ^3.12.0
 
 dependencies:
   tekartik_http:
@@ -20,13 +20,13 @@ dependencies:
   tekartik_common_utils:
     git:
       url: https://github.com/tekartik/common_utils.dart
-  args: ">=2.6.0"
+  args: ">=2.7.0"
   process_run: ">=1.2.1+1"
-  path: ">=1.9.0"
+  path: ">=1.9.1"
   http:
 
 dev_dependencies:
-  test: ">=1.24.0"
+  test: ">=1.31.0"
   build_test:
   # build_node_compilers: ">=0.2.2"
   # build_web_compilers: ">=0.4.2"

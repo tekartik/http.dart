@@ -59,6 +59,7 @@ void runEchoServerClientTests(HttpClientFactory httpClientFactory) {
         httpMethodPost,
         uri.replace(queryParameters: {'header_set_demo': 'true'}),
       );
+      // ignore: avoid_print
       print(response.headers);
       expect(response.headers['x-demo'], 'true');
     });

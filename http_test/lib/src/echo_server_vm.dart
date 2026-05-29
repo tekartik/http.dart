@@ -1,6 +1,5 @@
-import 'dart:async';
-
 import 'package:stream_channel/stream_channel.dart';
+import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http_io/http_server_io.dart';
 import 'package:tekartik_http_test/test_server.dart';
@@ -8,7 +7,7 @@ import 'package:tekartik_http_test/test_server.dart';
 /// Starts the redirect test HTTP server in the same process.
 Future<StreamChannel<Object?>> startServer() async {
   final controller = StreamChannelController<Object?>(sync: true);
-  hybridMain(controller.foreign);
+  hybridMain(controller.foreign).unawait();
   return controller.local;
 }
 
@@ -23,7 +22,7 @@ Future<StreamChannel<Object?>> startServer() async {
 ///     - send request body
 ///    When Receive Anything:
 ///     - exit
-void hybridMain(StreamChannel<Object?> channel) async {
+Future<void> hybridMain(StreamChannel<Object?> channel) async {
   var server = await httpServerFactoryIo.bind(localhost, 0);
   server.listen(handleEchoRequest);
   channel.sink.add(server.port);

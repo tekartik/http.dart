@@ -1,4 +1,5 @@
 import 'package:process_run/shell.dart';
+import 'package:process_run/stdio.dart';
 import 'package:tekartik_common_utils/common_utils_import.dart';
 
 Future<void> main() async {
@@ -7,7 +8,7 @@ Future<void> main() async {
   var lines = result.outLines;
   for (var line in lines) {
     var out = line.split(' ').where((element) => element.isNotEmpty).toList();
-    print(out);
+    stdout.writeln(out);
 
     try {
       var pid = int.parse(out[1].toString());
@@ -16,7 +17,7 @@ Future<void> main() async {
         await Shell().run('kill -9 $pid');
         return;
       } catch (e) {
-        print(e);
+        stderr.writeln(e);
       }
     } catch (_) {
       continue;

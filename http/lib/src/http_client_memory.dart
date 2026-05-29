@@ -184,7 +184,7 @@ class HttpRequestMemory extends Stream<Uint8List> implements HttpRequest {
   */
   // TODO: implement requestedUri
   @override
-  Uri get requestedUri => throw 'not implemented yet';
+  Uri get requestedUri => throw UnimplementedError('not implemented yet');
 
   HttpResponseMemory? _response;
 
@@ -296,7 +296,7 @@ class HttpResponseMemory implements StreamSink<Uint8List>, HttpResponse {
 
   @override
   Future redirect(Uri location, {int status = httpStatusMovedTemporarily}) =>
-      throw 'not implemented yet';
+      throw UnimplementedError('not implemented yet');
 
   @override
   void write(Object? obj) {
@@ -371,15 +371,16 @@ class ResponseMemory implements Response {
 
   // TODO: implement isRedirect
   @override
-  bool get isRedirect => throw 'not implemented yet';
+  bool get isRedirect => throw UnimplementedError('not implemented yet');
 
   // TODO: implement persistentConnection
   @override
-  bool get persistentConnection => throw 'not implemented yet';
+  bool get persistentConnection =>
+      throw UnimplementedError('not implemented yet');
 
   // TODO: implement reasonPhrase
   @override
-  String get reasonPhrase => throw 'not implemented yet';
+  String get reasonPhrase => throw UnimplementedError('not implemented yet');
 
   // TODO: implement statusCode
   @override

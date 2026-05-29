@@ -19,6 +19,11 @@ const String hostHeader = 'host';
 // response
 const String redirectUrlHeader = 'x-tekartik-redirect-url';
 
+void _log(Object? object) {
+  // ignore: avoid_print
+  print(object);
+}
+
 /// Proxy the HTTP request to the specified server.
 Future proxyHttpRequest(
   Options options,
@@ -33,17 +38,23 @@ Future proxyHttpRequest(
       path = path.substring(1);
     }
 
-    print('baseUrl: $baseUrl, path: $path, headers: ${request.headers}');
+    if (debugHttpRedirectServer) {
+      _log('baseUrl: $baseUrl, path: $path, headers: ${request.headers}');
+    }
     String? url;
     if (path == '' || path == '.' || path == '/') {
       url = baseUrl;
     } else {
       url = p.url.join(baseUrl!, path);
-      print('baseUrl: $baseUrl, path: $path, url $url');
+      if (debugHttpRedirectServer) {
+        _log('baseUrl: $baseUrl, path: $path, url $url');
+      }
     }
     uri = Uri.parse(url!);
   }
-  print('calling ${request.method} $uri');
+  if (debugHttpRedirectServer) {
+    _log('calling ${request.method} $uri');
+  }
 
   final headers = <String, String>{};
 
@@ -81,7 +92,9 @@ Future proxyHttpRequest(
       doSet();
     }
   });
-  print('headers: $headers');
+  if (debugHttpRedirectServer) {
+    _log('headers: $headers');
+  }
 
   var bytes = <int>[];
   for (var list in await request.toList()) {
@@ -115,8 +128,10 @@ Future proxyHttpRequest(
   final r = request.response;
 
   r.statusCode = innerResponse.statusCode;
-  print('response: ${r.statusCode}');
-  print('respons headers: ${innerResponse.headers}');
+  if (debugHttpRedirectServer) {
+    _log('response: ${r.statusCode}');
+    _log('respons headers: ${innerResponse.headers}');
+  }
 
   innerHeaders.forEach((key, values) {
     final lowercaseKey = key.toLowerCase();
@@ -130,7 +145,9 @@ Future proxyHttpRequest(
   });
   // r.contentLength = rs.contentLength == null ? -1 : rs.contentLength;
   // r.headers.contentType = ContentType.parse(innerResponse.headers[httpHeaderContentType]); //.contentType;
-  print('fwd response headers: ${r.headers}');
+  if (debugHttpRedirectServer) {
+    _log('fwd response headers: ${r.headers}');
+  }
   r.headers.set(redirectUrlHeader, uri.toString());
 
   try {
@@ -139,28 +156,30 @@ Future proxyHttpRequest(
     }
   } catch (e, st) {
     if (debugHttpRedirectServer) {
-      print(st);
+      _log(st);
     }
     rethrow;
   }
   try {
     await r.flush();
   } catch (e, st) {
-    print('Error flushing $e');
+    _log('Error flushing $e');
     if (debugHttpRedirectServer) {
-      print(st);
+      _log(st);
     }
   }
 
   try {
     await r.close();
   } catch (e, st) {
-    print('Error closing $e');
+    _log('Error closing $e');
     if (debugHttpRedirectServer) {
-      print(st);
+      _log(st);
     }
   }
-  print('done');
+  if (debugHttpRedirectServer) {
+    _log('done');
+  }
 }
 
 class Options {
@@ -213,13 +232,19 @@ Future<HttpServer> startServer(
   var host = options.host ?? InternetAddress.anyIPv4;
   var port = options.port ?? 8180;
   final server = await factory.bind(host, port);
-  print('listening on $host port $port');
-  print('from http://localhost:$port');
+  if (debugHttpRedirectServer) {
+    _log('listening on $host port $port');
+    _log('from http://localhost:$port');
+  }
   if (options.baseUrl != null) {
-    print('default redirection to ${options.baseUrl}');
+    if (debugHttpRedirectServer) {
+      _log('default redirection to ${options.baseUrl}');
+    }
   }
   server.listen((request) async {
-    print('uri: ${request.uri} ${request.method}');
+    if (debugHttpRedirectServer) {
+      _log('uri: ${request.uri} ${request.method}');
+    }
     if (options.handleCors) {
       //request.response.headers.set(HttpHeaders.CONTENT_TYPE, 'text/plain; charset=UTF-8');
       request.response.headers.add(
@@ -256,7 +281,9 @@ Future<HttpServer> startServer(
     var fullUrl = request.headers.value(redirectUrlHeader);
 
     if (baseUrl == null && fullUrl == null) {
-      print('no host port');
+      if (debugHttpRedirectServer) {
+        _log('no host port');
+      }
       request.response
         ..statusCode = 405
         ..write('missing $redirectBaseUrlHeader header or $redirectUrlHeader');
@@ -272,7 +299,7 @@ Future<HttpServer> startServer(
           client: http.Client(),
         );
       } catch (e) {
-        print('proxyHttpRequest error $e');
+        _log('proxyHttpRequest error $e');
         try {
           request.response
             ..statusCode = 405
