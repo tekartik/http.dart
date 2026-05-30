@@ -158,45 +158,14 @@ class HttpRequestMemory extends Stream<Uint8List> implements HttpRequest {
   /// Stream controller
   final _streamCtlr = StreamController<Uint8List>();
 
-  /*
-  // TODO: implement certificate
   @override
-  X509Certificate get certificate => throw 'not implemented yet';
-
-  // TODO: implement connectionInfo
-  @override
-  HttpConnectionInfo get connectionInfo => throw 'not implemented yet';
-  // TODO: implement contentLength
-  @override
-  int get contentLength => throw 'not implemented yet';
-
-  // TODO: implement cookies
-  @override
-  List<Cookie> get cookies => throw 'not implemented yet';
-
-  // TODO: implement persistentConnection
-  @override
-  bool get persistentConnection => throw 'not implemented yet';
-
-  // TODO: implement protocolVersion
-  @override
-  String get protocolVersion => throw 'not implemented yet';
-  */
-  // TODO: implement requestedUri
-  @override
-  Uri get requestedUri => throw UnimplementedError('not implemented yet');
+  Uri get requestedUri => uri;
 
   HttpResponseMemory? _response;
 
   @override
   HttpResponseMemory get response =>
       _response ??= HttpResponseMemory(Request(method, uri));
-
-  /*
-  // TODO: implement session
-  @override
-  HttpSession get session => throw 'not implemented yet';
-  */
 
   /// Close the request
   Future<void> close() async {}

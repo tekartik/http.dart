@@ -1,4 +1,5 @@
 import 'package:tekartik_http/http_memory.dart';
+import 'package:tekartik_http/src/http_client_memory.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -23,6 +24,15 @@ void main() {
           'name': 'value',
           'name2': ['value1', 'value2'],
         });
+      });
+      test('request', () async {
+        var request = HttpRequestMemory(
+          'GET',
+          Uri.parse('http://example.com/test'),
+        );
+        expect(request.method, 'GET');
+        expect(request.uri, Uri.parse('http://example.com/test'));
+        expect(request.requestedUri, Uri.parse('http://example.com/test'));
       });
     });
   });
