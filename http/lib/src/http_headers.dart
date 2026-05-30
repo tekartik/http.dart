@@ -30,6 +30,8 @@ import 'package:tekartik_http/http_memory.dart';
 abstract class HttpHeaders {
   /// Default implementation in memory
   factory HttpHeaders() => HttpHeadersMemory();
+
+  /// Create from map
   factory HttpHeaders.fromMap(Map map) {
     var headers = HttpHeadersMemory();
     map.forEach((key, value) {
