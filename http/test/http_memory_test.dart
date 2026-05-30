@@ -20,7 +20,7 @@ void main() {
         headers.set('name', 'value');
         headers.set('name2', ['value1', 'value2']);
         expect(headers.toMap(), {
-          'name': ['value'],
+          'name': 'value',
           'name2': ['value1', 'value2'],
         });
       });

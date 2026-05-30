@@ -7,7 +7,7 @@ library;
 import 'dart:convert';
 import 'dart:io' as io;
 
-import 'package:tekartik_http/http_test.dart';
+import 'package:tekartik_http/http_test_helper.dart';
 import 'package:tekartik_http_io/http_io.dart';
 import 'package:tekartik_http_test/http_test.dart';
 import 'package:test/test.dart';

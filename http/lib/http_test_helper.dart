@@ -1,6 +1,3 @@
-@Deprecated('Import http_test_helper.dart instead')
-library;
-
 import 'http_server.dart';
 
 /// Test http server

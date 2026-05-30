@@ -1,4 +1,4 @@
-import 'package:tekartik_http/http.dart';
+import 'package:tekartik_http/http_memory.dart';
 
 /// Headers for HTTP requests and responses.
 ///
@@ -28,6 +28,15 @@ import 'package:tekartik_http/http.dart';
 /// The most common mode of operation is to use `set()` for setting a value,
 /// and `value()` for retrieving a value.
 abstract class HttpHeaders {
+  /// Default implementation in memory
+  factory HttpHeaders() => HttpHeadersMemory();
+  factory HttpHeaders.fromMap(Map map) {
+    var headers = HttpHeadersMemory();
+    map.forEach((key, value) {
+      headers.set(key.toString(), value as Object);
+    });
+    return headers;
+  }
   /*
   static const acceptHeader = "accept";
   static const acceptCharsetHeader = "accept-charset";
@@ -349,16 +358,45 @@ abstract class HttpHeaders {
 /// Convenience methods for headers.
 extension HttpHeadersExt on HttpHeaders {
   /// Convert to a map where the value is either a single value or a list of values
-  Map<String, /* String | List<String> */ Object?> toMap() {
-    var map = <String, Object?>{};
+  Map<String, /* String | List<String> */ Object> toMap() {
+    var map = <String, Object>{};
     forEach((name, values) {
       if (values.length == 1) {
         map[name] = values.single;
       } else {
         map[name] = values;
       }
+    });
+    return map;
+  }
+
+  /// Ok for http client headers
+  Map<String, String> toStringMap() {
+    var map = <String, String>{};
+    forEach((name, values) {
+      if (values.length == 1) {
+        map[name] = values.single;
+      } else {
+        map[name] = values.join(', ');
+      }
+    });
+    return map;
+  }
+
+  /// Ok for http client headers
+  Map<String, List<String>> toListMap() {
+    var map = <String, List<String>>{};
+    forEach((name, values) {
       map[name] = values;
     });
     return map;
   }
+
+  /// Set mime type as a string
+  set mimeType(String mimeType) {
+    contentType = ContentType.parse(mimeType);
+  }
+
+  /// Get mime type as a string (or null)
+  String? get mimeType => contentType?.toString();
 }
