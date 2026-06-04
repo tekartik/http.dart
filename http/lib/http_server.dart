@@ -12,3 +12,4 @@ export 'package:tekartik_http/src/http_server.dart'
         ContentType,
         HttpRequestBodyBytesExt,
         HttpServerClientExt;
+export 'src/http_server_ext.dart' show TekartikHttpServerExt;

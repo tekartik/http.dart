@@ -1,7 +1,4 @@
-import 'http_server.dart';
+@Deprecated('Obsolete')
+library;
 
-/// Test http server
-extension TestHttpServer on HttpServer {
-  /// Get the base Uri for the client
-  Uri get uri => httpServerGetUri(this);
-}
+export 'src/http_server_ext.dart';
