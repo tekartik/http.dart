@@ -138,6 +138,7 @@ class HttpRequestMemory extends Stream<Uint8List> implements HttpRequest {
   StreamSubscription<Uint8List> listen(
     void Function(Uint8List event)? onData, {
     Function? onError,
+
     void Function()? onDone,
     bool? cancelOnError,
   }) {
@@ -422,6 +423,7 @@ class HttpClientMemory extends BaseClient
   }) async {
     var request = HttpRequestMemory(
       method,
+
       parseUri(url),
       headers: headers,
       body: body,

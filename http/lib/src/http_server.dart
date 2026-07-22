@@ -695,8 +695,8 @@ abstract class HttpServer implements Stream<HttpRequest> {
   InternetAddress? get address;
 
   /*
-  /// Sets the timeout, in seconds, for sessions of this [HttpServer].
-  /// The default timeout is 20 minutes.
+/// Sets the timeout, in seconds, for sessions of this [HttpServer].
+/// The default timeout is 20 minutes.
   set sessionTimeout(int timeout);
 
   /// Returns an [HttpConnectionsInfo] object summarizing the number of

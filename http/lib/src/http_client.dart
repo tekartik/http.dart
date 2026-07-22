@@ -240,5 +240,6 @@ bool _checkResponseSuccess(HttpClientResponse response) {
   if (response.reasonPhrase != null) {
     message = '$message: ${response.reasonPhrase}';
   }
+
   throw HttpClientExceptionImpl(message: message, response: response);
 }

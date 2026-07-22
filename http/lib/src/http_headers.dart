@@ -362,6 +362,7 @@ extension HttpHeadersExt on HttpHeaders {
   /// Convert to a map where the value is either a single value or a list of values
   Map<String, /* String | List<String> */ Object> toMap() {
     var map = <String, Object>{};
+
     forEach((name, values) {
       if (values.length == 1) {
         map[name] = values.single;
@@ -375,6 +376,7 @@ extension HttpHeadersExt on HttpHeaders {
   /// Ok for http client headers
   Map<String, String> toStringMap() {
     var map = <String, String>{};
+
     forEach((name, values) {
       if (values.length == 1) {
         map[name] = values.single;
@@ -388,6 +390,7 @@ extension HttpHeadersExt on HttpHeaders {
   /// Ok for http client headers
   Map<String, List<String>> toListMap() {
     var map = <String, List<String>>{};
+
     forEach((name, values) {
       map[name] = values;
     });

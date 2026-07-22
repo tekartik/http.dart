@@ -15,6 +15,7 @@ Uint8List getBodyAsBytes(Object? body, {Encoding? encoding}) {
   } else {
     bytes = body as List<int>?;
   }
+
   return asUint8List(bytes!);
 }
 
@@ -68,6 +69,7 @@ class HttpServerMemory extends Stream<HttpRequest>
   StreamSubscription<HttpRequest> listen(
     void Function(HttpRequest event)? onData, {
     Function? onError,
+
     void Function()? onDone,
     bool? cancelOnError,
   }) {

@@ -56,6 +56,7 @@ extension HttpClientFactoryIoExt on HttpClientFactory {
     }
     try {
       var bytes = await client.readBytes(url);
+
       await File(path).writeAsBytes(bytes);
     } finally {
       client.close();

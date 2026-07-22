@@ -45,5 +45,6 @@ Map<String, Object?>? httpDataAsMapOrNull(Object? data) {
   } else if (data is String) {
     return parseJsonObject(data);
   }
+
   return parseJsonObject(httpDataAsStringOrNull(data));
 }

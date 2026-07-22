@@ -35,6 +35,7 @@ InternetAddressType wrapInternetAddressType(
   } else if (ioAddressType == io.InternetAddressType.IPv6) {
     return InternetAddressType.IPv6;
   }
+
   return InternetAddressTypeIo(ioAddressType);
 }
 
@@ -165,6 +166,7 @@ class HttpRequestIo extends Stream<Uint8List> implements HttpRequest {
   StreamSubscription<Uint8List> listen(
     void Function(Uint8List event)? onData, {
     Function? onError,
+
     void Function()? onDone,
     bool? cancelOnError,
   }) {
@@ -207,6 +209,7 @@ class _HttpServerIo extends Stream<HttpRequest> implements HttpServerIo {
   StreamSubscription<HttpRequest> listen(
     void Function(HttpRequest event)? onData, {
     Function? onError,
+
     void Function()? onDone,
     bool? cancelOnError,
   }) {

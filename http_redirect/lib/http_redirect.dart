@@ -221,9 +221,7 @@ class Options {
   }();
 }
 
-///
 /// start http redirect server
-///
 @Deprecated('Use Redirect server')
 Future<HttpServer> startServer(
   HttpServerFactory factory,
