@@ -1,4 +1,5 @@
-import 'package:tekartik_http/http.dart';
+import 'package:tekartik_http_browser/src/http_client_browser.dart';
 
-HttpClientFactory get httpClientFactoryBrowser =>
+/// Browser http client factory (web only).
+HttpClientFactoryBrowser get httpClientFactoryBrowser =>
     throw UnimplementedError('httpClientFactoryBrowser browser only');

@@ -3,15 +3,34 @@
 @TestOn('browser')
 library;
 
+import 'dart:typed_data';
+
 import 'package:tekartik_http_browser/http_client_browser.dart';
 import 'package:tekartik_http_test/echo_server_client_test.dart';
+import 'package:tekartik_http_test/object_url_client_test.dart';
 import 'package:test/test.dart';
 
 void main() {
   runEchoServerClientTests(httpClientFactoryBrowser);
+  runObjectUrlClientTests(httpClientFactoryBrowser);
   test('client', () {
     var client = httpClientFactoryBrowser.newClient();
     expect(client, isNotNull);
     client.close();
+  });
+  test('object url', () async {
+    // Direct access, no cast needed
+    var url = httpClientFactoryBrowser.createObjectUrl(
+      Uint8List.fromList([1, 2, 3]),
+      contentType: httpContentTypeBytes,
+    );
+    try {
+      expect(url.scheme, httpSchemeBlob);
+      var client = httpClientFactoryBrowser.newClient();
+      expect(await client.readBytes(url), [1, 2, 3]);
+      client.close();
+    } finally {
+      httpClientFactoryBrowser.revokeObjectUrl(url);
+    }
   });
 }

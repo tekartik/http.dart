@@ -27,6 +27,19 @@ const String httpMethodPurge = 'PURGE';
 const String httpMethodOptions = 'OPTIONS';
 
 //
+// Url schemes
+//
+
+/// Url scheme http.
+const String httpSchemeHttp = 'http';
+
+/// Url scheme https.
+const String httpSchemeHttps = 'https';
+
+/// Url scheme blob (object url, see `HttpObjectUrlFactory`).
+const String httpSchemeBlob = 'blob';
+
+//
 // Http headers
 //
 

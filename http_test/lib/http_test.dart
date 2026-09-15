@@ -7,6 +7,7 @@ import 'dart:typed_data';
 import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/http_memory.dart';
+import 'package:tekartik_http_test/object_url_client_test.dart' as object_url;
 import 'package:tekartik_http_test/test_server_test.dart' as test_server;
 import 'package:test/test.dart';
 
@@ -56,6 +57,25 @@ void run(HttpFactory httpFactory) {
       expect(
         await client.read(Uri.parse('http://$localhost:${server.port}')),
         'test',
+      );
+      client.close();
+      await server.close();
+    });
+    test('response.addStream', () async {
+      var server = await httpServerFactory.bind(localhost, 0);
+      server.listen((request) async {
+        await request.response.addStream(
+          Stream.fromIterable([
+            Uint8List.fromList([1, 2]),
+            Uint8List.fromList([3]),
+          ]),
+        );
+        await request.response.close();
+      });
+      var client = httpClientFactory.newClient();
+      expect(
+        await client.readBytes(Uri.parse('http://$localhost:${server.port}')),
+        [1, 2, 3],
       );
       client.close();
       await server.close();
@@ -467,4 +487,9 @@ void run(HttpFactory httpFactory) {
   });
 
   test_server.run(httpFactory);
+
+  // Object url (blob:) support is optional (browser and memory only)
+  if (httpClientFactory.supportsObjectUrl) {
+    object_url.runObjectUrlClientTests(httpClientFactory);
+  }
 }

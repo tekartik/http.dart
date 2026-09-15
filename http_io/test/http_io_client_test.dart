@@ -12,6 +12,11 @@ import 'package:test/test.dart';
 void main() {
   run(httpFactoryIo);
 
+  test('object url not supported', () {
+    expect(httpClientFactoryIo.supportsObjectUrl, isFalse);
+    expect(() => httpClientFactoryIo.objectUrlFactory, throwsUnsupportedError);
+  });
+
   test('google', () async {
     await httpClientFactoryIo.newClient().read(
       Uri.parse('http://www.google.com'),

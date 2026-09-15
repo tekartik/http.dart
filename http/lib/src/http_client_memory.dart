@@ -6,6 +6,7 @@ import 'dart:typed_data';
 
 import 'package:http/http.dart';
 import 'package:tekartik_http/http.dart';
+import 'package:tekartik_http/src/http_memory.dart' show httpMemoryHost;
 import 'package:tekartik_http/src/http_server_memory.dart';
 import 'package:tekartik_http/src/http_server_mixin.dart';
 import 'package:tekartik_http/src/utils.dart';
@@ -223,7 +224,12 @@ class HttpResponseMemory implements StreamSink<Uint8List>, HttpResponse {
   }
 
   @override
-  Future addStream(Stream<Uint8List> stream) => _streamCtlr.addStream(stream);
+  Future addStream(Stream<Uint8List> stream) {
+    // Buffer the events ourselves: StreamController.addStream would pause
+    // the source until the response is listened to (in close), deadlocking
+    // `await response.addStream(...)` followed by `await response.close()`.
+    return stream.forEach(add);
+  }
 
   @override
   Future close() async {
@@ -421,10 +427,13 @@ class HttpClientMemory extends BaseClient
     body,
     Encoding? encoding,
   }) async {
+    var uri = parseUri(url);
+    if (uri.scheme == httpSchemeBlob) {
+      return _objectUrlCall(method, uri, headers: headers);
+    }
     var request = HttpRequestMemory(
       method,
-
-      parseUri(url),
+      uri,
       headers: headers,
       body: body,
       encoding: encoding,
@@ -440,6 +449,41 @@ class HttpClientMemory extends BaseClient
     // wait for response
     var response = await request.response.response;
     return response;
+  }
+
+  /// Serve a `blob:` url from memory, like a browser fetch does (GET only).
+  Future<Response> _objectUrlCall(
+    String method,
+    Uri uri, {
+    Map<String, String>? headers,
+  }) async {
+    var request = Request(method, uri);
+    if (headers != null) {
+      request.headers.addAll(headers);
+    }
+    if (method != httpMethodGet) {
+      throw ClientException(
+        'Failed to fetch object url: method $method not supported (GET only)',
+        uri,
+      );
+    }
+    var data = httpDataMemory.objectUrls[uri.toString()];
+    if (data == null) {
+      throw ClientException(
+        'Failed to fetch object url: not found or revoked',
+        uri,
+      );
+    }
+    return Response.bytes(
+      data.bytes,
+      httpStatusCodeOk,
+      request: request,
+      headers: {
+        if (data.contentType != null)
+          httpHeaderContentType.toLowerCase(): data.contentType!,
+        'content-length': data.bytes.length.toString(),
+      },
+    );
   }
 
   @override
@@ -470,11 +514,31 @@ class HttpClientMemory extends BaseClient
 }
 
 /// Http client factory in memory.
-class HttpClientFactoryMemory extends HttpClientFactory {
+///
+/// Supports object urls (`blob:`), see [HttpObjectUrlFactory].
+class HttpClientFactoryMemory extends HttpClientFactory
+    implements HttpObjectUrlFactory {
   @override
   Client newClient() {
     var client = HttpClientMemory();
     return client;
+  }
+
+  @override
+  Uri createObjectUrl(Uint8List bytes, {String? contentType}) {
+    var id = ++httpDataMemory.lastObjectUrlId;
+    // Same shape as a browser object url: blob:<origin>/<id>
+    var url = Uri.parse('$httpSchemeBlob:http://$httpMemoryHost/$id');
+    httpDataMemory.objectUrls[url.toString()] = HttpObjectUrlDataMemory(
+      Uint8List.fromList(bytes),
+      contentType,
+    );
+    return url;
+  }
+
+  @override
+  void revokeObjectUrl(Uri url) {
+    httpDataMemory.objectUrls.remove(url.toString());
   }
 }
 

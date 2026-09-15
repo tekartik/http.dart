@@ -1,15 +1,9 @@
-import 'package:http/browser_client.dart' as http;
-import 'package:http/http.dart' as http;
 import 'package:tekartik_http/http_client.dart';
 
-class HttpClientFactoryBrowser implements HttpClientFactory {
-  @override
-  http.Client newClient() {
-    return http.BrowserClient();
-  }
-}
-
-HttpClientFactoryBrowser? _httpClientFactoryBrowser;
-
-HttpClientFactoryBrowser get httpClientFactoryBrowser =>
-    _httpClientFactoryBrowser ??= HttpClientFactoryBrowser();
+/// Browser http client factory.
+///
+/// Clients are `BrowserClient` from `package:http` (fetch based).
+/// Object urls (`blob:`) are supported through [HttpObjectUrlFactory]
+/// (`URL.createObjectURL`/`URL.revokeObjectURL`).
+abstract class HttpClientFactoryBrowser
+    implements HttpClientFactory, HttpObjectUrlFactory {}

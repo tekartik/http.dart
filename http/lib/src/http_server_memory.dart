@@ -95,10 +95,28 @@ class HttpServerMemory extends Stream<HttpRequest>
 /// Http connect in memory
 class HttpConnectionMemory {}
 
+/// Object url (blob:) content in memory
+class HttpObjectUrlDataMemory {
+  /// The bytes (a copy of the bytes given at creation)
+  final Uint8List bytes;
+
+  /// Optional content type
+  final String? contentType;
+
+  /// Create object url content
+  HttpObjectUrlDataMemory(this.bytes, this.contentType);
+}
+
 /// Http data in memory
 class HttpDataMemory {
   /// All servers
   final servers = <int, HttpServerMemory>{};
+
+  /// All object urls (blob:) by url string
+  final objectUrls = <String, HttpObjectUrlDataMemory>{};
+
+  /// Last object url id used
+  int lastObjectUrlId = 0;
 }
 
 HttpDataMemory? _httpDataMemory;
