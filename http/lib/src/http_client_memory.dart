@@ -387,10 +387,25 @@ mixin HttpClientMixin implements Client {
     Encoding? encoding,
   });
 
+  /// Like package:http [BaseClient.readBytes], throws a [ClientException]
+  /// when the status code is not successful (>= 400).
   @override
   Future<Uint8List> readBytes(url, {Map<String, String>? headers}) async {
     var response = await this.get(url, headers: headers);
+    _checkResponseSuccess(url, response);
     return response.bodyBytes;
+  }
+
+  /// Same check and message as package:http [BaseClient].
+  void _checkResponseSuccess(Uri url, Response response) {
+    if (response.statusCode < 400) {
+      return;
+    }
+    var message = 'Request to $url failed with status ${response.statusCode}';
+    if (response.reasonPhrase != null) {
+      message = '$message: ${response.reasonPhrase}';
+    }
+    throw ClientException('$message.', url);
   }
 
   @override

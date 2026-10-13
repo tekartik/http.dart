@@ -4,6 +4,7 @@
 
 import 'dart:typed_data';
 
+import 'package:http/http.dart' show ClientException;
 import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_http/http.dart';
 import 'package:tekartik_http/http_memory.dart';
@@ -220,6 +221,25 @@ void run(HttpFactory httpFactory) {
       );
       var port2 = server2.port;
       expect(port1, isNot(port2));
+    });
+
+    test('read readBytes failure', () async {
+      // Like package:http, read and readBytes throw on an error status
+      // instead of returning the body.
+      var uri = httpServerGetUri(server);
+      var url = Uri.parse('$uri?statusCode=404&body=test');
+      Matcher throwsStatus404() => throwsA(
+        isA<ClientException>()
+            .having((e) => e.message, 'message', contains('404'))
+            .having((e) => e.uri, 'uri', url),
+      );
+      await expectLater(client.readBytes(url), throwsStatus404());
+      await expectLater(client.read(url), throwsStatus404());
+      // Still successful below 400
+      expect(
+        await client.read(Uri.parse('$uri?statusCode=201&body=test')),
+        'test',
+      );
     });
 
     test('httpClientRead1', () async {
