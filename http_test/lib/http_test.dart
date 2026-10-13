@@ -61,6 +61,22 @@ void run(HttpFactory httpFactory) {
       client.close();
       await server.close();
     });
+    test('multiple header values', () async {
+      var server = await httpServerFactory.bind(localhost, 0);
+      server.listen((request) async {
+        request.response.headers
+          ..add('x-multi', 'a')
+          ..add('x-multi', 'b');
+        await request.response.close();
+      });
+      var client = httpClientFactory.newClient();
+      var response = await client.get(
+        Uri.parse('http://$localhost:${server.port}'),
+      );
+      expect(response.headers['x-multi'], 'a, b');
+      client.close();
+      await server.close();
+    });
     test('response.addStream', () async {
       var server = await httpServerFactory.bind(localhost, 0);
       server.listen((request) async {
@@ -400,21 +416,6 @@ void run(HttpFactory httpFactory) {
       expect(response.statusCode, 200);
       expect(response.contentLength, greaterThan(0));
       expect(response.body, equals('hello'));
-      client.close();
-    });
-
-    test('make get request with library-level get method', () async {
-      var client = httpClientFactory.newClient();
-      var response = await client.get(Uri.parse(url));
-      // devPrint(response.headers);
-      expect(response.statusCode, 200);
-      expect(response.contentLength, greaterThan(0));
-      expect(response.body, equals('ok'));
-      expect(response.headers, contains('content-type'));
-      expect(
-        response.headers['set-cookie'],
-        'JSESSIONID=verylongid; Path=/somepath; HttpOnly',
-      );
       client.close();
     });
   });

@@ -188,17 +188,11 @@ Future<String> httpClientRead(
     body: body,
     encoding: encoding,
   );
-  if (_checkResponseSuccess(response)) {
-    if (responseEncoding == null) {
-      return response.body;
-    } else {
-      return responseEncoding.decode(response.bodyBytes);
-    }
+  _checkResponseSuccess(response);
+  if (responseEncoding == null) {
+    return response.body;
   } else {
-    throw HttpClientExceptionImpl(
-      message: 'Error ${response.statusCode}',
-      response: response,
-    );
+    return responseEncoding.decode(response.bodyBytes);
   }
 }
 
@@ -219,20 +213,14 @@ Future<Uint8List> httpClientReadBytes(
     body: body,
     encoding: encoding,
   );
-  if (_checkResponseSuccess(response)) {
-    return response.bodyBytes;
-  } else {
-    throw HttpClientExceptionImpl(
-      message: 'Error ${response.statusCode}',
-      response: response,
-    );
-  }
+  _checkResponseSuccess(response);
+  return response.bodyBytes;
 }
 
 /// Throws an error if [response] is not successful.
-bool _checkResponseSuccess(HttpClientResponse response) {
+void _checkResponseSuccess(HttpClientResponse response) {
   if (response.isSuccessful) {
-    return true;
+    return;
   }
 
   var message =

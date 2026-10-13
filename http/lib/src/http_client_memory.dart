@@ -326,7 +326,8 @@ class ResponseMemory implements Response {
   ResponseMemory(this._request, this._httpResponseMemory, this.bodyBytes) {
     _httpResponseMemory.headers.forEach((name, values) {
       if (values.length > 1) {
-        headers[name] = values.join();
+        // Same as io, where the server sends the values on one line.
+        headers[name] = values.join(', ');
       } else {
         headers[name] = values.first;
       }

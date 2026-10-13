@@ -221,94 +221,24 @@ class Options {
   }();
 }
 
+/// Client factory of the legacy [startServer], using the default client.
+class _DefaultHttpClientFactory implements HttpClientFactory {
+  @override
+  http.Client newClient() => http.Client();
+}
+
 /// start http redirect server
 @Deprecated('Use Redirect server')
 Future<HttpServer> startServer(
   HttpServerFactory factory,
   Options options,
 ) async {
-  var host = options.host ?? InternetAddress.anyIPv4;
-  var port = options.port ?? 8180;
-  final server = await factory.bind(host, port);
-  if (debugHttpRedirectServer) {
-    _log('listening on $host port $port');
-    _log('from http://localhost:$port');
-  }
-  if (options.baseUrl != null) {
-    if (debugHttpRedirectServer) {
-      _log('default redirection to ${options.baseUrl}');
-    }
-  }
-  server.listen((request) async {
-    if (debugHttpRedirectServer) {
-      _log('uri: ${request.uri} ${request.method}');
-    }
-    if (options.handleCors) {
-      //request.response.headers.set(HttpHeaders.CONTENT_TYPE, 'text/plain; charset=UTF-8');
-      request.response.headers.add(
-        'Access-Control-Allow-Methods',
-        'POST, OPTIONS, GET, PATCH, DELETE',
-      );
-      request.response.headers.add('Access-Control-Allow-Origin', '*');
-      request.response.headers.add(
-        'Access-Control-Allow-Headers',
-        // 'Origin,Content-Type,Authorization,Accept,connection,content-length,host,user-agent');
-        options.corsHeadersText,
-      );
-
-      if (request.method == 'OPTIONS') {
-        request.response
-          ..statusCode = 200
-          ..write('');
-        await request.response.close();
-        return;
-      }
-    }
-    /*
-    var overridenRedirectHostPort =
-        parseHostPort(request.headers.value('_tekartik_redirect_host'));
-    var redirectHostPort = overridenRedirectHostPort ?? hostPort;
-    */
-    // compat
-    var baseUrl =
-        request.headers.value(redirectBaseUrlHeader) ??
-        // compat
-        request.headers.value('_tekartik_redirect_host') ??
-        options.baseUrl;
-
-    var fullUrl = request.headers.value(redirectUrlHeader);
-
-    if (baseUrl == null && fullUrl == null) {
-      if (debugHttpRedirectServer) {
-        _log('no host port');
-      }
-      request.response
-        ..statusCode = 405
-        ..write('missing $redirectBaseUrlHeader header or $redirectUrlHeader');
-      await request.response.flush();
-      await request.response.close();
-    } else {
-      try {
-        await proxyHttpRequest(
-          options,
-          request,
-          baseUrl,
-          uri: fullUrl != null ? Uri.parse(fullUrl) : null,
-          client: http.Client(),
-        );
-      } catch (e) {
-        _log('proxyHttpRequest error $e');
-        try {
-          request.response
-            ..statusCode = 405
-            ..write('caught error $e');
-          await request.response.flush();
-          await request.response.close();
-        } catch (_) {}
-      }
-    }
-  });
-  return server;
+  var server = await HttpRedirectServer.startServer(
+    httpClientFactory: _DefaultHttpClientFactory(),
+    httpServerFactory: factory,
+    options: options,
+  );
+  return server.httpServer;
 }
 
 var corsDefaultHeaders = [

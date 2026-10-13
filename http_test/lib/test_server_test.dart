@@ -24,12 +24,8 @@ void run(HttpFactory httpFactory) {
     });
     tearDownAll(() async {
       await echoServeState?.close();
-      try {
-        await client.ping();
-        fail('unexpected ping success');
-      } catch (e) {
-        // fail('expected ping error');
-      }
+      // The server is closed.
+      await expectLater(client.ping(), throwsA(anything));
     });
     test('body param', () async {
       expect(

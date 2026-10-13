@@ -13,8 +13,10 @@ void run({
   //HttpServerFactory? httpServerFactory,
   HttpFactory? testServerHttpFactory,
 }) {
-  var clientFactory = testServerHttpFactory?.client ?? httpFactory!.client;
-  var serverFactory = httpFactory!.server;
+  // The test client reads the redirect server, the redirect server reads the
+  // test server.
+  var clientFactory = httpFactory!.client;
+  var serverFactory = httpFactory.server;
   group('redirect', () {
     test('redirect', () async {
       var httpServer = await (testServerHttpFactory?.server ?? serverFactory)
@@ -42,7 +44,7 @@ void run({
       //devPrint('redirectPort: $redirectPort');
       expect(port, isNot(redirectPort));
       expect(
-        await client.read(Uri.parse('http://$localhost:$port')),
+        await client.read(Uri.parse('http://$localhost:$redirectPort')),
         'tekartik_http_redirect',
       );
       client.close();
