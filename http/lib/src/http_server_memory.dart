@@ -132,7 +132,10 @@ class HttpServerFactoryMemory extends HttpServerFactory {
   @override
   Future<HttpServer> bind(address, int port) async {
     if (port == 0) {
-      port = ++lastPort;
+      // Skip the ports already bound (explicitly or by another factory)
+      do {
+        port = ++lastPort;
+      } while (httpDataMemory.servers.containsKey(port));
     }
     if (httpDataMemory.servers[port] != null) {
       throw Exception('port $port is busy');

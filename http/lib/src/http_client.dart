@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:tekartik_common_utils/common_utils_import.dart';
 import 'package:tekartik_http/http_client.dart' as http_client;
-import 'package:tekartik_http/src/http_common.dart';
 
 import 'http_client_memory.dart';
 
@@ -100,8 +99,12 @@ abstract class HttpClientResponse {
   /// Response headers.
   HttpMapHeaders get headers => HttpMapHeadersFromMap(_response.headers);
 
-  /// Response reason phrase.
-  String? reasonPhrase;
+  String? _reasonPhrase;
+
+  /// Response reason phrase, the one of [response] unless set.
+  String? get reasonPhrase => _reasonPhrase ?? _response.reasonPhrase;
+
+  set reasonPhrase(String? reasonPhrase) => _reasonPhrase = reasonPhrase;
 
   @override
   String toString() {
@@ -122,8 +125,13 @@ class HttpClientExceptionImpl extends http.ClientException
   final HttpClientResponse response;
 
   /// Creates an exception with a message and a response.
+  ///
+  /// The uri is the one of the response request, if any.
   HttpClientExceptionImpl({required String message, required this.response})
-    : super(message, parseUri(response.response.request!.url));
+    : super(message, response.response.request?.url);
+
+  HttpClientExceptionImpl._(String message, this.response, Uri uri)
+    : super(message, uri);
 
   @override
   int get statusCode => response.statusCode;
@@ -161,7 +169,7 @@ Future<HttpClientResponse> httpClientSend(
   var httpResponse = HttpClientResponse(response);
 
   if (throwOnFailure == true) {
-    _checkResponseSuccess(httpResponse);
+    _checkResponseSuccess(httpResponse, uri);
   }
   return httpResponse;
 }
@@ -188,7 +196,7 @@ Future<String> httpClientRead(
     body: body,
     encoding: encoding,
   );
-  _checkResponseSuccess(response);
+  _checkResponseSuccess(response, uri);
   if (responseEncoding == null) {
     return response.body;
   } else {
@@ -213,21 +221,22 @@ Future<Uint8List> httpClientReadBytes(
     body: body,
     encoding: encoding,
   );
-  _checkResponseSuccess(response);
+  _checkResponseSuccess(response, uri);
   return response.bodyBytes;
 }
 
 /// Throws an error if [response] is not successful.
-void _checkResponseSuccess(HttpClientResponse response) {
+///
+/// [uri] is the uri of the call, used when the response has no request.
+void _checkResponseSuccess(HttpClientResponse response, Uri uri) {
   if (response.isSuccessful) {
     return;
   }
-
-  var message =
-      'Request to ${response.response.request!.url} failed with status ${response.statusCode}';
+  var url = response.response.request?.url ?? uri;
+  var message = 'Request to $url failed with status ${response.statusCode}';
   if (response.reasonPhrase != null) {
     message = '$message: ${response.reasonPhrase}';
   }
 
-  throw HttpClientExceptionImpl(message: message, response: response);
+  throw HttpClientExceptionImpl._(message, response, url);
 }

@@ -46,7 +46,8 @@ below add typed responses, error handling and constants.
   - `httpClientRead(client, method, uri, {headers, body, encoding,
     responseEncoding})` returns the body as a `String` and always throws
     `HttpClientException` on failure. Pass `responseEncoding: utf8` when the
-    server sends no charset (the io client decodes latin1 by default).
+    server sends no charset (`package:http` decodes latin1 by default). The
+    exception message ends with the reason phrase when the server sent one.
   - `httpClientReadBytes(...)` returns a `Uint8List` and throws on failure.
 * `body` accepts a `String`, a `List<int>` (sent as bytes) or a
   `Map<String, String>` (sent form url-encoded). JSON is encoded by hand:
@@ -78,11 +79,14 @@ below add typed responses, error handling and constants.
   a `String`, `Uint8List`, `Map` or `List`. `copyRequest({url})` on a
   `BaseRequest` and `copyWithBytes(bytes)` on `Response` /
   `StreamedResponse` duplicate an already consumed request or response
-  (interceptors, retries).
+  (interceptors, retries); a `MultipartRequest` with files cannot be resent
+  (its file streams are read once), a `StreamedRequest` cannot be copied.
 * Basic auth: `BasicAuthClient(username, password, {inner})` from
   `package:tekartik_http/basic_auth_client.dart` wraps a client and adds the
   `Authorization` header to every request; `close()` closes the inner client
-  only when `BasicAuthClient` created it.
+  only when `BasicAuthClient` created it. The credentials are encoded as
+  latin1: a character outside latin1 throws an `ArgumentError`. Never log
+  them nor the header.
 * Object urls (`blob:`): a factory implementing `HttpObjectUrlFactory`
   (browser and memory) turns in-memory bytes into a url that its own clients
   read with GET. Check `factory.supportsObjectUrl`, then
@@ -97,7 +101,8 @@ below add typed responses, error handling and constants.
   url throws. `HttpClientMixin` (`http_memory.dart`) helps writing a fake
   `Client` by implementing `httpCall` / `httpSend`.
 * `parseUri(dynamic)` accepts a `String` or a `Uri`;
-  `httpStreamGetBytes(stream)` collects a `Stream<Uint8List>`.
+  `httpStreamGetBytes(stream)` collects a `Stream<Uint8List>` (it copies the
+  buffer for each chunk: small bodies only).
 
 ## Examples
 

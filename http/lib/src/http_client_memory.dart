@@ -64,9 +64,15 @@ class HttpHeadersMemory with HttpHeadersMixin implements HttpHeaders {
   @override
   String? value(String name) => _map[_getKey(name)]?.first.toString();
 
+  /// Setting null removes the header (as io does).
   @override
-  set contentType(ContentType? contentType) =>
+  set contentType(ContentType? contentType) {
+    if (contentType == null) {
+      remove(httpHeaderContentType);
+    } else {
       set(httpHeaderContentType, contentType.toString());
+    }
+  }
 
   @override
   ContentType? get contentType {
@@ -274,13 +280,14 @@ class HttpResponseMemory implements StreamSink<Uint8List>, HttpResponse {
   Future redirect(Uri location, {int status = httpStatusMovedTemporarily}) =>
       throw UnimplementedError('not implemented yet');
 
+  /// Writes [obj] as text (`obj.toString()`, like io), a byte list is added
+  /// as bytes.
   @override
   void write(Object? obj) {
-    if (obj is String) {
-      add(asUint8List(utf8.encode(obj)));
+    if (obj is List<int>) {
+      add(asUint8List(obj));
     } else {
-      // Only type supported
-      add(asUint8List(obj as List<int>));
+      add(asUint8List(utf8.encode('$obj')));
     }
   }
 

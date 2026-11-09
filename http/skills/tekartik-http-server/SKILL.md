@@ -64,7 +64,8 @@ package, for tests and browser code) or on node (`tekartik_http_node`).
 * CORS: start a handler with `if (request.handleCors()) return;`
   (`package:tekartik_http/http_utils.dart`). It adds permissive
   `Access-Control-Allow-Origin/Methods/Headers/Expose-Headers: *` and answers
-  `OPTIONS` preflights itself (returns `true`). Header names:
+  `OPTIONS` preflights itself (returns `true`). Any web page can then read the
+  responses: not for a server relying on cookies or on the caller origin. Header names:
   `httpAccessControlAllowOrigin`, `httpAccessControlAllowMethods`,
   `httpAccessControlAllowHeaders`, `httpAccessControlExposeHeaders`.
 * Stop with `await server.close()` (`force: true` drops open connections);
