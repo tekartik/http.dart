@@ -379,6 +379,32 @@ void run(HttpFactory httpFactory) {
       client.close();
       await server.close();
     });
+
+    test('content type absent or removed', () async {
+      var server = await httpServerFactory.bind(localhost, 0);
+      server.listen((request) async {
+        // No content type sent: null, not a 'null' content type.
+        var requestContentType = request.headers.contentType;
+        request.response.headers.contentType = ContentType.parse(
+          httpContentTypeText,
+        );
+        // Setting null removes the header.
+        request.response.headers.contentType = null;
+        request.response.write(requestContentType?.toString() ?? 'none');
+        await request.response.close();
+      });
+      var client = httpClientFactory.newClient();
+      try {
+        var response = await client.get(
+          Uri.parse('http://$localhost:${server.port}'),
+        );
+        expect(response.body, 'none');
+        expect(response.headers['content-type'], isNull);
+      } finally {
+        client.close();
+        await server.close();
+      }
+    }, timeout: const Timeout(Duration(seconds: 10)));
   });
   group('client_server', () {
     late HttpServer server;

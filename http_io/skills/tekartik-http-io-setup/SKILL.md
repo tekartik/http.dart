@@ -51,6 +51,8 @@ everywhere: the getters throw `UnimplementedError` off the VM.
   `server.uri` is `http://localhost:<port>/`. Only `anyIPv4` is mapped among
   the abstract addresses; other abstract `InternetAddress` values throw
   `UnsupportedError`.
+* `request.headers.contentType` is null when the request has none, and
+  `response.headers.contentType = null` removes the header, as in memory.
 * The underlying `dart:io` request, response and server objects are not
   exposed by the public libraries. TLS servers (`bindSecure`), cookies or
   sessions mean using `dart:io` directly for that part.
@@ -58,7 +60,8 @@ everywhere: the getters throw `UnimplementedError` off the VM.
   `HttpClientFactory` from `http_client_io.dart`) reads the url bytes with a
   temporary client and writes them to `path` (default: the last url segment
   inside `directory`, or the current directory), creating parent
-  directories.
+  directories. A url without a file name (`https://host`, or ending
+  with `/`) needs an explicit `path`.
 * Platform split: keep shared code on `tekartik_http`; `main` or a
   `@TestOn('vm')` test picks `httpFactoryIo`. In a multiplatform test guard
   the access with `try { httpFactoryIo; } on UnimplementedError catch (_) {}`
@@ -72,8 +75,9 @@ everywhere: the getters throw `UnimplementedError` off the VM.
   `runEchoServerClientTests(clientFactory)` from
   `echo_server_client_test.dart` runs a client suite against that server,
   spawned in the VM even from a browser test.
-* Run tests with `dart test` (VM). The io client test hitting google.com
-  needs network access.
+* Run tests with `dart test` (VM). One test downloads a static https file of
+  the test fixtures site (network needed); a test never calls a third party
+  site or API.
 
 ## Examples
 

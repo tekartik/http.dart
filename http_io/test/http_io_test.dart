@@ -51,15 +51,24 @@ void main() {
 
   test('redirect', () async {
     var server = await httpFactoryIo.server.bind(InternetAddress.anyIPv4, 0);
+    var baseUri = Uri.parse('http://127.0.0.1:${server.port}');
     server.listen((request) async {
-      await request.response.redirect(Uri.parse('https://www.google.com'));
+      if (request.uri.path == '/target') {
+        request.response.write('target');
+        await request.response.close();
+      } else {
+        // Local target, no third party download.
+        await request.response.redirect(baseUri.replace(path: '/target'));
+      }
     });
     var client = httpFactoryIo.client.newClient();
-    var response = await client.get(
-      Uri.parse('http://127.0.0.1:${server.port}'),
-    );
-    // print(response.body);
-    expect(response.statusCode, 200);
-    client.close();
+    try {
+      var response = await client.get(baseUri);
+      expect(response.statusCode, 200);
+      expect(response.body, 'target');
+    } finally {
+      client.close();
+      await server.close();
+    }
   });
 }

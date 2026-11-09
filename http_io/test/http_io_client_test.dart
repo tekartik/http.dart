@@ -4,10 +4,14 @@
 @TestOn('vm')
 library;
 
+import 'dart:convert';
+
 import 'package:tekartik_http_io/http_client_io.dart';
 import 'package:tekartik_http_io/http_io.dart';
 import 'package:tekartik_http_test/http_test.dart';
 import 'package:test/test.dart';
+
+import 'http_io_test.dart' show connectedFixtureUri;
 
 void main() {
   run(httpFactoryIo);
@@ -17,12 +21,16 @@ void main() {
     expect(() => httpClientFactoryIo.objectUrlFactory, throwsUnsupportedError);
   });
 
-  test('google', () async {
-    await httpClientFactoryIo.newClient().read(
-      Uri.parse('http://www.google.com'),
-    );
-    await httpClientFactoryIoNoSslCheck.newClient().read(
-      Uri.parse('http://www.google.com'),
-    );
+  // A real https download (static fixture), with and without the SSL check.
+  test('https download', () async {
+    for (var factory in [httpClientFactoryIo, httpClientFactoryIoNoSslCheck]) {
+      var client = factory.newClient();
+      try {
+        var map = jsonDecode(await client.read(connectedFixtureUri)) as Map;
+        expect(map['name'], 'tekartik_http_test');
+      } finally {
+        client.close();
+      }
+    }
   });
 }

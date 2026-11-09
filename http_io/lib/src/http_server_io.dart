@@ -53,9 +53,15 @@ class HttpHeadersIo with HttpHeadersMixin implements HttpHeaders {
   /// The io headers
   final io.HttpHeaders ioHttpHeaders;
 
+  /// Null when there is no content type (as the memory headers).
   @override
-  ContentType get contentType =>
-      ContentType.parse(ioHttpHeaders.contentType.toString());
+  ContentType? get contentType {
+    var ioContentType = ioHttpHeaders.contentType;
+    if (ioContentType == null) {
+      return null;
+    }
+    return ContentType.parse(ioContentType.toString());
+  }
 
   /// Constructor
   HttpHeadersIo(this.ioHttpHeaders);
@@ -76,9 +82,10 @@ class HttpHeadersIo with HttpHeadersMixin implements HttpHeaders {
   @override
   String? value(String name) => ioHttpHeaders.value(name);
 
+  /// Setting null removes the header.
   @override
-  set contentType(ContentType? contentType) =>
-      ioHttpHeaders.contentType = io.ContentType.parse(contentType.toString());
+  set contentType(ContentType? contentType) => ioHttpHeaders.contentType =
+      contentType == null ? null : io.ContentType.parse(contentType.toString());
 }
 
 /// Convert to common response
