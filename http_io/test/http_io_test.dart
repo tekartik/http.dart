@@ -5,28 +5,29 @@
 library;
 
 import 'dart:convert';
-import 'dart:io' as io;
 
 import 'package:tekartik_http_io/http_io.dart';
 import 'package:tekartik_http_test/http_test.dart';
 import 'package:test/test.dart';
 
-//import 'dart:io';
-
-bool get runningOnTravis => io.Platform.environment['TRAVIS'] == 'true';
+/// Static json file served by the tekartik test fixtures site.
+final connectedFixtureUri = Uri.parse(
+  'https://tekartik-test-fixtures.web.app/http/connected.json',
+);
 
 void main() {
   run(httpFactoryIo);
 
   test('connected', () async {
     var client = httpFactoryIo.client.newClient();
-    var content = await client.read(
-      Uri.parse('https://api.github.com'),
-      headers: {'User-Agent': 'tekartik_http_node'},
-    );
-    var map = jsonDecode(content) as Map;
-    expect(map['current_user_url'], 'https://api.github.com/user');
-  }, skip: runningOnTravis);
+    try {
+      var content = await client.read(connectedFixtureUri);
+      var map = jsonDecode(content) as Map;
+      expect(map['name'], 'tekartik_http_test');
+    } finally {
+      client.close();
+    }
+  });
 
   test('server_any_ipv4', () async {
     var server = await httpFactoryIo.server.bind(InternetAddress.anyIPv4, 0);
