@@ -499,6 +499,29 @@ void run(HttpFactory httpFactory) {
       await server.close();
     });
 
+    test('write non String objects', () async {
+      // Like io: an object is written as its toString().
+      var server = await httpServerFactory.bind(localhost, 0);
+      server.listen((request) async {
+        request.response
+          ..write(42)
+          ..write(true)
+          ..write(null)
+          ..write(1.5);
+        await request.response.close();
+      });
+      var client = httpClientFactory.newClient();
+      try {
+        expect(
+          await client.read(Uri.parse('http://$localhost:${server.port}')),
+          '42truenull1.5',
+        );
+      } finally {
+        client.close();
+        await server.close();
+      }
+    }, timeout: const Timeout(Duration(seconds: 10)));
+
     // This fails on node
     test('writeCharCode', () async {
       var server = await httpServerFactory.bind(localhost, 0);

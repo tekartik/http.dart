@@ -102,18 +102,23 @@ void main() {
 
 ### Client-only suites (no server implementation)
 
+The echo server is a real `dart:io` server (a hybrid isolate in a browser
+test): give a client that reaches localhost (browser, io, node), not the
+memory client, which only reaches memory servers.
+
 ```dart
-import 'package:tekartik_http/http_memory.dart';
+@TestOn('browser')
+library;
+
+import 'package:tekartik_http_browser/http_client_browser.dart';
 import 'package:tekartik_http_test/echo_server_client_test.dart';
 import 'package:tekartik_http_test/object_url_client_test.dart';
 import 'package:test/test.dart';
 
 void main() {
-  // Works from a browser test too: the echo server runs on the VM side.
-  runEchoServerClientTests(httpClientFactoryMemory);
-  if (httpClientFactoryMemory.supportsObjectUrl) {
-    runObjectUrlClientTests(httpClientFactoryMemory);
-  }
+  // The echo server runs on the VM side (spawnHybridUri).
+  runEchoServerClientTests(httpClientFactoryBrowser);
+  runObjectUrlClientTests(httpClientFactoryBrowser);
 }
 ```
 
